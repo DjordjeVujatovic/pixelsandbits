@@ -14,8 +14,13 @@
     "./background-beams-with-collision": "./src/background-beams-with-collision.tsx",
     "./hero-highlight-text": "./src/hero-highlight-text.tsx",
     "./hover-border-gradient": "./src/hover-border-gradient.tsx",
-    "./navbar-menu": "./src/navbar-menu.tsx",
-    "./utils": "./lib/utils.ts"
+    "./utils": "./lib/utils.ts",
+    "./nav/mobile-nav": "./src/nav/mobile-nav.tsx",
+    "./nav/navbar-menu": "./src/nav/navbar-menu.tsx",
+    "./button": "./src/button.tsx",
+    "./logo/logo-with-text": "./src/logo/logo-with-text.tsx",
+    "./logo/logo-text": "./src/logo/logo-text.tsx",
+    "./logo/logo-icon": "./src/logo/logo-icon.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -41,9 +46,12 @@
     "typescript": "5.5.4"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.1",
     "@tabler/icons-react": "^3.26.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.15.0",
+    "lucide-react": "^0.469.0",
     "mini-svg-data-uri": "^1.4.4",
     "tailwind-merge": "^2.6.0"
   }

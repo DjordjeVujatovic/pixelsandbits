@@ -1,12 +1,20 @@
 "use client";
 import React, { useState } from "react";
 import { DotBackground } from "@repo/ui/dot-background";
+import Link from "next/link";
 import { BackgroundBeamsWithCollision } from "@repo/ui/background-beams-with-collision";
 import { motion } from "framer-motion";
 import { HeroHighlight, Highlight } from "@repo/ui/hero-highlight-text";
-import { HoveredLink, Menu, MenuItem, ProductItem } from "@repo/ui/navbar-menu";
+import {
+  HoveredLink,
+  Menu,
+  MenuItem,
+  ProductItem,
+} from "@repo/ui/nav/navbar-menu";
 import { cn } from "@repo/ui/utils";
-import { Logo } from "./logo";
+import { MobileMenu } from "@repo/ui/nav/mobile-nav";
+import { LogoWithText } from "@repo/ui/logo/logo-with-text";
+import { LogoIcon } from "@repo/ui/logo/logo-icon";
 
 export function HeroHighlightComponent(): JSX.Element {
   return (
@@ -27,6 +35,7 @@ export function HeroHighlightComponent(): JSX.Element {
         }}
       >
         Beautiful products delivered at warp speed with percision down to the{" "}
+        <br />
         <Highlight className="text-black dark:text-white">
           Pixels & Bits
         </Highlight>
@@ -48,16 +57,19 @@ function Navbar({ className }: { className?: string }): JSX.Element {
   return (
     <div
       className={cn(
-        "fixed flex row justify-between inset-x-0 mx-auto z-50 px-14",
+        "fixed flex row justify-between items-center inset-x-0 mx-auto z-50 px-14",
         className
       )}
     >
-      <div>
-        <Logo fill="#FFFFFF" height={60.33} width={255.5} />
+      <div className="hidden lg:block">
+        <LogoWithText fill="#FFFFFF" />
+      </div>
+      <div className="block lg:hidden sm:w-1/4 lg:w-fit">
+        <LogoIcon id="logo-icon-tablet" />
       </div>
       <div
         className={cn(
-          "fixed top-10 inset-x-0 max-w-xl mx-auto z-50",
+          "top-10 inset-x-0 lg:mx-auto z-50 sm:w-fit lg:w-96",
           className
         )}
       >
@@ -76,59 +88,63 @@ function Navbar({ className }: { className?: string }): JSX.Element {
               <HoveredLink href="/seo">Search Engine Optimization</HoveredLink>
             </div>
           </MenuItem>
-          <MenuItem active={active} item="Testimonials" setActive={setActive}>
-            <div className="  text-sm grid grid-cols-2 gap-10 p-4">
-              <ProductItem
-                description="Prepare for tech interviews like never before."
-                href="https://algochurn.com"
-                src="https://assets.aceternity.com/demos/algochurn.webp"
-                title="Algochurn"
-              />
-              <ProductItem
-                description="Production ready Tailwind css components for your next project"
-                href="https://tailwindmasterkit.com"
-                src="https://assets.aceternity.com/demos/tailwindmasterkit.webp"
-                title="Tailwind Master Kit"
-              />
-              <ProductItem
-                description="Never write from scratch again. Go from idea to blog in minutes."
-                href="https://gomoonbeam.com"
-                src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
-                title="Moonbeam"
-              />
-            </div>
-          </MenuItem>
           <MenuItem active={active} item="Portfolio" setActive={setActive}>
-            <div className="  text-sm grid grid-cols-2 gap-10 p-4">
+            <div className="text-sm grid grid-cols-2 gap-6 lg:gap-10 p-4">
               <ProductItem
-                description="Prepare for tech interviews like never before."
+                description="Platform for buying, selling, and storing crypto."
                 href="https://algochurn.com"
                 src="https://assets.aceternity.com/demos/algochurn.webp"
-                title="Algochurn"
+                title="Coinbase"
               />
               <ProductItem
-                description="Production ready Tailwind css components for your next project"
+                description="Platform for blockchain-based games and digital collectibles like NBA Top Shot and CryptoKitties."
                 href="https://tailwindmasterkit.com"
                 src="https://assets.aceternity.com/demos/tailwindmasterkit.webp"
-                title="Tailwind Master Kit"
+                title="Dapper Labs"
               />
               <ProductItem
-                description="Never write from scratch again. Go from idea to blog in minutes."
+                description="Aii tracks and helps reduce the environmental impact of apparel production."
                 href="https://gomoonbeam.com"
                 src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
-                title="Moonbeam"
+                title="Apparel Impact Institute"
               />
               <ProductItem
-                description="Respond to government RFPs, RFIs and RFQs 10x faster using AI"
+                description="User attribution and growth platform for Web3"
                 href="https://userogue.com"
                 src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.47.07%E2%80%AFPM.png"
-                title="Rogue"
+                title="Spindl"
+              />
+              <ProductItem
+                description="Background screening and verification platform"
+                href="https://gomoonbeam.com"
+                src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
+                title="Certn"
+              />
+              <ProductItem
+                description="Never write from scratch again. Go from idea to blog in minutes."
+                href="https://gomoonbeam.com"
+                src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
+                title="Athena"
               />
             </div>
           </MenuItem>
+          <Link href="/#testimonials">
+            <MenuItem active={null} item="Testimonials" setActive={setActive} />
+          </Link>
+          <div className="block lg:hidden">
+            <button
+              className="relative inline-flex h-12 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit"
+              type="button"
+            >
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-4 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                Lets Chat
+              </span>
+            </button>
+          </div>
         </Menu>
       </div>
-      <div>
+      <div className="hidden lg:block">
         <button
           className="relative inline-flex h-12 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit"
           type="button"
@@ -146,7 +162,12 @@ function Navbar({ className }: { className?: string }): JSX.Element {
 export default function Page(): JSX.Element {
   return (
     <main className="h-screen w-screen relative px-8">
-      <NavbarComponent />
+      <div className="hidden sm:block">
+        <NavbarComponent />
+      </div>
+      <div className="block sm:hidden">
+        <MobileMenu />
+      </div>
       <DotBackground>
         <BackgroundBeamsWithCollision>
           <div className="flex flex-col gap-4 items-center justify-center">

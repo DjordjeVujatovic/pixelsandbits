@@ -5,7 +5,7 @@ interface LogoProps {
   fill?: string;
 }
 
-export function Logo({
+export function LogoWithText({
   width = 266.5,
   height = 64.33,
   fill = "#000000",
@@ -17,15 +17,21 @@ export function Logo({
       viewBox="0 0 406 98"
       width={width}
     >
-      <defs id="SvgjsDefs10171">
-        <linearGradient id="logoGradient" x1="0%" x2="100%" y1="0%" y2="0%">
-          <stop offset="0%" stopColor="#a855f7" />
-          <stop offset="100%" stopColor="#7c3aed" />
+      <defs>
+        <linearGradient
+          id="logoWithTextGradient"
+          x1="0%"
+          x2="100%"
+          y1="0%"
+          y2="0%"
+        >
+          <stop offset="0%" stopColor="#6366f1" /> {/* indigo-500 */}
+          <stop offset="100%" stopColor="#a855f7" /> {/* purple-500 */}
         </linearGradient>
       </defs>
       <g
         data-feature-key="symbolFeature-0"
-        fill="url(#logoGradient)"
+        fill="url(#logoWithTextGradient)"
         id="SvgjsG10172"
         transform="matrix(1.119402985074627,0,0,1.119402985074627,-16.791044776119406,-7.19402985074627)"
       >

@@ -23,16 +23,16 @@ export function MenuItem({
   active: string | null;
   item: string;
   children?: React.ReactNode;
-}) {
+}): JSX.Element {
   return (
     <div
-      className="relative "
+      className="relative"
       onMouseEnter={() => {
         setActive(item);
       }}
     >
       <motion.p
-        className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
+        className="cursor-pointer text-sm lg:text-base text-black hover:opacity-[0.9] dark:text-white"
         transition={{ duration: 0.3 }}
       >
         {item}
@@ -44,16 +44,13 @@ export function MenuItem({
           transition={transition}
         >
           {active === item && (
-            <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
+            <div className="absolute top-[calc(100%_+_1.25rem)] left-1/2 transform -translate-x-1/2 pt-3 lg:pt-4">
               <motion.div
-                className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl"
-                layoutId="active" // layoutId ensures smooth animation
+                className="bg-white dark:bg-black backdrop-blur-sm rounded-xl lg:rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl"
+                layoutId="active"
                 transition={transition}
               >
-                <motion.div
-                  className="w-max h-full p-4"
-                  layout // layout ensures smooth animation
-                >
+                <motion.div className="w-max h-full lg:p-4" layout>
                   {children}
                 </motion.div>
               </motion.div>
@@ -71,10 +68,10 @@ export function Menu({
 }: {
   setActive: (item: string | null) => void;
   children: React.ReactNode;
-}) {
+}): JSX.Element {
   return (
     <nav
-      className="relative rounded-full border border-transparent dark:bg-black dark:border-white/[0.2] bg-white shadow-input flex justify-center space-x-4 px-8 py-6 "
+      className="relative lg:right-16 rounded-full border border-transparent dark:bg-black dark:border-white/[0.2] bg-white shadow-input flex justify-center items-center space-x-4 lg:space-x-6 px-6 py-4 lg:px-8 lg:py-6 "
       onMouseLeave={() => {
         setActive(null);
       }}
@@ -94,21 +91,22 @@ export function ProductItem({
   description: string;
   href: string;
   src: string;
-}) {
+}): JSX.Element {
   return (
-    <Link className="flex space-x-2" href={href}>
-      <Image
-        alt={title}
-        className="flex-shrink-0 rounded-md shadow-2xl"
-        height={70}
-        src={src}
-        width={140}
-      />
+    <Link className="flex space-x-2 h-full" href={href}>
+      <div className="w-[100px] lg:w-[140px] h-full relative flex-shrink-0">
+        <Image
+          alt={title}
+          className="rounded-md shadow-2xl object-cover"
+          fill
+          src={src}
+        />
+      </div>
       <div>
-        <h4 className="text-xl font-bold mb-1 text-black dark:text-white">
+        <h4 className="text-base lg:text-xl font-bold mb-1 text-black dark:text-white">
           {title}
         </h4>
-        <p className="text-neutral-700 text-sm max-w-[10rem] dark:text-neutral-300">
+        <p className="text-xs lg:text-sm text-neutral-700 max-w-[7rem] lg:max-w-[8rem] dark:text-neutral-300">
           {description}
         </p>
       </div>
@@ -123,7 +121,7 @@ export function HoveredLink({
   children: React.ReactNode;
   href: string;
   className?: string;
-}) {
+}): JSX.Element {
   return (
     <Link
       {...rest}
