@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 import { DotBackground } from "@repo/ui/dot-background";
 import Link from "next/link";
 import { BackgroundBeamsWithCollision } from "@repo/ui/background-beams-with-collision";
@@ -15,6 +16,8 @@ import { cn } from "@repo/ui/utils";
 import { MobileMenu } from "@repo/ui/nav/mobile-nav";
 import { LogoWithText } from "@repo/ui/logo/logo-with-text";
 import { LogoIcon } from "@repo/ui/logo/logo-icon";
+import { PinContainer } from "@repo/ui/3d-pin";
+import { FlipWords } from "@repo/ui/flip-words";
 
 export function HeroHighlightComponent(): JSX.Element {
   return (
@@ -44,10 +47,88 @@ export function HeroHighlightComponent(): JSX.Element {
   );
 }
 
+export function HeroHighlightPortfolio(): JSX.Element {
+  return (
+    <HeroHighlight className="bg-transparent relative z-10s">
+      <motion.h1
+        animate={{
+          opacity: 1,
+          y: [20, -5, 0],
+        }}
+        className="text-3xl px-4 font-bold mx-auto my-8 max-w-4xl text-center text-neutral-700 dark:text-white leading-relaxed lg:leading-snug relative"
+        initial={{
+          opacity: 100,
+          y: 20,
+        }}
+        transition={{
+          duration: 0.5,
+          ease: [0.4, 0.0, 0.2, 1],
+        }}
+      >
+        We have worked with many world class clients and build their products
+        out from{" "}
+        <Highlight className="text-black dark:text-white">
+          Ideation to Launch
+        </Highlight>
+      </motion.h1>
+    </HeroHighlight>
+  );
+}
+
+export function FlipWordsComponent(): JSX.Element {
+  const words = [
+    "Coinbase",
+    "Dapper Labs",
+    "Certn",
+    "Apparel Impact Institute",
+  ];
+
+  return (
+    <div className="max-w-screen flex justify-start items-center px-4">
+      <div className="text-4xl font-normal text-neutral-400 dark:text-neutral-100">
+        We have worked with World Class companies such as
+        <FlipWords words={words} />
+      </div>
+    </div>
+  );
+}
+
 export function NavbarComponent(): JSX.Element {
   return (
     <div className="relative w-full flex items-center justify-center">
       <Navbar className="top-8" />
+    </div>
+  );
+}
+
+export function AnimatedPin(data: {
+  title: string;
+  description: string;
+  href: string;
+  image: string;
+}): JSX.Element {
+  return (
+    <div className="h-[26rem] w-full flex items-center justify-center">
+      <PinContainer href={data.href} title={data.title}>
+        <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[24rem]">
+          <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">
+            {data.title}
+          </h3>
+          <div className="text-base !m-0 !p-0 font-normal">
+            <span className="text-slate-500 ">{data.description}</span>
+          </div>
+          <div className="flex flex-1 w-full rounded-lg mt-4 overflow-hidden">
+            <Image
+              alt="Aceternity UI"
+              className="rounded-lg object-cover w-full h-full object-center"
+              height={400}
+              src={data.image}
+              style={{ objectPosition: "center" }}
+              width={600}
+            />
+          </div>
+        </div>
+      </PinContainer>
     </div>
   );
 }
@@ -92,38 +173,38 @@ function Navbar({ className }: { className?: string }): JSX.Element {
             <div className="text-sm grid grid-cols-2 gap-6 lg:gap-10 p-4">
               <ProductItem
                 description="Platform for buying, selling, and storing crypto."
-                href="https://algochurn.com"
-                src="https://assets.aceternity.com/demos/algochurn.webp"
+                href="https://www.coinbase.com/"
+                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%209.50.20%20PM.png"
                 title="Coinbase"
               />
               <ProductItem
-                description="Platform for blockchain-based games and digital collectibles like NBA Top Shot and CryptoKitties."
-                href="https://tailwindmasterkit.com"
-                src="https://assets.aceternity.com/demos/tailwindmasterkit.webp"
+                description="Platform for blockchain-based games and digital collectibles."
+                href="https://www.dapperlabs.com/"
+                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.00.39%20PM.png"
                 title="Dapper Labs"
               />
               <ProductItem
-                description="Aii tracks and helps reduce the environmental impact of apparel production."
-                href="https://gomoonbeam.com"
-                src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
-                title="Apparel Impact Institute"
+                description="Funds and scales industry proven solutions to reduce carbon emissions."
+                href="https://apparelimpact.org/"
+                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.07.45%20PM.png"
+                title="Aii"
               />
               <ProductItem
                 description="User attribution and growth platform for Web3"
-                href="https://userogue.com"
-                src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.47.07%E2%80%AFPM.png"
+                href="https://www.spindl.xyz/"
+                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.15.48%20PM.png"
                 title="Spindl"
               />
               <ProductItem
                 description="Background screening and verification platform"
-                href="https://gomoonbeam.com"
-                src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
+                href="https://certn.co/"
+                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.11.12%20PM.png"
                 title="Certn"
               />
               <ProductItem
-                description="Never write from scratch again. Go from idea to blog in minutes."
-                href="https://gomoonbeam.com"
-                src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
+                description="Virtual assistants for founders, investors, and leaders"
+                href="https://www.athena.com/"
+                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.14.10%20PM.png"
                 title="Athena"
               />
             </div>
@@ -159,9 +240,76 @@ function Navbar({ className }: { className?: string }): JSX.Element {
   );
 }
 
+const portfolio = [
+  {
+    title: "Coinbase",
+    description:
+      "Developed the frontend for Onchain Summer's (OCS) NFT marketplace; OCS drove nearly 500,000 transactions across 400,000 unique wallets, generating over 200 ETH in volume",
+    href: "https://www.coinbase.com/",
+    image:
+      "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%209.50.20%20PM.png",
+  },
+  {
+    title: "Dapper Labs",
+    description:
+      "Helped develop a design system for Dapper Labs that would be used accross their sportds product line (NBA Top Shot, NFL All Day, etc)",
+    href: "https://www.dapperlabs.com/",
+    image:
+      "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.00.39%20PM.png",
+  },
+  {
+    title: "Apparel Impact Institute",
+    description:
+      "Developed a custom customer facing dashboard for Aii to track and help reduce the environmental impact of apparel production in additon to a data ingestion pipeline",
+    href: "https://apparelimpact.org/",
+    image:
+      "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.07.45%20PM.png",
+  },
+  {
+    title: "Certn",
+    description:
+      "Developed custom  frontend for Certn's internal tools and dashboards, as well as the customer-facing background check products",
+    href: "https://certn.co/",
+    image:
+      "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.11.12%20PM.png",
+  },
+  {
+    title: "Athena",
+    description:
+      "Developed Athena’s initial custom playbook system and collaborated with the team to build out their marketing website rebrand",
+    href: "https://www.athena.com/",
+    image:
+      "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.14.10%20PM.png",
+  },
+  {
+    title: "Spindl",
+    description:
+      "Developed and implemented a custom dashboard and user attribution platform for Spindl, enabling real-time tracking and visualization of key business metrics and user behavior.",
+    href: "https://www.spindl.xyz/",
+    image:
+      "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.15.48%20PM.png",
+  },
+  {
+    title: "Delphia",
+    description:
+      "Collaborated with Delphia's CEO to design and develop the company's homepage, ensuring effective communication of the brand's core message and value proposition.",
+    href: "https://delphia.com/",
+    image:
+      "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.19.08%20PM.png",
+  },
+  {
+    title: "ZeroDown (Acquired by Flyhomes)",
+    description:
+      "Helped build out ZeroDown's internal tools including their offer tracking system, property management tools, lead search and filter dashboard, and more",
+    href: "https://zerodown.com/",
+    image:
+      "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.20.38%20PM.png",
+  },
+];
+
 export default function Page(): JSX.Element {
   return (
-    <main className="h-screen w-screen relative px-8">
+    <main className="px-8">
       <div className="hidden sm:block">
         <NavbarComponent />
       </div>
@@ -186,11 +334,16 @@ export default function Page(): JSX.Element {
           </div>
         </BackgroundBeamsWithCollision>
       </DotBackground>
-      <div className="flex h-screen flex-col gap-4 items-center justify-center">
-        <div>
-          <h1>We are a team of experienced developers</h1>
+      <DotBackground>
+        <div className="flex flex-col gap-4 items-center justify-start">
+          <HeroHighlightPortfolio />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 z-10">
+            {portfolio.map((item) => (
+              <AnimatedPin key={item.title} {...item} />
+            ))}
+          </div>
         </div>
-      </div>
+      </DotBackground>
     </main>
   );
 }
