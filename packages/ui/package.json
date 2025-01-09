@@ -9,7 +9,18 @@
   ],
   "exports": {
     "./styles.css": "./dist/index.css",
-    "./card": "./src/card.tsx"
+    "./card": "./src/card.tsx",
+    "./dot-background": "./src/dot-background.tsx",
+    "./background-beams-with-collision": "./src/background-beams-with-collision.tsx",
+    "./hero-highlight-text": "./src/hero-highlight-text.tsx",
+    "./hover-border-gradient": "./src/hover-border-gradient.tsx",
+    "./utils": "./lib/utils.ts",
+    "./nav/mobile-nav": "./src/nav/mobile-nav.tsx",
+    "./nav/navbar-menu": "./src/nav/navbar-menu.tsx",
+    "./button": "./src/button.tsx",
+    "./logo/logo-with-text": "./src/logo/logo-with-text.tsx",
+    "./logo/logo-text": "./src/logo/logo-text.tsx",
+    "./logo/logo-icon": "./src/logo/logo-icon.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -19,16 +30,29 @@
     "type-check": "tsc --noEmit"
   },
   "peerDependencies": {
+    "next": ">=13.0.0",
     "react": "^18.2.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@types/next": ">=9.0.0",
     "@types/react": "^18.2.61",
+    "@types/tailwindcss": "^3.1.0",
     "autoprefixer": "^10.4.18",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "5.5.4"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.1.1",
+    "@tabler/icons-react": "^3.26.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
+    "lucide-react": "^0.469.0",
+    "mini-svg-data-uri": "^1.4.4",
+    "tailwind-merge": "^2.6.0"
   }
 }
