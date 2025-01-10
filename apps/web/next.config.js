@@ -29,6 +29,15 @@ module.exports = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "media.licdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "api.microlink.io",
+        pathname: "/**",
+      },
     ],
   },
 };

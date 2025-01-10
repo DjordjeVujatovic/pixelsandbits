@@ -22,7 +22,9 @@
     "./logo/logo-text": "./src/logo/logo-text.tsx",
     "./logo/logo-icon": "./src/logo/logo-icon.tsx",
     "./3d-pin": "./src/3d-pin.tsx",
-    "./flip-words": "./src/flip-words.tsx"
+    "./flip-words": "./src/flip-words.tsx",
+    "./infinite-moving-cards": "./src/infinite-moving-cards.tsx",
+    "./background-gradient": "./src/background-gradient.tsx"
   },
   "license": "MIT",
   "scripts": {

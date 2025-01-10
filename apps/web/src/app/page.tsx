@@ -5,7 +5,10 @@ import { DotBackground } from "@repo/ui/dot-background";
 import Link from "next/link";
 import { BackgroundBeamsWithCollision } from "@repo/ui/background-beams-with-collision";
 import { motion } from "framer-motion";
-import { HeroHighlight, Highlight } from "@repo/ui/hero-highlight-text";
+import {
+  HeroHighlight as HeroHighlightText,
+  Highlight,
+} from "@repo/ui/hero-highlight-text";
 import {
   HoveredLink,
   Menu,
@@ -18,16 +21,73 @@ import { LogoWithText } from "@repo/ui/logo/logo-with-text";
 import { LogoIcon } from "@repo/ui/logo/logo-icon";
 import { PinContainer } from "@repo/ui/3d-pin";
 import { FlipWords } from "@repo/ui/flip-words";
+import { InfiniteMovingCards } from "@repo/ui/infinite-moving-cards";
 
-export function HeroHighlightComponent(): JSX.Element {
+export function InfiniteMovingCardsComponent(): JSX.Element {
   return (
-    <HeroHighlight className="bg-transparent relative z-10">
+    <div className="max-h-[850px] lg:max-h-[750px] rounded-md flex flex-col antialiased bg-white dark:bg-black dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden">
+      <InfiniteMovingCards
+        direction="right"
+        items={testimonials.map((item) => ({
+          ...item,
+          image: { src: item.image, height: 800, width: 800 },
+        }))}
+        speed="slow"
+      />
+    </div>
+  );
+}
+
+const testimonials = [
+  {
+    quote:
+      "Djordje was an absolute pleasure to work with. His work ethic was top-tier, consistently going above and beyond to ensure that every assignment was completed to the highest standard. Djordje is a sharp critical thinker who approaches problems thoughtfully, finding creative and effective solutions, rather than just mindlessly completing assigned work. Combine all of those traits with his calm and steady demeanor and he is perfect fit for any team he joins, becoming instrumental to their success. I have no doubt Djordje will bring the same dedication, talent, and positive energy to any project he takes on.",
+    name: "Dan Xavier",
+    title: "Head of Software, Aii",
+    image:
+      "https://media.licdn.com/dms/image/v2/D5603AQHSSfzYx7m5og/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1681566410237?e=1741824000&v=beta&t=vqaXKgfwYZCkC_YoQGWPRhd5ks-WjjEJOk_AqFtudwM",
+  },
+  {
+    quote:
+      "Djordje stepped in as a full-stack software engineer for our internal tools team and quickly took a product ownership role of the project and made an immediate impact. His end-to-end ownership of our internal app was exactly what we needed. From developing a sophisticated offer management system to building custom property management tools, he consistently delivered solutions that improved our team's efficiency. What impressed me most was his ability to understand complex business requirements and translate them into intuitive user experiences. The search and filter features he built for our sales and marketing team became a powerful tool for lead generation and management. Djordje is a strategic product thinker and a highly skilled engineer, working with him was a pleasure.",
+    name: "Laks Srini",
+    title: "CTO, ZeroDown (Acquired by Flyhomes)",
+    image:
+      "https://media.licdn.com/dms/image/v2/D5603AQGrknAcOfFewQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1728346713809?e=1741824000&v=beta&t=HmpznviPcn_xjZN-pDvdqmX8ZTf6-Wg-rGI-7ZIx7_M",
+  },
+  {
+    quote: "All that we see or seem is but a dream within a dream.",
+    name: "Rose Kuan",
+    title: "Senior Product Designer, Coinbase",
+    image:
+      "https://media.licdn.com/dms/image/v2/D4E03AQHZCxkLSRRk9A/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1696544456905?e=1741824000&v=beta&t=Jog917Zkbyp9OFdu_hBTAyHfZRqU4scIy8qKm_QCjjE",
+  },
+];
+
+interface HeroHighlightProps {
+  text: string;
+  highlightText: string;
+  className?: string;
+  showBreak?: boolean;
+}
+
+export function HeroHighlight({
+  text,
+  highlightText,
+  className,
+  showBreak = false,
+}: HeroHighlightProps): JSX.Element {
+  return (
+    <HeroHighlightText className="bg-transparent relative z-10">
       <motion.h1
         animate={{
           opacity: 1,
           y: [20, -5, 0],
         }}
-        className="text-2xl px-4 md:text-4xl lg:text-5xl font-bold text-neutral-700 dark:text-white max-w-4xl leading-relaxed lg:leading-snug text-center mx-auto relative"
+        className={cn(
+          "px-4 font-bold text-neutral-700 dark:text-white max-w-4xl leading-relaxed lg:leading-snug text-center mx-auto relative",
+          className ?? "text-2xl md:text-4xl lg:text-5xl"
+        )}
         initial={{
           opacity: 100,
           y: 20,
@@ -37,41 +97,42 @@ export function HeroHighlightComponent(): JSX.Element {
           ease: [0.4, 0.0, 0.2, 1],
         }}
       >
-        Beautiful products delivered at warp speed with percision down to the{" "}
-        <br />
+        {text} {showBreak ? <br /> : null}
         <Highlight className="text-black dark:text-white">
-          Pixels & Bits
+          {highlightText}
         </Highlight>
       </motion.h1>
-    </HeroHighlight>
+    </HeroHighlightText>
+  );
+}
+
+export function HeroHighlightComponent(): JSX.Element {
+  return (
+    <HeroHighlight
+      highlightText="Pixels & Bits"
+      showBreak
+      text="Beautiful products delivered at warp speed with percision down to the"
+    />
   );
 }
 
 export function HeroHighlightPortfolio(): JSX.Element {
   return (
-    <HeroHighlight className="bg-transparent relative z-10s">
-      <motion.h1
-        animate={{
-          opacity: 1,
-          y: [20, -5, 0],
-        }}
-        className="text-3xl px-4 font-bold mx-auto my-8 max-w-4xl text-center text-neutral-700 dark:text-white leading-relaxed lg:leading-snug relative"
-        initial={{
-          opacity: 100,
-          y: 20,
-        }}
-        transition={{
-          duration: 0.5,
-          ease: [0.4, 0.0, 0.2, 1],
-        }}
-      >
-        We have worked with many world class clients and build their products
-        out from{" "}
-        <Highlight className="text-black dark:text-white">
-          Ideation to Launch
-        </Highlight>
-      </motion.h1>
-    </HeroHighlight>
+    <HeroHighlight
+      className="text-3xl my-8"
+      highlightText="Ideation to Launch"
+      text="We have worked with many world class clients and build their products out from"
+    />
+  );
+}
+
+export function HeroHighlightTestimonials(): JSX.Element {
+  return (
+    <HeroHighlight
+      className="text-3xl my-8"
+      highlightText="our work"
+      text="What some of our past clients have said about"
+    />
   );
 }
 
@@ -310,10 +371,10 @@ const portfolio = [
 export default function Page(): JSX.Element {
   return (
     <main className="px-8">
-      <div className="hidden sm:block">
+      <div className="hidden md:block">
         <NavbarComponent />
       </div>
-      <div className="block sm:hidden">
+      <div className="block md:hidden">
         <MobileMenu />
       </div>
       <DotBackground>
@@ -342,6 +403,12 @@ export default function Page(): JSX.Element {
               <AnimatedPin key={item.title} {...item} />
             ))}
           </div>
+        </div>
+      </DotBackground>
+      <DotBackground>
+        <div className="flex flex-col gap-4 items-center justify-start pt-24">
+          <HeroHighlightTestimonials />
+          <InfiniteMovingCardsComponent />
         </div>
       </DotBackground>
     </main>
