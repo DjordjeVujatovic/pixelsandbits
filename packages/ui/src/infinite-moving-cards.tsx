@@ -76,7 +76,7 @@ export function InfiniteMovingCards({
   return (
     <div
       className={cn(
-        "scroller relative z-20 h-[60rem] max-w-[96rem] overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)] w-screen",
+        "scroller relative z-20 h-[32rem] max-w-[96rem] overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)] w-screen",
         className
       )}
       ref={containerRef}
