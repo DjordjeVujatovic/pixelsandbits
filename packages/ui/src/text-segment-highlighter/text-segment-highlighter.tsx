@@ -28,8 +28,8 @@ export function TextSegmentHighlighter({
           y: [20, -5, 0],
         }}
         className={cn(
-          "px-4 font-bold text-neutral-700 dark:text-white max-w-4xl leading-relaxed lg:leading-snug text-center mx-auto relative",
-          className ?? "lg:text-5xl md:text-4xl sm:text-2xl"
+          "px-4 font-bold text-neutral-700 dark:text-white max-w-4xl leading-relaxed lg:leading-snug text-center mx-auto relative whitespace-pre-wrap",
+          className ?? "lg:text-5xl md:text-4xl text-[2rem]"
         )}
         initial={{
           opacity: 100,
@@ -44,12 +44,17 @@ export function TextSegmentHighlighter({
           <React.Fragment key={index}>
             {segment.highlight ? (
               <Highlight
-                className={cn("text-black dark:text-white", segment.className)}
+                className={cn(
+                  "text-black dark:text-white inline-block",
+                  segment.className
+                )}
               >
                 {segment.text}
               </Highlight>
             ) : (
-              <span className={segment.className}>{segment.text}</span>
+              <span className={cn("inline-block", segment.className)}>
+                {segment.text}
+              </span>
             )}
             {segment.break ? <br /> : null}
             {!segment.break && " "}

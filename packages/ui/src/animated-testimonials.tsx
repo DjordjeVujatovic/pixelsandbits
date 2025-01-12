@@ -48,7 +48,7 @@ export function AnimatedTestimonials({
   };
 
   return (
-    <div className="w-full px-4 py-20">
+    <div className="w-full px-4 2xl:pt-20 pb-10">
       <div className="container mx-auto max-w-4xl">
         <div className="flex flex-col md:flex-row md:gap-20">
           <div className="w-full md:w-1/2">
@@ -129,7 +129,7 @@ export function AnimatedTestimonials({
                 y: 0,
                 opacity: 1,
               }}
-              className="h-[400px] relative"
+              className="h-[300px] relative"
               exit={{
                 y: -20,
                 opacity: 0,
@@ -144,30 +144,92 @@ export function AnimatedTestimonials({
                 ease: "easeInOut",
               }}
             >
-              <motion.p className="text-lg text-center md:text-left text-gray-500 mt-8 dark:text-neutral-300">
-                {testimonials[active].quote.split(" ").map((word, index) => (
-                  <motion.span
-                    animate={{
-                      filter: "blur(0px)",
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    className="inline-block"
-                    initial={{
-                      filter: "blur(10px)",
-                      opacity: 0,
-                      y: 5,
-                    }}
-                    key={index}
-                    transition={{
-                      duration: 0.2,
+              <motion.p className="text-sm text-center md:text-left text-gray-500 mt-8 dark:text-neutral-300 relative">
+                <motion.span
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                    y: [-2, 2, -2],
+                    rotate: [-3, 0, -3],
+                  }}
+                  className="text-4xl font-serif text-gray-300 dark:text-neutral-600 absolute -left-4 -top-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  transition={{
+                    opacity: {
+                      duration: 0.3,
+                      delay:
+                        0.02 * testimonials[active].quote.split(" ").length,
+                    },
+                    x: {
+                      duration: 0.3,
+                      delay:
+                        0.02 * testimonials[active].quote.split(" ").length,
+                    },
+                    y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                    rotate: {
+                      duration: 4,
+                      repeat: Infinity,
                       ease: "easeInOut",
-                      delay: 0.02 * index,
-                    }}
-                  >
-                    {word}&nbsp;
-                  </motion.span>
-                ))}
+                    },
+                  }}
+                >
+                  &ldquo;
+                </motion.span>
+                <span className="relative inline-block text-center">
+                  {testimonials[active].quote.split(" ").map((word, index) => (
+                    <motion.span
+                      animate={{
+                        filter: "blur(0px)",
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      className="inline-block"
+                      initial={{
+                        filter: "blur(10px)",
+                        opacity: 0,
+                        y: 5,
+                      }}
+                      key={index}
+                      transition={{
+                        duration: 0.2,
+                        ease: "easeInOut",
+                        delay: 0.02 * index,
+                      }}
+                    >
+                      {word}&nbsp;
+                    </motion.span>
+                  ))}
+                </span>
+                <motion.span
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                    y: [2, -2, 2],
+                    rotate: [3, 0, 3],
+                  }}
+                  className="text-4xl font-serif text-gray-300 dark:text-neutral-600 absolute right-6 -bottom-8"
+                  initial={{ opacity: 0, x: 20 }}
+                  transition={{
+                    opacity: {
+                      duration: 0.3,
+                      delay:
+                        0.02 * testimonials[active].quote.split(" ").length,
+                    },
+                    x: {
+                      duration: 0.3,
+                      delay:
+                        0.02 * testimonials[active].quote.split(" ").length,
+                    },
+                    y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                    rotate: {
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    },
+                  }}
+                >
+                  &rdquo;
+                </motion.span>
               </motion.p>
             </motion.div>
           </div>
