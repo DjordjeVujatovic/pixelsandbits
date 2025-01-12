@@ -22,7 +22,6 @@
     "./logo/logo-text": "./src/logo/logo-text.tsx",
     "./logo/logo-icon": "./src/logo/logo-icon.tsx",
     "./3d-pin": "./src/3d-pin.tsx",
-    "./infinite-moving-cards": "./src/infinite-moving-cards.tsx",
     "./background-gradient": "./src/background-gradient.tsx",
     "./animated-testimonials": "./src/animated-testimonials.tsx",
     "./meteor-card": "./src/meteor-card.tsx",

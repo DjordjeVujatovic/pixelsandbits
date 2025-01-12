@@ -15,7 +15,6 @@ import { MobileMenu } from "@repo/ui/nav/mobile-nav";
 import { LogoWithText } from "@repo/ui/logo/logo-with-text";
 import { LogoIcon } from "@repo/ui/logo/logo-icon";
 import { PinContainer } from "@repo/ui/3d-pin";
-import { InfiniteMovingCards } from "@repo/ui/infinite-moving-cards";
 import { TextSegmentHighlighter } from "@repo/ui/text-segment-highlighter";
 import { AnimatedTestimonials } from "@repo/ui/animated-testimonials";
 import { Meteors } from "@repo/ui/meteor-card";
@@ -111,7 +110,7 @@ const techStack = [
   },
 ];
 
-export function WarpSpeedCoverDemo() {
+function WarpSpeedCoverDemo() {
   return (
     <div>
       <h1 className="text-3xl md:text-4xl lg:text-[8rem] font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white">
@@ -128,7 +127,7 @@ interface MeteorsCardProps {
   emoji?: string;
 }
 
-export function MeteorsCard({ title, description, emoji }: MeteorsCardProps) {
+function MeteorsCard({ title, description, emoji }: MeteorsCardProps) {
   return (
     <div className="h-full">
       <div className="w-full relative max-w-xs h-full">
@@ -149,7 +148,7 @@ export function MeteorsCard({ title, description, emoji }: MeteorsCardProps) {
   );
 }
 
-export function AnimatedTestimonialsDemo() {
+function AnimatedTestimonialsDemo() {
   const testimonials = [
     {
       quote:
@@ -176,48 +175,7 @@ export function AnimatedTestimonialsDemo() {
   return <AnimatedTestimonials testimonials={testimonials} />;
 }
 
-export function InfiniteMovingCardsComponent(): JSX.Element {
-  return (
-    <div className="max-h-[850px] lg:max-h-[750px] rounded-md flex flex-col antialiased bg-white dark:bg-black dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden">
-      <InfiniteMovingCards
-        direction="right"
-        items={testimonials.map((item) => ({
-          ...item,
-          image: { src: item.image, height: 800, width: 800 },
-        }))}
-        speed="slow"
-      />
-    </div>
-  );
-}
-
-const testimonials = [
-  {
-    quote:
-      "Djordje was an absolute pleasure to work with. His work ethic was top-tier, consistently going above and beyond to ensure that every assignment was completed to the highest standard. Djordje is a sharp critical thinker who approaches problems thoughtfully, finding creative and effective solutions, rather than just mindlessly completing assigned work.",
-    name: "Dan Xavier",
-    title: "Head of Software, Aii",
-    image:
-      "https://media.licdn.com/dms/image/v2/D5603AQHSSfzYx7m5og/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1681566410237?e=1741824000&v=beta&t=vqaXKgfwYZCkC_YoQGWPRhd5ks-WjjEJOk_AqFtudwM",
-  },
-  {
-    quote:
-      "Djordje stepped in as a full-stack software engineer for our internal tools team and quickly took a product ownership role of the project and made an immediate impact. His end-to-end ownership of our internal app was exactly what we needed. From developing a sophisticated offer management system to building custom property management tools, he consistently delivered solutions that improved our team's efficiency. What impressed me most was his ability to understand complex business requirements and translate them into intuitive user experiences.",
-    name: "Laks Srini",
-    title: "CTO, ZeroDown (Acquired by Flyhomes)",
-    image:
-      "https://media.licdn.com/dms/image/v2/D5603AQGrknAcOfFewQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1728346713809?e=1741824000&v=beta&t=HmpznviPcn_xjZN-pDvdqmX8ZTf6-Wg-rGI-7ZIx7_M",
-  },
-  {
-    quote: "All that we see or seem is but a dream within a dream.",
-    name: "Rose Kuan",
-    title: "Senior Product Designer, Coinbase",
-    image:
-      "https://media.licdn.com/dms/image/v2/D4E03AQHZCxkLSRRk9A/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1696544456905?e=1741824000&v=beta&t=Jog917Zkbyp9OFdu_hBTAyHfZRqU4scIy8qKm_QCjjE",
-  },
-];
-
-export function HeroHighlightComponent(): JSX.Element {
+function HeroHighlightComponent(): JSX.Element {
   return (
     <TextSegmentHighlighter
       segments={[
@@ -229,8 +187,7 @@ export function HeroHighlightComponent(): JSX.Element {
     />
   );
 }
-
-export function HeroHighlightPortfolio(): JSX.Element {
+function HeroHighlightPortfolio(): JSX.Element {
   return (
     <TextSegmentHighlighter
       className="text-3xl my-8"
@@ -251,7 +208,7 @@ export function HeroHighlightPortfolio(): JSX.Element {
   );
 }
 
-export function HeroHighlightTestimonials(): JSX.Element {
+function HeroHighlightTestimonials(): JSX.Element {
   return (
     <TextSegmentHighlighter
       className="text-3xl my-8 text-center lg:text-left md:relative md:bottom-20 max-w-2xl"
@@ -275,31 +232,7 @@ export function HeroHighlightTestimonials(): JSX.Element {
   );
 }
 
-export function HeroHighlightServicess(): JSX.Element {
-  return (
-    <TextSegmentHighlighter
-      className="text-3xl my-8 text-left md:relative md:bottom-20 max-w-2xl"
-      segments={[
-        {
-          text: "We use",
-        },
-        {
-          text: "the latest and greatest",
-          highlight: true,
-        },
-        {
-          text: "modern tools and technologies in our tech stack",
-        },
-        {
-          text: "to build out",
-          highlight: true,
-        },
-      ]}
-    />
-  );
-}
-
-export function HeroHighlightServices(): JSX.Element {
+function HeroHighlightServices(): JSX.Element {
   return (
     <TextSegmentHighlighter
       className="text-3xl my-8"
@@ -315,7 +248,7 @@ export function HeroHighlightServices(): JSX.Element {
   );
 }
 
-export function NavbarComponent(): JSX.Element {
+function NavbarComponent(): JSX.Element {
   return (
     <div className="relative w-full flex items-center justify-center">
       <Navbar className="top-0 py-1.5" />
@@ -323,7 +256,7 @@ export function NavbarComponent(): JSX.Element {
   );
 }
 
-export function AnimatedPin(data: {
+function AnimatedPin(data: {
   title: string;
   description: string;
   href: string;
