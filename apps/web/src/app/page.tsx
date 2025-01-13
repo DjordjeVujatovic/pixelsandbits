@@ -1,19 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { DotBackground } from "@repo/ui/dot-background";
-import Link from "next/link";
 import { BackgroundBeamsWithCollision } from "@repo/ui/background-beams-with-collision";
-import {
-  HoveredLink,
-  Menu,
-  MenuItem,
-  ProductItem,
-} from "@repo/ui/nav/navbar-menu";
-import { cn } from "@repo/ui/utils";
-import { MobileMenu } from "@repo/ui/nav/mobile-nav";
-import { LogoWithText } from "@repo/ui/logo/logo-with-text";
-import { LogoIcon } from "@repo/ui/logo/logo-icon";
 import { PinContainer } from "@repo/ui/3d-pin";
 import { TextSegmentHighlighter } from "@repo/ui/text-segment-highlighter";
 import { AnimatedTestimonials } from "@repo/ui/animated-testimonials";
@@ -34,6 +23,7 @@ import {
   SiStripe,
 } from "react-icons/si";
 import { WarpSpeedCover } from "@repo/ui/warp-speed-cover";
+import { NavResponsive } from "@repo/ui/nav/responsive-nav";
 
 const techStack = [
   {
@@ -288,166 +278,6 @@ function AnimatedPin(data: {
   );
 }
 
-function Navbar({ className }: { className?: string }): JSX.Element {
-  const [active, setActive] = useState<string | null>(null);
-  const [hasScrolled, setHasScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setHasScrolled(scrollPosition > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  const menuPortfolioItems = [
-    {
-      title: "Coinbase",
-      description: "Platform for buying, selling, and storing crypto.",
-      href: "https://www.coinbase.com/",
-      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%209.50.20%20PM.png",
-    },
-    {
-      title: "Dapper Labs",
-      description:
-        "Platform for blockchain-based games and digital collectibles.",
-      href: "https://www.dapperlabs.com/",
-      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.00.39%20PM.png",
-    },
-    {
-      title: "Aii",
-      description:
-        "Funds and scales industry proven solutions to reduce carbon emissions.",
-      href: "https://apparelimpact.org/",
-      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.07.45%20PM.png",
-    },
-    {
-      title: "Spindl",
-      description: "User attribution and growth platform for Web3",
-      href: "https://www.spindl.xyz/",
-      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.15.48%20PM.png",
-    },
-    {
-      title: "Certn",
-      description: "Background screening and verification platform",
-      href: "https://certn.co/",
-      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.11.12%20PM.png",
-    },
-    {
-      title: "Athena",
-      description: "Virtual assistants for founders, investors, and leaders",
-      href: "https://www.athena.com/",
-      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.14.10%20PM.png",
-    },
-  ];
-
-  const serviceItems = [
-    {
-      title: "Frontend Development",
-      emoji: "🎨",
-      href: "/frontend-development",
-    },
-    {
-      title: "Full Stack Development",
-      emoji: "⚡",
-      href: "/full-stack-development",
-    },
-    {
-      title: "Startup MVP Development",
-      emoji: "🚀",
-      href: "/startup-mvp-development",
-    },
-    {
-      title: "Search Engine Optimization",
-      emoji: "🔍",
-      href: "/seo",
-    },
-  ];
-
-  return (
-    <div
-      className={cn(
-        "fixed flex row justify-between items-center inset-x-0 mx-auto z-50 px-14 transition-all duration-200",
-        hasScrolled
-          ? "bg-black/80 backdrop-blur-sm border-b border-neutral-900"
-          : "bg-transparent border-b border-transparent",
-        className
-      )}
-    >
-      <div className="hidden lg:block">
-        <LogoWithText fill="#FFFFFF" />
-      </div>
-      <div className="block lg:hidden sm:w-1/4 lg:w-fit">
-        <LogoIcon id="logo-icon-tablet" />
-      </div>
-      <div
-        className={cn(
-          "top-10 inset-x-0 lg:mx-auto z-50 sm:w-fit lg:w-96",
-          className
-        )}
-      >
-        <Menu setActive={setActive}>
-          <MenuItem active={active} item="Services" setActive={setActive}>
-            <div className="flex md:p-2 lg:p-0 flex-col space-y-4 text-sm">
-              {serviceItems.map((item) => (
-                <HoveredLink href={item.href} key={item.href}>
-                  {item.emoji}
-                  {"  "}
-                  <span className="text-neutral-700 dark:text-neutral-200 hover:bg-gradient-to-r hover:from-indigo-300 hover:to-purple-300 hover:bg-clip-text hover:text-transparent dark:hover:from-indigo-500 dark:hover:to-purple-500">
-                    {item.title}
-                  </span>
-                </HoveredLink>
-              ))}
-            </div>
-          </MenuItem>
-          <MenuItem active={active} item="Portfolio" setActive={setActive}>
-            <div className="text-sm grid grid-cols-2 gap-6 lg:gap-10 p-4">
-              {menuPortfolioItems.map((item) => (
-                <ProductItem
-                  description={item.description}
-                  href={item.href}
-                  key={item.title}
-                  src={item.src}
-                  title={item.title}
-                />
-              ))}
-            </div>
-          </MenuItem>
-          <Link href="/#testimonials">
-            <MenuItem active={null} item="Testimonials" setActive={setActive} />
-          </Link>
-          <div className="block lg:hidden">
-            <button
-              className="relative inline-flex h-12 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit"
-              type="button"
-            >
-              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-4 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-                Lets Chat
-              </span>
-            </button>
-          </div>
-        </Menu>
-      </div>
-      <div className="hidden lg:block">
-        <button
-          className="relative inline-flex h-12 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit"
-          type="button"
-        >
-          <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-lg font-medium text-white backdrop-blur-3xl">
-            Lets Chat
-          </span>
-        </button>
-      </div>
-    </div>
-  );
-}
-
 const portfolio = [
   {
     title: "Coinbase",
@@ -545,11 +375,8 @@ const services = [
 export default function Page(): JSX.Element {
   return (
     <main className="px-8">
-      <div className="hidden md:block">
-        <NavbarComponent />
-      </div>
-      <div className="block md:hidden">
-        <MobileMenu />
+      <div className="hiddenmd:block">
+        <NavResponsive />
       </div>
       <DotBackground>
         <BackgroundBeamsWithCollision>
@@ -569,7 +396,7 @@ export default function Page(): JSX.Element {
           </div>
         </BackgroundBeamsWithCollision>
       </DotBackground>
-      <DotBackground>
+      <DotBackground id="portfolio">
         <div className="flex flex-col gap-4 items-center justify-start">
           <HeroHighlightPortfolio />
           <div className="grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 z-10">
@@ -581,13 +408,13 @@ export default function Page(): JSX.Element {
           </div>
         </div>
       </DotBackground>
-      <DotBackground>
+      <DotBackground id="testimonials">
         <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 items-center justify-start pt-24">
           <HeroHighlightTestimonials />
           <AnimatedTestimonialsDemo />
         </div>
       </DotBackground>
-      <DotBackground>
+      <DotBackground id="services">
         <div className="flex flex-col gap-4 items-center justify-start">
           <HeroHighlightServices />
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 items-center justify-start pt-8">

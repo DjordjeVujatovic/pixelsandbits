@@ -77,7 +77,7 @@ export function AnimatedTooltip({
                       damping: 10,
                     },
                   }}
-                  className="absolute -top-14 -left-1/2 translate-x-1/2 flex text-xs flex-col items-center justify-center rounded-md bg-black z-50 shadow-xl px-3 py-1.5"
+                  className="max-md:hidden flex absolute -top-14 -left-1/2 translate-x-1/2 text-xs flex-col items-center justify-center rounded-md bg-black z-50 shadow-xl px-3 py-1.5"
                   exit={{ opacity: 0, y: 20, scale: 0.6 }}
                   initial={{ opacity: 0, y: 20, scale: 0.6 }}
                   style={{
