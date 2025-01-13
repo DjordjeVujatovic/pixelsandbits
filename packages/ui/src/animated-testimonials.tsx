@@ -175,7 +175,7 @@ export function AnimatedTestimonials({
                 >
                   &ldquo;
                 </motion.span>
-                <span className="relative inline-block text-center">
+                <span className="relative inline-block text-center text-slate-400">
                   {testimonials[active].quote.split(" ").map((word, index) => (
                     <motion.span
                       animate={{

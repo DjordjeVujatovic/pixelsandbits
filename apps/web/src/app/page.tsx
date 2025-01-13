@@ -78,14 +78,14 @@ function MeteorsCard({
         <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-500 to-teal-500 transform scale-[0.80] rounded-full blur-3xl" />
         <div className="relative shadow-xl bg-black border border-gray-800 px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col">
           <div>{emoji ? <span className="text-4xl">{emoji}</span> : null}</div>
-          <div className="flex items-center gap-2 mb-4 relative">
+          <div className="flex items-center gap-2 my-4 relative">
             <h1 className="font-bold text-xl text-white">{title}</h1>
           </div>
 
-          <p className="font-normal text-base text-slate-500 mb-4 relative">
+          <p className="font-normal text-base text-slate-400 mb-4 relative">
             {description}
           </p>
-          <Meteors number={20} />
+          <Meteors number={50} />
         </div>
       </div>
     </div>
@@ -161,8 +161,7 @@ function HeroHighlightServices(): JSX.Element {
       segments={[
         { text: "We use" },
         { text: "the latest and greatest", highlight: true },
-        { text: "modern tools and technologies in our tech stack" },
-        { text: "for all of the services we offer" },
+        { text: "tools and technologies in our tech stack" },
         { text: "to build out" },
         { text: "beautiful products", highlight: true },
       ]}
@@ -184,7 +183,7 @@ function AnimatedPin(data: {
             {data.title}
           </h3>
           <div className="text-base !m-0 !p-0 font-normal">
-            <span className="text-slate-500 ">{data.description}</span>
+            <span className="text-slate-400 ">{data.description}</span>
           </div>
           <div className="flex flex-1 w-full rounded-lg mt-4 overflow-hidden">
             <Image

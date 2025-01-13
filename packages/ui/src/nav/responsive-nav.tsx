@@ -75,22 +75,22 @@ export function DesktopNavResponsive({
   const serviceItems = [
     {
       title: "Frontend Development",
-      emoji: "🎨",
+      emoji: "🎨 ",
       href: "#services",
     },
     {
       title: "Full Stack Development",
-      emoji: "⚡",
+      emoji: "⚡ ",
       href: "#services",
     },
     {
       title: "Startup MVP Development",
-      emoji: "🚀",
+      emoji: "🚀 ",
       href: "#services",
     },
     {
       title: "Search Engine Optimization",
-      emoji: "🔍",
+      emoji: "🔍 ",
       href: "#services",
     },
   ];
@@ -124,7 +124,7 @@ export function DesktopNavResponsive({
                 <HoveredLink href={item.href} key={item.href}>
                   {item.emoji}
                   {"  "}
-                  <span className="text-neutral-700 dark:text-neutral-200 hover:bg-gradient-to-r hover:from-indigo-300 hover:to-purple-300 hover:bg-clip-text hover:text-transparent dark:hover:from-indigo-500 dark:hover:to-purple-500">
+                  <span className="text-neutral-700 dark:text-neutral-200 hover:bg-gradient-to-r hover:from-[#14b8a6] hover:to-[#3b82f6] hover:bg-clip-text hover:text-transparent dark:hover:from-[#14b8a6] dark:hover:to-[#3b82f6]">
                     {item.title}
                   </span>
                 </HoveredLink>

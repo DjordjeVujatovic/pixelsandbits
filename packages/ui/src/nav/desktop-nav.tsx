@@ -103,7 +103,7 @@ export function ProductItem({
         />
       </div>
       <div>
-        <h4 className="text-base lg:text-xl font-bold mb-1 text-black dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 dark:group-hover:from-indigo-500 dark:group-hover:to-purple-500">
+        <h4 className="text-base lg:text-xl font-bold mb-1 text-black dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#14b8a6] group-hover:to-[#3b82f6] dark:group-hover:from-[#14b8a6] dark:group-hover:to-[#3b82f6]">
           {title}
         </h4>
         <p className="text-xs lg:text-sm text-neutral-700 max-w-[7rem] lg:max-w-[8rem] dark:text-neutral-300">
