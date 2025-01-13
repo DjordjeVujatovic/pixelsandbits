@@ -167,11 +167,11 @@ export function AnimatedTestimonials({
                 <motion.span
                   animate={{
                     opacity: 1,
-                    x: 0,
+                    x: -20,
                     y: [-2, 2, -2],
                     rotate: [-3, 0, -3],
                   }}
-                  className="text-4xl font-serif text-neutral-600 absolute -left-4 -top-4"
+                  className="text-4xl font-serif text-neutral-600 absolute -left-2 -top-2"
                   initial={{ opacity: 0, x: -20 }}
                   transition={{
                     opacity: {
@@ -226,7 +226,7 @@ export function AnimatedTestimonials({
                     y: [2, -2, 2],
                     rotate: [3, 0, 3],
                   }}
-                  className="text-body md:text-md-body lg:text-lg-body font-serif text-neutral-600 absolute right-6 -bottom-8"
+                  className="text-4xl font-serif text-neutral-600 absolute right-6 -bottom-8"
                   initial={{ opacity: 0, x: 20 }}
                   transition={{
                     opacity: {
