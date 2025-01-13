@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
 import { Card } from "@repo/ui/card";
+import { useEffect, useState } from "react";
 
 function Gradient({
   conic,
@@ -44,10 +46,27 @@ const LINKS = [
 ];
 
 export default function Page(): JSX.Element {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-24">
       <div className="z-10 items-center justify-between w-full max-w-5xl font-mono text-sm lg:flex">
-        <p className="fixed top-0 left-0 flex justify-center w-full px-4 pt-8 pb-6 border-b bg-gradient-to-b backdrop-blur-2xl border-neutral-800 bg-zinc-800/30 from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:bg-zinc-800/30">
+        <p
+          className={`fixed top-0 left-0 flex justify-center w-full px-4 pt-8 pb-6 border-b backdrop-blur-2xl border-neutral-800
+          ${scrolled ? "bg-black/75" : "bg-zinc-800/30"}
+          from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:bg-zinc-800/30`}
+        >
           examples/with-tailwind -&nbsp;
           <code className="font-mono font-bold">docs</code>
         </p>

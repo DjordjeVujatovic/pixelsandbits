@@ -12,15 +12,23 @@
     "./card": "./src/card.tsx",
     "./dot-background": "./src/dot-background.tsx",
     "./background-beams-with-collision": "./src/background-beams-with-collision.tsx",
-    "./hero-highlight-text": "./src/hero-highlight-text.tsx",
+    "./text-segment-highlighter": "./src/text-segment-highlighter/text-segment-highlighter.tsx",
     "./hover-border-gradient": "./src/hover-border-gradient.tsx",
     "./utils": "./lib/utils.ts",
     "./nav/mobile-nav": "./src/nav/mobile-nav.tsx",
-    "./nav/navbar-menu": "./src/nav/navbar-menu.tsx",
+    "./nav/desktop-nav": "./src/nav/desktop-nav.tsx",
+    "./nav/responsive-nav": "./src/nav/responsive-nav.tsx",
     "./button": "./src/button.tsx",
     "./logo/logo-with-text": "./src/logo/logo-with-text.tsx",
     "./logo/logo-text": "./src/logo/logo-text.tsx",
-    "./logo/logo-icon": "./src/logo/logo-icon.tsx"
+    "./logo/logo-icon": "./src/logo/logo-icon.tsx",
+    "./3d-pin": "./src/3d-pin.tsx",
+    "./background-gradient": "./src/background-gradient.tsx",
+    "./animated-testimonials": "./src/animated-testimonials.tsx",
+    "./meteor-card": "./src/meteor-card.tsx",
+    "./animated-tooltip": "./src/animated-tooltip.tsx",
+    "./warp-speed-cover": "./src/warp-speed-cover.tsx",
+    "./sparkles": "./src/sparkles.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -30,6 +38,7 @@
     "type-check": "tsc --noEmit"
   },
   "peerDependencies": {
+    "@types/react": "^18.2.61",
     "next": ">=13.0.0",
     "react": "^18.2.0"
   },
@@ -38,7 +47,6 @@
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/next": ">=9.0.0",
-    "@types/react": "^18.2.61",
     "@types/tailwindcss": "^3.1.0",
     "autoprefixer": "^10.4.18",
     "postcss": "^8.4.35",
@@ -48,11 +56,16 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.1",
     "@tabler/icons-react": "^3.26.0",
+    "@tsparticles/engine": "^3.7.1",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.7.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "config": "link:tailwindcss/types/config",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
     "mini-svg-data-uri": "^1.4.4",
+    "react-icons": "^5.4.0",
     "tailwind-merge": "^2.6.0"
   }
 }

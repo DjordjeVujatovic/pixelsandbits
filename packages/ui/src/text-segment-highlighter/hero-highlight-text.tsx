@@ -1,7 +1,12 @@
 "use client";
-import { useMotionValue, motion, useMotionTemplate } from "framer-motion";
-import React from "react";
-import { cn } from "../lib/utils";
+import {
+  useMotionValue,
+  motion,
+  useMotionTemplate,
+  useInView,
+} from "framer-motion";
+import React, { useRef } from "react";
+import { cn } from "../../lib/utils";
 
 export function HeroHighlight({
   children,
@@ -33,9 +38,9 @@ export function HeroHighlight({
       )}
       onMouseMove={handleMouseMove}
     >
-      <div className="absolute inset-0 bg-dot-thick-neutral-300 dark:bg-dot-thick-neutral-800  pointer-events-none" />
+      <div className="absolute inset-0 bg-dot-thick-neutral-800 pointer-events-none" />
       <motion.div
-        className="pointer-events-none bg-dot-thick-indigo-500 dark:bg-dot-thick-indigo-500   absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
+        className="pointer-events-none bg-dot-thick-indigo-500 absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
           WebkitMaskImage: useMotionTemplate`
             radial-gradient(
@@ -66,18 +71,28 @@ export function Highlight({
   children: React.ReactNode;
   className?: string;
 }): JSX.Element {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
   return (
     <motion.span
-      animate={{
-        backgroundSize: "100% 100%",
-      }}
+      animate={
+        isInView
+          ? {
+              backgroundSize: "100% 100%",
+            }
+          : {
+              backgroundSize: "0% 100%",
+            }
+      }
       className={cn(
-        `relative inline-block pb-1 px-2 md:px-4 rounded-lg bg-gradient-to-r from-indigo-300 to-purple-300 dark:from-indigo-500 dark:to-purple-500`,
+        `relative inline-block pb-1 px-2 md:px-4 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500`,
         className
       )}
       initial={{
         backgroundSize: "0% 100%",
       }}
+      ref={ref}
       style={{
         backgroundRepeat: "no-repeat",
         backgroundPosition: "left center",

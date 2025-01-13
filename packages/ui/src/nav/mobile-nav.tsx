@@ -54,7 +54,19 @@ export function HamburgerMenu({
 
 export function MobileMenu(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -72,7 +84,7 @@ export function MobileMenu(): JSX.Element {
 
   return (
     <header className="fixed top-0 left-0 right-0  z-50">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center bg-white dark:bg-black">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center bg-black">
         <LogoIcon />
         <Button
           aria-controls="mobile-menu"
@@ -86,7 +98,11 @@ export function MobileMenu(): JSX.Element {
         </Button>
       </div>
       <div
-        className="absolute top-full left-0 right-0 bg-background border-b border-black/[0.2] dark:border-white/[0.2] bg-black overflow-hidden transition-[max-height] duration-300 ease-in-out"
+        className={`absolute top-full left-0 right-0 bg-background bg-black overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+          hasScrolled
+            ? "border-b border-white/[0.2]"
+            : "border-b border-white/0"
+        }`}
         id="mobile-menu"
         ref={menuRef}
         style={{ maxHeight: "0px" }}
@@ -94,7 +110,7 @@ export function MobileMenu(): JSX.Element {
         <nav
           className={`animate-fade-in ${isOpen ? "opacity-100" : "opacity-0"}`}
         >
-          <ul className="container mx-auto px-4 py-2 space-y-1">
+          <ul className="container mx-auto px-4 pt-2 pb-4 space-y-1 flex flex-col items-center justify-center gap-2">
             <li>
               <Button asChild className="w-full justify-center" variant="ghost">
                 <a href="/">Home</a>
@@ -102,19 +118,28 @@ export function MobileMenu(): JSX.Element {
             </li>
             <li>
               <Button asChild className="w-full justify-center" variant="ghost">
-                <a href="/about">About</a>
+                <a href="#portfolio">Portfolio</a>
               </Button>
             </li>
             <li>
               <Button asChild className="w-full justify-center" variant="ghost">
-                <a href="/services">Services</a>
+                <a href="#services">Services</a>
               </Button>
             </li>
             <li>
               <Button asChild className="w-full justify-center" variant="ghost">
-                <a href="/contact">Contact</a>
+                <a href="#testimonials ">Testimonials</a>
               </Button>
             </li>
+            <button
+              className="relative inline-flex h-10 overflow-hidden rounded-[9999px] p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit transform-gpu"
+              type="button"
+            >
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] rounded-[9999px] will-change-transform" />
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-[9999px] bg-slate-950 px-4 py-1 text-body-md md:text-md-body-md lg:text-lg-body-md font-medium text-white backdrop-blur-3xl isolate">
+                Lets Chat
+              </span>
+            </button>
           </ul>
         </nav>
       </div>
