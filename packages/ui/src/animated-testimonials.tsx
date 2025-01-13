@@ -94,10 +94,10 @@ export function AnimatedTestimonials({
                           width={150}
                         />
                         <div className="flex flex-col text-center md:text-left">
-                          <h3 className="text-2xl font-bold dark:text-white text-black">
+                          <h3 className="text-2xl font-bold text-white">
                             {testimonials[active].name}
                           </h3>
-                          <p className="text-sm text-gray-500 dark:text-neutral-500">
+                          <p className="text-sm text-neutral-500">
                             {testimonials[active].designation}
                           </p>
                         </div>
@@ -109,16 +109,16 @@ export function AnimatedTestimonials({
             </div>
             <div className="flex gap-4 mt-4 justify-center">
               <button
-                className="h-7 w-7 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center group/button"
+                className="h-7 w-7 rounded-full bg-neutral-800 flex items-center justify-center group/button"
                 onClick={handlePrev}
               >
-                <IconArrowLeft className="h-5 w-5 text-black dark:text-neutral-400 group-hover/button:rotate-12 transition-transform duration-300" />
+                <IconArrowLeft className="h-5 w-5 text-neutral-400 group-hover/button:rotate-12 transition-transform duration-300" />
               </button>
               <button
-                className="h-7 w-7 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center group/button"
+                className="h-7 w-7 rounded-full bg-neutral-800 flex items-center justify-center group/button"
                 onClick={handleNext}
               >
-                <IconArrowRight className="h-5 w-5 text-black dark:text-neutral-400 group-hover/button:-rotate-12 transition-transform duration-300" />
+                <IconArrowRight className="h-5 w-5 text-neutral-400 group-hover/button:-rotate-12 transition-transform duration-300" />
               </button>
             </div>
           </div>
@@ -144,7 +144,7 @@ export function AnimatedTestimonials({
                 ease: "easeInOut",
               }}
             >
-              <motion.p className="text-sm text-center md:text-left text-gray-500 mt-8 dark:text-neutral-300 relative">
+              <motion.p className="text-sm text-center md:text-left text-neutral-300 mt-8 relative">
                 <motion.span
                   animate={{
                     opacity: 1,
@@ -152,7 +152,7 @@ export function AnimatedTestimonials({
                     y: [-2, 2, -2],
                     rotate: [-3, 0, -3],
                   }}
-                  className="text-4xl font-serif text-gray-300 dark:text-neutral-600 absolute -left-4 -top-4"
+                  className="text-4xl font-serif text-neutral-600 absolute -left-4 -top-4"
                   initial={{ opacity: 0, x: -20 }}
                   transition={{
                     opacity: {
@@ -207,7 +207,7 @@ export function AnimatedTestimonials({
                     y: [2, -2, 2],
                     rotate: [3, 0, 3],
                   }}
-                  className="text-body md:text-md-body lg:text-lg-body font-serif text-gray-300 dark:text-neutral-600 absolute right-6 -bottom-8"
+                  className="text-body md:text-md-body lg:text-lg-body font-serif text-neutral-600 absolute right-6 -bottom-8"
                   initial={{ opacity: 0, x: 20 }}
                   transition={{
                     opacity: {

@@ -72,7 +72,7 @@ export function MobileMenu(): JSX.Element {
 
   return (
     <header className="fixed top-0 left-0 right-0  z-50">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center bg-white dark:bg-black">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center bg-black">
         <LogoIcon />
         <Button
           aria-controls="mobile-menu"
@@ -86,7 +86,7 @@ export function MobileMenu(): JSX.Element {
         </Button>
       </div>
       <div
-        className="absolute top-full left-0 right-0 bg-background border-b border-black/[0.2] dark:border-white/[0.2] bg-black overflow-hidden transition-[max-height] duration-300 ease-in-out"
+        className="absolute top-full left-0 right-0 bg-background border-b border-white/[0.2] bg-black overflow-hidden transition-[max-height] duration-300 ease-in-out"
         id="mobile-menu"
         ref={menuRef}
         style={{ maxHeight: "0px" }}

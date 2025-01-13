@@ -32,7 +32,7 @@ export function MenuItem({
       }}
     >
       <motion.p
-        className="cursor-pointer text-sm lg:text-base text-black hover:opacity-[0.9] dark:text-white"
+        className="cursor-pointer text-sm lg:text-base text-white hover:opacity-[0.9]"
         transition={{ duration: 0.3 }}
       >
         {item}
@@ -46,7 +46,7 @@ export function MenuItem({
           {active === item && (
             <div className="absolute top-[calc(100%_+_1.25rem)] left-1/2 transform -translate-x-1/2 pt-3 lg:pt-4">
               <motion.div
-                className="bg-white dark:bg-black backdrop-blur-sm rounded-xl lg:rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl"
+                className="bg-black backdrop-blur-sm rounded-xl lg:rounded-2xl overflow-hidden border border-white/[0.2] shadow-xl"
                 layoutId="active"
                 transition={transition}
               >
@@ -71,7 +71,7 @@ export function Menu({
 }): JSX.Element {
   return (
     <nav
-      className="relative lg:right-16 rounded-full border border-transparent dark:bg-black dark:border-white/[0.2] bg-white shadow-input flex justify-center items-center space-x-4 lg:space-x-6 px-6 py-4 lg:px-8 lg:py-6 "
+      className="relative lg:right-16 rounded-full border border-white/[0.2] bg-black flex justify-center items-center space-x-4 lg:space-x-6 px-6 py-4 lg:px-8 lg:py-6"
       onMouseLeave={() => {
         setActive(null);
       }}
@@ -103,10 +103,10 @@ export function ProductItem({
         />
       </div>
       <div>
-        <h4 className="text-base lg:text-xl font-bold mb-1 text-black dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#14b8a6] group-hover:to-[#3b82f6] dark:group-hover:from-[#14b8a6] dark:group-hover:to-[#3b82f6]">
+        <h4 className="text-base lg:text-xl font-bold mb-1 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#14b8a6] group-hover:to-[#3b82f6]">
           {title}
         </h4>
-        <p className="text-xs lg:text-sm text-neutral-700 max-w-[7rem] lg:max-w-[8rem] dark:text-neutral-300">
+        <p className="text-xs lg:text-sm text-neutral-300 max-w-[7rem] lg:max-w-[8rem]">
           {description}
         </p>
       </div>
@@ -123,7 +123,7 @@ export function HoveredLink({
   className?: string;
 }): JSX.Element {
   return (
-    <Link {...rest} className="text-neutral-700 dark:text-neutral-200">
+    <Link {...rest} className="text-neutral-200">
       {children}
     </Link>
   );
