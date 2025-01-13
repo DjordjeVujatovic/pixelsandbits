@@ -19,7 +19,7 @@ export function AnimatedTestimonials({
 }: {
   testimonials: Testimonial[];
   autoplay?: boolean;
-}) {
+}): JSX.Element {
   const [active, setActive] = useState(0);
 
   const handleNext = () => {
@@ -207,7 +207,7 @@ export function AnimatedTestimonials({
                     y: [2, -2, 2],
                     rotate: [3, 0, 3],
                   }}
-                  className="text-4xl font-serif text-gray-300 dark:text-neutral-600 absolute right-6 -bottom-8"
+                  className="text-body md:text-md-body lg:text-lg-body font-serif text-gray-300 dark:text-neutral-600 absolute right-6 -bottom-8"
                   initial={{ opacity: 0, x: 20 }}
                   transition={{
                     opacity: {

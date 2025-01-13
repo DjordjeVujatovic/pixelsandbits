@@ -154,7 +154,7 @@ export function AnimatedTooltip({
                     }}
                   >
                     <item.icon
-                      className="object-cover cursor-pointer !m-0 !p-0 object-top h-[22px] w-[22px] lg:h-[55px] lg:w-[55px] border-neutral-700 relative transition duration-500"
+                      className="object-cover cursor-pointer !m-0 !p-0 object-top h-[30px] w-[25px] lg:h-[55px] lg:w-[55px] border-neutral-700 relative transition duration-500"
                       style={{
                         fill:
                           hoveredIndex === item.id

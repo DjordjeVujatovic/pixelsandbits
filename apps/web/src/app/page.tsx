@@ -20,7 +20,7 @@ import {
 
 function CallToActionFooter(): JSX.Element {
   return (
-    <div className="h-[25rem] relative w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+    <div className="h-[30rem] lg:h-[35rem] relative w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
       <div className="w-full absolute inset-0 h-screen">
         <div className="relative w-full h-full">
           <SparklesCore
@@ -35,14 +35,14 @@ function CallToActionFooter(): JSX.Element {
         </div>
       </div>
       <WarpSpeedCoverComponent />
-      <div className="flex flex-col gap-4 items-center justify-center pt-4">
+      <div className="flex flex-col gap-4 items-center justify-center pt-8">
         <button
-          className="relative inline-flex h-16 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit"
+          className="relative inline-flex h-16 lg:h-20 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit"
           type="button"
         >
-          <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#14B8A6_0%,#0F766E_50%,#14B8A6_100%)]" />
-          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-lg font-medium text-white backdrop-blur-3xl">
-            Book a call with us today
+          <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-12 py-1 text-heading-4 md:text-md-heading-4 lg:text-lg-heading-4 font-medium text-white backdrop-blur-3xl">
+            Book a Call With Us Today
           </span>
         </button>
       </div>
@@ -53,8 +53,8 @@ function CallToActionFooter(): JSX.Element {
 function WarpSpeedCoverComponent(): JSX.Element {
   return (
     <div>
-      <h1 className="text-3xl md:text-4xl lg:text-[8rem] font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white">
-        Lets work together and well help you <br /> build your products at{" "}
+      <h1 className="text-heading-1 md:text-md-heading-1 lg:text-lg-heading-1 font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white">
+        Lets work together and well help you <br /> ship your products at{" "}
         <WarpSpeedCover>warp speed</WarpSpeedCover>
       </h1>
     </div>
@@ -79,10 +79,12 @@ function MeteorsCard({
         <div className="relative shadow-xl bg-black border border-gray-800 px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col">
           <div>{emoji ? <span className="text-4xl">{emoji}</span> : null}</div>
           <div className="flex items-center gap-2 my-4 relative">
-            <h1 className="font-bold text-xl text-white">{title}</h1>
+            <h2 className="text-heading-3 md:text-md-heading-3 font-bold text-white">
+              {title}
+            </h2>
           </div>
 
-          <p className="font-normal text-base text-slate-400 mb-4 relative">
+          <p className="text-body md:text-body lg:text-lg-body text-slate-400 mb-4 relative">
             {description}
           </p>
           <Meteors number={50} />
@@ -99,10 +101,10 @@ function AnimatedTestimonialsComponent(): JSX.Element {
 function HeroHighlightComponent(): JSX.Element {
   return (
     <TextSegmentHighlighter
-      className="text-[1.75rem] md:text-[2.5rem] lg:text-[3rem] my-4"
+      className="text-heading-1 md:text-md-heading-1 lg:text-lg-heading-1 my-4"
       segments={[
         {
-          text: "Beautiful products delivered at warp speed with percision down to the",
+          text: "Beautiful products delivered at the speed of light with percision down to the",
         },
         {
           text: "Pixels & Bits",
@@ -117,7 +119,7 @@ function HeroHighlightComponent(): JSX.Element {
 function HeroHighlightPortfolio(): JSX.Element {
   return (
     <TextSegmentHighlighter
-      className="text-[1.35rem] md:text-[1.75rem] lg:text-[2rem] my-8"
+      className="text-heading-3 md:text-md-heading-3 lg:text-lg-heading-3 my-8"
       segments={[
         {
           text: "We have worked with many",
@@ -143,7 +145,7 @@ function HeroHighlightPortfolio(): JSX.Element {
 function HeroHighlightTestimonials(): JSX.Element {
   return (
     <TextSegmentHighlighter
-      className="text-[1.35rem] md:text-[1.75rem] lg:text-[2rem] my-8 text-center lg:text-left md:relative md:bottom-20 max-w-2xl"
+      className="text-heading-3 md:text-md-heading-3 lg:text-lg-heading-3 my-8 text-center lg:text-left md:relative md:bottom-20 max-w-2xl"
       segments={[
         {
           text: "Our clients have",
@@ -169,7 +171,7 @@ function HeroHighlightTestimonials(): JSX.Element {
 function HeroHighlightServices(): JSX.Element {
   return (
     <TextSegmentHighlighter
-      className="text-[1.35rem] md:text-[1.75rem] lg:text-[2rem] my-8"
+      className="text-heading-3 md:text-md-heading-3 lg:text-lg-heading-3 my-8"
       segments={[
         { text: "We use" },
         {
@@ -199,11 +201,13 @@ function AnimatedPin(data: {
     <div className="h-[26rem] w-full flex items-center justify-center">
       <PinContainer href={data.href} title={data.title}>
         <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[24rem]">
-          <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">
+          <h3 className="max-w-xs !pb-2 !m-0 font-bold text-heading-4 md:text-md-heading-4 lg:text-lg-heading-4 text-slate-100">
             {data.title}
           </h3>
           <div className="text-base !m-0 !p-0 font-normal">
-            <span className="text-slate-400 ">{data.description}</span>
+            <span className="text-slate-400 text-body md:text-md-body lg:text-lg-body">
+              {data.description}
+            </span>
           </div>
           <div className="flex flex-1 w-full rounded-lg mt-4 overflow-hidden">
             <Image
@@ -233,12 +237,12 @@ export default function Page(): JSX.Element {
             <HeroHighlightComponent />
             <div className="flex flex-col gap-4 items-center justify-center pt-8">
               <button
-                className="relative inline-flex h-16 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit"
+                className="relative inline-flex h-16 lg:h-20 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit"
                 type="button"
               >
                 <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-lg font-medium text-white backdrop-blur-3xl">
-                  Book a call with us today
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-12 py-1 text-heading-4 md:text-md-heading-4 lg:text-lg-heading-4 font-medium text-white backdrop-blur-3xl">
+                  Book a Call With Us Today
                 </span>
               </button>
             </div>

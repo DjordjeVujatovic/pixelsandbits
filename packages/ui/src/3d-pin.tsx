@@ -72,13 +72,12 @@ export function PinPerspective({
     setIsMounted(true);
   }, []);
 
-  // Only render the motion components after client-side hydration
   if (!isMounted) {
     return null;
   }
 
   return (
-    <motion.div className="pointer-events-none w-96 h-80 flex items-center justify-center opacity-0 group-hover/pin:opacity-100 z-[60] transition duration-500">
+    <motion.div className="pointer-events-none w-96 h-80 flex items-center justify-center opacity-0 group-hover/pin:opacity-100 z-[60] transition duration-500 hidden md:flex">
       <div
         className="w-full h-full -mt-7 flex-none inset-0"
         suppressHydrationWarning
@@ -90,7 +89,7 @@ export function PinPerspective({
             rel="noopener"
             target="_blank"
           >
-            <span className="relative z-20 text-white text-xs font-bold inline-block py-0.5">
+            <span className="relative z-20 text-white text-body-small md:text-md-body lg:text-lg-body font-bold inline-block py-0.5">
               {title}
             </span>
 
