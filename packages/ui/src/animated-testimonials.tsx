@@ -84,16 +84,16 @@ export function AnimatedTestimonials({
                     }}
                   >
                     <BackgroundGradient>
-                      <div className="h-[250px] w-full bg-gradient-to-r from-black to-neutral-900 flex flex-row items-center rounded-3xl object-cover object-center brightness-70 p-4 gap-6">
+                      <div className="h-[250px] w-full bg-gradient-to-r from-black to-neutral-900 flex flex-col md:flex-row items-center rounded-3xl object-cover object-center brightness-70 p-4 gap-6">
                         <Image
                           alt={testimonial.name}
-                          className="rounded-full object-cover object-center brightness-65 border-2 border-gray-800"
+                          className="rounded-full object-cover object-center brightness-65 border-2 border-gray-800 h-[125px] w-[125px] md:h-[150px] md:w-[150px]"
                           draggable={false}
                           height={150}
                           src={testimonial.src}
                           width={150}
                         />
-                        <div className="flex flex-col items-start justify-start">
+                        <div className="flex flex-col text-center md:text-left">
                           <h3 className="text-2xl font-bold dark:text-white text-black">
                             {testimonials[active].name}
                           </h3>

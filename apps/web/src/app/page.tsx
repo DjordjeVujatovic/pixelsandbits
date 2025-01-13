@@ -99,11 +99,16 @@ function AnimatedTestimonialsComponent(): JSX.Element {
 function HeroHighlightComponent(): JSX.Element {
   return (
     <TextSegmentHighlighter
+      className="text-[1.75rem] md:text-[2.5rem] lg:text-[3rem] my-4"
       segments={[
         {
           text: "Beautiful products delivered at warp speed with percision down to the",
         },
-        { text: "Pixels & Bits", highlight: true },
+        {
+          text: "Pixels & Bits",
+          highlight: true,
+          className: "whitespace-nowrap md:whitespace-normal",
+        },
       ]}
     />
   );
@@ -112,7 +117,7 @@ function HeroHighlightComponent(): JSX.Element {
 function HeroHighlightPortfolio(): JSX.Element {
   return (
     <TextSegmentHighlighter
-      className="text-3xl my-8"
+      className="text-[1.35rem] md:text-[1.75rem] lg:text-[2rem] my-8"
       segments={[
         {
           text: "We have worked with many",
@@ -120,11 +125,16 @@ function HeroHighlightPortfolio(): JSX.Element {
         {
           text: "world class clients",
           highlight: true,
+          className: "whitespace-nowrap md:whitespace-normal",
         },
         {
           text: "and build their products out from",
         },
-        { text: "Ideation to Launch", highlight: true },
+        {
+          text: "Ideation to Launch",
+          highlight: true,
+          className: "whitespace-nowrap md:whitespace-normal",
+        },
       ]}
     />
   );
@@ -133,7 +143,7 @@ function HeroHighlightPortfolio(): JSX.Element {
 function HeroHighlightTestimonials(): JSX.Element {
   return (
     <TextSegmentHighlighter
-      className="text-3xl my-8 text-center lg:text-left md:relative md:bottom-20 max-w-2xl"
+      className="text-[1.35rem] md:text-[1.75rem] lg:text-[2rem] my-8 text-center lg:text-left md:relative md:bottom-20 max-w-2xl"
       segments={[
         {
           text: "Our clients have",
@@ -141,13 +151,15 @@ function HeroHighlightTestimonials(): JSX.Element {
         {
           text: "loved working with us",
           highlight: true,
+          className: "whitespace-nowrap md:whitespace-normal",
         },
         {
-          text: "in the past and heres what they have to say",
+          text: "and heres what they have to say",
         },
         {
           text: "about our work",
           highlight: true,
+          className: "whitespace-nowrap md:whitespace-normal",
         },
       ]}
     />
@@ -157,13 +169,21 @@ function HeroHighlightTestimonials(): JSX.Element {
 function HeroHighlightServices(): JSX.Element {
   return (
     <TextSegmentHighlighter
-      className="text-3xl my-8"
+      className="text-[1.35rem] md:text-[1.75rem] lg:text-[2rem] my-8"
       segments={[
         { text: "We use" },
-        { text: "the latest and greatest", highlight: true },
+        {
+          text: "the latest and greatest",
+          highlight: true,
+          className: "whitespace-nowrap md:whitespace-normal",
+        },
         { text: "tools and technologies in our tech stack" },
         { text: "to build out" },
-        { text: "beautiful products", highlight: true },
+        {
+          text: "beautiful products",
+          highlight: true,
+          className: "whitespace-nowrap md:whitespace-normal",
+        },
       ]}
     />
   );
