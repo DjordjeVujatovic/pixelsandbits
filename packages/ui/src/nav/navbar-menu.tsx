@@ -93,7 +93,7 @@ export function ProductItem({
   src: string;
 }): JSX.Element {
   return (
-    <Link className="flex space-x-2 h-full" href={href}>
+    <Link className="flex space-x-2 h-full group" href={href}>
       <div className="w-[100px] lg:w-[140px] h-full relative flex-shrink-0">
         <Image
           alt={title}
@@ -103,7 +103,7 @@ export function ProductItem({
         />
       </div>
       <div>
-        <h4 className="text-base lg:text-xl font-bold mb-1 text-black dark:text-white">
+        <h4 className="text-base lg:text-xl font-bold mb-1 text-black dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 dark:group-hover:from-indigo-500 dark:group-hover:to-purple-500">
           {title}
         </h4>
         <p className="text-xs lg:text-sm text-neutral-700 max-w-[7rem] lg:max-w-[8rem] dark:text-neutral-300">
@@ -123,10 +123,7 @@ export function HoveredLink({
   className?: string;
 }): JSX.Element {
   return (
-    <Link
-      {...rest}
-      className="text-neutral-700 dark:text-neutral-200 hover:text-black"
-    >
+    <Link {...rest} className="text-neutral-700 dark:text-neutral-200">
       {children}
     </Link>
   );

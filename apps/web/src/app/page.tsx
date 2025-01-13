@@ -304,6 +304,70 @@ function Navbar({ className }: { className?: string }): JSX.Element {
     };
   }, []);
 
+  const menuPortfolioItems = [
+    {
+      title: "Coinbase",
+      description: "Platform for buying, selling, and storing crypto.",
+      href: "https://www.coinbase.com/",
+      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%209.50.20%20PM.png",
+    },
+    {
+      title: "Dapper Labs",
+      description:
+        "Platform for blockchain-based games and digital collectibles.",
+      href: "https://www.dapperlabs.com/",
+      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.00.39%20PM.png",
+    },
+    {
+      title: "Aii",
+      description:
+        "Funds and scales industry proven solutions to reduce carbon emissions.",
+      href: "https://apparelimpact.org/",
+      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.07.45%20PM.png",
+    },
+    {
+      title: "Spindl",
+      description: "User attribution and growth platform for Web3",
+      href: "https://www.spindl.xyz/",
+      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.15.48%20PM.png",
+    },
+    {
+      title: "Certn",
+      description: "Background screening and verification platform",
+      href: "https://certn.co/",
+      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.11.12%20PM.png",
+    },
+    {
+      title: "Athena",
+      description: "Virtual assistants for founders, investors, and leaders",
+      href: "https://www.athena.com/",
+      src: "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.14.10%20PM.png",
+    },
+  ];
+
+  const serviceItems = [
+    {
+      title: "Frontend Development",
+      emoji: "🎨",
+      href: "/frontend-development",
+    },
+    {
+      title: "Full Stack Development",
+      emoji: "⚡",
+      href: "/full-stack-development",
+    },
+    {
+      title: "Startup MVP Development",
+      emoji: "🚀",
+      href: "/startup-mvp-development",
+    },
+    {
+      title: "Search Engine Optimization",
+      emoji: "🔍",
+      href: "/seo",
+    },
+  ];
+
   return (
     <div
       className={cn(
@@ -329,58 +393,28 @@ function Navbar({ className }: { className?: string }): JSX.Element {
         <Menu setActive={setActive}>
           <MenuItem active={active} item="Services" setActive={setActive}>
             <div className="flex md:p-2 lg:p-0 flex-col space-y-4 text-sm">
-              <HoveredLink href="/frontend-development">
-                🎨{"  "}Frontend Development
-              </HoveredLink>
-              <HoveredLink href="/full-stack-development">
-                ⚡{"  "}Full Stack Development
-              </HoveredLink>
-              <HoveredLink href="/startup-mvp-development">
-                🚀{"  "}Startup MVP Development
-              </HoveredLink>
-              <HoveredLink href="/seo">
-                🔍{"  "}Search Engine Optimization
-              </HoveredLink>
+              {serviceItems.map((item) => (
+                <HoveredLink href={item.href} key={item.href}>
+                  {item.emoji}
+                  {"  "}
+                  <span className="text-neutral-700 dark:text-neutral-200 hover:bg-gradient-to-r hover:from-indigo-300 hover:to-purple-300 hover:bg-clip-text hover:text-transparent dark:hover:from-indigo-500 dark:hover:to-purple-500">
+                    {item.title}
+                  </span>
+                </HoveredLink>
+              ))}
             </div>
           </MenuItem>
           <MenuItem active={active} item="Portfolio" setActive={setActive}>
             <div className="text-sm grid grid-cols-2 gap-6 lg:gap-10 p-4">
-              <ProductItem
-                description="Platform for buying, selling, and storing crypto."
-                href="https://www.coinbase.com/"
-                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%209.50.20%20PM.png"
-                title="Coinbase"
-              />
-              <ProductItem
-                description="Platform for blockchain-based games and digital collectibles."
-                href="https://www.dapperlabs.com/"
-                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.00.39%20PM.png"
-                title="Dapper Labs"
-              />
-              <ProductItem
-                description="Funds and scales industry proven solutions to reduce carbon emissions."
-                href="https://apparelimpact.org/"
-                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.07.45%20PM.png"
-                title="Aii"
-              />
-              <ProductItem
-                description="User attribution and growth platform for Web3"
-                href="https://www.spindl.xyz/"
-                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.15.48%20PM.png"
-                title="Spindl"
-              />
-              <ProductItem
-                description="Background screening and verification platform"
-                href="https://certn.co/"
-                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.11.12%20PM.png"
-                title="Certn"
-              />
-              <ProductItem
-                description="Virtual assistants for founders, investors, and leaders"
-                href="https://www.athena.com/"
-                src="https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.14.10%20PM.png"
-                title="Athena"
-              />
+              {menuPortfolioItems.map((item) => (
+                <ProductItem
+                  description={item.description}
+                  href={item.href}
+                  key={item.title}
+                  src={item.src}
+                  title={item.title}
+                />
+              ))}
             </div>
           </MenuItem>
           <Link href="/#testimonials">
