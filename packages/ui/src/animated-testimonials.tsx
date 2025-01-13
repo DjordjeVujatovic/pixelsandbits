@@ -106,7 +106,7 @@ export function AnimatedTestimonials({
                       <div className="h-[250px] w-full bg-gradient-to-r from-black to-neutral-900 flex flex-col md:flex-row items-center rounded-3xl object-cover object-center brightness-70 p-4 gap-6">
                         <Image
                           alt={testimonial.name}
-                          className="rounded-full object-cover object-center brightness-75 border-2 border-gray-800 h-[125px] w-[125px] md:h-[150px] md:w-[150px]"
+                          className="rounded-full object-cover object-center brightness-75 border-2 border-gray-800 h-[125px] w-[125px] md:h-[140px] md:w-[140px] xl:h-[150px] xl:w-[150px]"
                           draggable={false}
                           height={150}
                           src={testimonial.src}

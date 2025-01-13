@@ -54,7 +54,19 @@ export function HamburgerMenu({
 
 export function MobileMenu(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -86,7 +98,11 @@ export function MobileMenu(): JSX.Element {
         </Button>
       </div>
       <div
-        className="absolute top-full left-0 right-0 bg-background border-b border-white/[0.2] bg-black overflow-hidden transition-[max-height] duration-300 ease-in-out"
+        className={`absolute top-full left-0 right-0 bg-background bg-black overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+          hasScrolled
+            ? "border-b border-white/[0.2]"
+            : "border-b border-white/0"
+        }`}
         id="mobile-menu"
         ref={menuRef}
         style={{ maxHeight: "0px" }}
