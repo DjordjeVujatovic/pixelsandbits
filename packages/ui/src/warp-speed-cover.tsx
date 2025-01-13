@@ -74,7 +74,7 @@ export function WarpSpeedCover({
                 className="w-full h-full"
                 maxSize={1}
                 minSize={0.4}
-                particleColor="#FFFFFF"
+                particleColor="rgba(20, 184, 166, 1)"
                 particleDensity={500}
               />
               <SparklesCore
@@ -82,7 +82,7 @@ export function WarpSpeedCover({
                 className="w-full h-full"
                 maxSize={1}
                 minSize={0.4}
-                particleColor="#FFFFFF"
+                particleColor="rgba(20, 184, 166, 1)"
                 particleDensity={500}
               />
             </motion.div>
