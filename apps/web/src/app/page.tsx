@@ -199,7 +199,11 @@ function AnimatedPin(data: {
 }): JSX.Element {
   return (
     <div className="h-[26rem] w-full flex items-center justify-center">
-      <PinContainer href={data.href} title={data.title}>
+      <PinContainer
+        className="md:hover:animate-tilt"
+        href={data.href}
+        title={data.title}
+      >
         <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[24rem]">
           <h3 className="max-w-xs !pb-2 !m-0 font-bold text-heading-4 md:text-md-heading-4 lg:text-lg-heading-4 text-slate-100">
             {data.title}

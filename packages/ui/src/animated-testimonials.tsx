@@ -1,7 +1,7 @@
 // "use client";
 
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BackgroundGradient } from "./background-gradient";
@@ -21,6 +21,7 @@ export function AnimatedTestimonials({
   autoplay?: boolean;
 }): JSX.Element {
   const [active, setActive] = useState(0);
+  const controls = useAnimation();
 
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -47,6 +48,20 @@ export function AnimatedTestimonials({
     return Math.floor(Math.random() * 21) - 10;
   };
 
+  const handleDragEnd = (event: any, info: any) => {
+    // Only handle swipes on mobile viewport
+    if (window.innerWidth > 768) return;
+
+    const swipeThreshold = 50;
+    const { offset } = info;
+
+    if (offset.x < -swipeThreshold) {
+      handleNext();
+    } else if (offset.x > swipeThreshold) {
+      handlePrev();
+    }
+  };
+
   return (
     <div className="w-full px-4 2xl:pt-20 pb-10">
       <div className="container mx-auto max-w-4xl">
@@ -65,6 +80,9 @@ export function AnimatedTestimonials({
                       y: isActive(index) ? [0, -80, 0] : 0,
                     }}
                     className="absolute inset-0 origin-bottom"
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
                     exit={{
                       opacity: 0,
                       scale: 0.9,
@@ -78,6 +96,7 @@ export function AnimatedTestimonials({
                       rotate: randomRotateY(),
                     }}
                     key={testimonial.src}
+                    onDragEnd={handleDragEnd}
                     transition={{
                       duration: 0.4,
                       ease: "easeInOut",
@@ -109,13 +128,13 @@ export function AnimatedTestimonials({
             </div>
             <div className="flex gap-4 mt-4 justify-center">
               <button
-                className="h-7 w-7 rounded-full bg-neutral-800 flex items-center justify-center group/button"
+                className="hidden md:flex h-7 w-7 rounded-full bg-neutral-800 items-center justify-center group/button"
                 onClick={handlePrev}
               >
                 <IconArrowLeft className="h-5 w-5 text-neutral-400 group-hover/button:rotate-12 transition-transform duration-300" />
               </button>
               <button
-                className="h-7 w-7 rounded-full bg-neutral-800 flex items-center justify-center group/button"
+                className="hidden md:flex h-7 w-7 rounded-full bg-neutral-800 items-center justify-center group/button"
                 onClick={handleNext}
               >
                 <IconArrowRight className="h-5 w-5 text-neutral-400 group-hover/button:-rotate-12 transition-transform duration-300" />
