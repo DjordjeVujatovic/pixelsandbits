@@ -11,6 +11,7 @@ import { AnimatedTooltip } from "@repo/ui/animated-tooltip";
 import { WarpSpeedCover } from "@repo/ui/warp-speed-cover";
 import { NavResponsive } from "@repo/ui/nav/responsive-nav";
 import { SparklesCore } from "@repo/ui/sparkles";
+import { motion } from "framer-motion";
 import {
   portfolio,
   services,
@@ -229,6 +230,35 @@ function AnimatedPin(data: {
   );
 }
 
+function HeroSection(): JSX.Element {
+  return (
+    <div className="flex flex-col gap-4 items-center justify-center">
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        transition={{
+          duration: 0.25,
+          ease: "easeOut",
+        }}
+      >
+        <HeroHighlightComponent />
+      </motion.div>
+
+      <div className="flex flex-col gap-4 items-center justify-center pt-8">
+        <button
+          className="relative inline-flex h-16 lg:h-20 overflow-hidden rounded-[9999px] p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit transform-gpu"
+          type="button"
+        >
+          <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] rounded-[9999px] will-change-transform" />
+          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-[9999px] bg-slate-950 px-12 py-1 text-heading-4 md:text-md-heading-4 lg:text-lg-heading-4 font-medium text-white backdrop-blur-3xl isolate">
+            Book a Call With Us Today
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Page(): JSX.Element {
   return (
     <main className="px-8">
@@ -237,20 +267,7 @@ export default function Page(): JSX.Element {
       </div>
       <DotBackground>
         <BackgroundBeamsWithCollision>
-          <div className="flex flex-col gap-4 items-center justify-center">
-            <HeroHighlightComponent />
-            <div className="flex flex-col gap-4 items-center justify-center pt-8">
-              <button
-                className="relative inline-flex h-16 lg:h-20 overflow-hidden rounded-[9999px] p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit transform-gpu"
-                type="button"
-              >
-                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] rounded-[9999px] will-change-transform" />
-                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-[9999px] bg-slate-950 px-12 py-1 text-heading-4 md:text-md-heading-4 lg:text-lg-heading-4 font-medium text-white backdrop-blur-3xl isolate">
-                  Book a Call With Us Today
-                </span>
-              </button>
-            </div>
-          </div>
+          <HeroSection />
         </BackgroundBeamsWithCollision>
       </DotBackground>
       <DotBackground id="portfolio">
