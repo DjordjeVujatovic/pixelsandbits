@@ -98,13 +98,16 @@ export function MobileMenu({
           size="icon"
           variant="ghost"
         >
-          <HamburgerMenu className="h-24 w-24" isOpen={isOpen} />
+          <HamburgerMenu
+            className="h-24 w-24 text-neutral-400"
+            isOpen={isOpen}
+          />
         </Button>
       </div>
       <div
         className={`absolute top-full left-0 right-0 bg-background bg-black overflow-hidden transition-[max-height] duration-300 ease-in-out ${
           hasScrolled
-            ? "border-b border-white/[0.2]"
+            ? "border-b border-white/[0.05]"
             : "border-b border-white/0"
         }`}
         id="mobile-menu"
