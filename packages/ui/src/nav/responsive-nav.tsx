@@ -13,8 +13,10 @@ import { LogoIcon } from "@repo/ui/logo/logo-icon";
 
 export function DesktopNavResponsive({
   className,
+  handleOpenChatwoot,
 }: {
   className?: string;
+  handleOpenChatwoot: () => void;
 }): JSX.Element {
   const [active, setActive] = useState<string | null>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -163,6 +165,7 @@ export function DesktopNavResponsive({
       <div className="hidden lg:block">
         <button
           className="relative inline-flex h-12 overflow-hidden rounded-[9999px] p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit transform-gpu"
+          onClick={handleOpenChatwoot}
           type="button"
         >
           <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] rounded-[9999px] will-change-transform" />
@@ -175,14 +178,18 @@ export function DesktopNavResponsive({
   );
 }
 
-export function NavResponsive(): JSX.Element {
+export function NavResponsive({
+  handleOpenChatwoot,
+}: {
+  handleOpenChatwoot: () => void;
+}): JSX.Element {
   return (
     <>
       <div className="block md:hidden">
-        <MobileMenu />
+        <MobileMenu handleOpenChatwoot={handleOpenChatwoot} />
       </div>
       <div className="hidden md:block">
-        <DesktopNavResponsive />
+        <DesktopNavResponsive handleOpenChatwoot={handleOpenChatwoot} />
       </div>
     </>
   );

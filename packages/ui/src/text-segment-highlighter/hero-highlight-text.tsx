@@ -99,7 +99,7 @@ export function Highlight({
         display: "inline",
       }}
       transition={{
-        duration: 2,
+        duration: 1.5,
         ease: "linear",
         delay: 0.5,
       }}

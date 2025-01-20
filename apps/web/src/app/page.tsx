@@ -12,6 +12,7 @@ import { WarpSpeedCover } from "@repo/ui/warp-speed-cover";
 import { NavResponsive } from "@repo/ui/nav/responsive-nav";
 import { SparklesCore } from "@repo/ui/sparkles";
 import { motion } from "framer-motion";
+import { toggleChatwoot } from "../components/chatwoot-widget";
 import {
   portfolio,
   services,
@@ -39,6 +40,7 @@ function CallToActionFooter(): JSX.Element {
       <div className="flex flex-col gap-4 items-center justify-center pt-8">
         <button
           className="relative inline-flex h-16 lg:h-20 overflow-hidden rounded-[9999px] p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit transform-gpu"
+          onClick={toggleChatwoot}
           type="button"
         >
           <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] rounded-[9999px] will-change-transform" />
@@ -105,7 +107,7 @@ function HeroHighlightComponent(): JSX.Element {
       className="text-heading-1 md:text-md-heading-1 lg:text-lg-heading-1 my-4"
       segments={[
         {
-          text: "Beautiful products delivered at the speed of light with percision down to the",
+          text: "Beautiful products delivered at the speed of light with percision down to\u00A0the",
         },
         {
           text: "Pixels & Bits",
@@ -123,7 +125,7 @@ function HeroHighlightPortfolio(): JSX.Element {
       className="text-heading-3 md:text-md-heading-3 lg:text-lg-heading-3 my-8"
       segments={[
         {
-          text: "We have worked with many",
+          text: "We have worked with\u00A0many",
         },
         {
           text: "world class clients",
@@ -131,7 +133,7 @@ function HeroHighlightPortfolio(): JSX.Element {
           className: "whitespace-nowrap md:whitespace-normal",
         },
         {
-          text: "and build their products out from",
+          text: "and build their products out\u00A0from",
         },
         {
           text: "Ideation to Launch",
@@ -149,7 +151,7 @@ function HeroHighlightTestimonials(): JSX.Element {
       className="text-heading-3 md:text-md-heading-3 lg:text-lg-heading-3 my-8 text-center lg:text-left md:relative md:bottom-20 max-w-2xl"
       segments={[
         {
-          text: "Our clients have",
+          text: "Our clients\u00A0have",
         },
         {
           text: "loved working with us",
@@ -157,7 +159,7 @@ function HeroHighlightTestimonials(): JSX.Element {
           className: "whitespace-nowrap md:whitespace-normal",
         },
         {
-          text: "and heres what they have to say",
+          text: "and heres what they have to\u00A0say",
         },
         {
           text: "about our work",
@@ -181,7 +183,6 @@ function HeroHighlightServices(): JSX.Element {
           className: "whitespace-nowrap md:whitespace-normal",
         },
         { text: "tools and technologies in our tech stack" },
-        { text: "to build out" },
         {
           text: "beautiful products",
           highlight: true,
@@ -237,7 +238,7 @@ function HeroSection(): JSX.Element {
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 20 }}
         transition={{
-          duration: 0.25,
+          duration: 0.5,
           ease: "easeOut",
         }}
       >
@@ -247,6 +248,7 @@ function HeroSection(): JSX.Element {
       <div className="flex flex-col gap-4 items-center justify-center pt-8">
         <button
           className="relative inline-flex h-16 lg:h-20 overflow-hidden rounded-[9999px] p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit transform-gpu"
+          onClick={toggleChatwoot}
           type="button"
         >
           <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] rounded-[9999px] will-change-transform" />
@@ -263,7 +265,7 @@ export default function Page(): JSX.Element {
   return (
     <main className="px-8">
       <div className="hiddenmd:block">
-        <NavResponsive />
+        <NavResponsive handleOpenChatwoot={toggleChatwoot} />
       </div>
       <DotBackground>
         <BackgroundBeamsWithCollision>
