@@ -107,7 +107,7 @@ function HeroHighlightComponent(): JSX.Element {
       className="text-heading-1 md:text-md-heading-1 lg:text-lg-heading-1 my-4"
       segments={[
         {
-          text: "Beautiful products delivered at the speed of light with percision down to the",
+          text: "Beautiful products delivered at the speed of light with percision down to\u00A0the",
         },
         {
           text: "Pixels & Bits",
@@ -125,7 +125,7 @@ function HeroHighlightPortfolio(): JSX.Element {
       className="text-heading-3 md:text-md-heading-3 lg:text-lg-heading-3 my-8"
       segments={[
         {
-          text: "We have worked with many",
+          text: "We have worked with\u00A0many",
         },
         {
           text: "world class clients",
@@ -133,7 +133,7 @@ function HeroHighlightPortfolio(): JSX.Element {
           className: "whitespace-nowrap md:whitespace-normal",
         },
         {
-          text: "and build their products out from",
+          text: "and build their products out\u00A0from",
         },
         {
           text: "Ideation to Launch",
@@ -151,7 +151,7 @@ function HeroHighlightTestimonials(): JSX.Element {
       className="text-heading-3 md:text-md-heading-3 lg:text-lg-heading-3 my-8 text-center lg:text-left md:relative md:bottom-20 max-w-2xl"
       segments={[
         {
-          text: "Our clients have",
+          text: "Our clients\u00A0have",
         },
         {
           text: "loved working with us",
@@ -159,7 +159,7 @@ function HeroHighlightTestimonials(): JSX.Element {
           className: "whitespace-nowrap md:whitespace-normal",
         },
         {
-          text: "and heres what they have to say",
+          text: "and heres what they have to\u00A0say",
         },
         {
           text: "about our work",
@@ -183,7 +183,6 @@ function HeroHighlightServices(): JSX.Element {
           className: "whitespace-nowrap md:whitespace-normal",
         },
         { text: "tools and technologies in our tech stack" },
-        { text: "to build out" },
         {
           text: "beautiful products",
           highlight: true,
@@ -239,7 +238,7 @@ function HeroSection(): JSX.Element {
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 20 }}
         transition={{
-          duration: 0.25,
+          duration: 0.5,
           ease: "easeOut",
         }}
       >

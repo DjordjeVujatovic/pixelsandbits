@@ -21,7 +21,6 @@ export function AnimatedTestimonials({
   autoplay?: boolean;
 }): JSX.Element {
   const [active, setActive] = useState(0);
-  const controls = useAnimation();
 
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -63,7 +62,7 @@ export function AnimatedTestimonials({
   };
 
   return (
-    <div className="w-full px-4 2xl:pt-20 pb-10">
+    <div className="w-full px-4 2xl:pt-20 lg:pb-10">
       <div className="container mx-auto max-w-4xl">
         <div className="flex flex-col md:flex-row md:gap-20">
           <div className="w-full md:w-1/2">
