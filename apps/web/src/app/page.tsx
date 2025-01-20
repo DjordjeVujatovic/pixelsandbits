@@ -12,6 +12,7 @@ import { WarpSpeedCover } from "@repo/ui/warp-speed-cover";
 import { NavResponsive } from "@repo/ui/nav/responsive-nav";
 import { SparklesCore } from "@repo/ui/sparkles";
 import { motion } from "framer-motion";
+import { toggleChatwoot } from "../components/chatwoot-widget";
 import {
   portfolio,
   services,
@@ -39,6 +40,7 @@ function CallToActionFooter(): JSX.Element {
       <div className="flex flex-col gap-4 items-center justify-center pt-8">
         <button
           className="relative inline-flex h-16 lg:h-20 overflow-hidden rounded-[9999px] p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit transform-gpu"
+          onClick={toggleChatwoot}
           type="button"
         >
           <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] rounded-[9999px] will-change-transform" />
@@ -247,6 +249,7 @@ function HeroSection(): JSX.Element {
       <div className="flex flex-col gap-4 items-center justify-center pt-8">
         <button
           className="relative inline-flex h-16 lg:h-20 overflow-hidden rounded-[9999px] p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 max-w-fit transform-gpu"
+          onClick={toggleChatwoot}
           type="button"
         >
           <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)] rounded-[9999px] will-change-transform" />
@@ -263,7 +266,7 @@ export default function Page(): JSX.Element {
   return (
     <main className="px-8">
       <div className="hiddenmd:block">
-        <NavResponsive />
+        <NavResponsive handleOpenChatwoot={toggleChatwoot} />
       </div>
       <DotBackground>
         <BackgroundBeamsWithCollision>
