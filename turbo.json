@@ -15,5 +15,6 @@
     "clean": {
       "cache": false
     }
-  }
+  },
+  "globalEnv": ["NEXT_PUBLIC_CHATWOOT_BASE_URL", "NEXT_PUBLIC_CHATWOOT_TOKEN"]
 }

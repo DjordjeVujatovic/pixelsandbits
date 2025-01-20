@@ -1,6 +1,5 @@
 "use client";
 
-import type React from "react";
 import { useEffect } from "react";
 
 // Add type declaration for window properties
@@ -22,13 +21,13 @@ declare global {
 }
 
 // Export this function to use anywhere in your application
-export const toggleChatwoot = () => {
+export const toggleChatwoot = (): void => {
   if (window.$chatwoot) {
     window.$chatwoot.toggle();
   }
 };
 
-const ChatwootWidget: React.FC = () => {
+function ChatwootWidget(): JSX.Element {
   useEffect(() => {
     window.chatwootSettings = {
       hideMessageBubble: false,
@@ -37,8 +36,16 @@ const ChatwootWidget: React.FC = () => {
       type: "standard",
     };
 
-    (function (d, t) {
+    // Named function for linting
+    function initializeChatwoot(d: Document, t: string): void {
       const BASE_URL = process.env.NEXT_PUBLIC_CHATWOOT_BASE_URL;
+      const WEBSITE_TOKEN = process.env.NEXT_PUBLIC_CHATWOOT_TOKEN;
+
+      if (!BASE_URL || !WEBSITE_TOKEN) {
+        // Replace console.error with a proper error handling method
+        throw new Error("Chatwoot configuration is missing");
+      }
+
       const g = d.createElement(t) as HTMLScriptElement,
         s = d.getElementsByTagName(t)[0];
       g.src = `${BASE_URL}/packs/js/sdk.js`;
@@ -47,14 +54,16 @@ const ChatwootWidget: React.FC = () => {
       s.parentNode?.insertBefore(g, s);
       g.onload = () => {
         window.chatwootSDK.run({
-          websiteToken: process.env.NEXT_PUBLIC_CHATWOOT_TOKEN,
+          websiteToken: WEBSITE_TOKEN,
           baseUrl: BASE_URL,
         });
       };
-    })(document, "script");
+    }
+
+    initializeChatwoot(document, "script");
   }, []);
 
-  return null;
-};
+  return <></>;
+}
 
 export default ChatwootWidget;
