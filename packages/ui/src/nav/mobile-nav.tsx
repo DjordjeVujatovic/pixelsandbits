@@ -98,7 +98,10 @@ export function MobileMenu({
           size="icon"
           variant="ghost"
         >
-          <HamburgerMenu className="h-24 w-24" isOpen={isOpen} />
+          <HamburgerMenu
+            className="h-24 w-24 text-neutral-400"
+            isOpen={isOpen}
+          />
         </Button>
       </div>
       <div
