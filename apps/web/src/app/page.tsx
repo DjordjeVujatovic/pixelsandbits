@@ -154,12 +154,12 @@ function HeroHighlightTestimonials(): JSX.Element {
           text: "Our clients\u00A0have",
         },
         {
-          text: "loved working with us",
+          text: "loved working with us,",
           highlight: true,
           className: "whitespace-nowrap md:whitespace-normal",
         },
         {
-          text: "and heres what they have to\u00A0say",
+          text: "Heres what they have to\u00A0say",
         },
         {
           text: "about our work",
