@@ -154,7 +154,7 @@ export const portfolio = [
       "https://storage.googleapis.com/pixelsandbits/Screen%20Shot%202025-01-08%20at%2010.14.10%20PM.png",
   },
   {
-    title: "Spindl",
+    title: "Spindl (Acquired by Coinbase)",
     description:
       "Developed and implemented a custom dashboard and user attribution platform for Spindl, enabling real-time tracking and visualization of key business metrics and user behavior.",
     href: "https://www.spindl.xyz/",

@@ -3,7 +3,7 @@ import "@repo/ui/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import ChatwootWidget from "../components/chatwoot-widget";
-
+import { Analytics } from "@vercel/analytics/next";
 const inter = Inter({ subsets: ["latin"] });
 
 // Remove useEffect since it can't be used at the top level in a Server Component
@@ -69,6 +69,7 @@ export default function RootLayout({
       <body className={inter.className}>
         {children}
         <ChatwootWidget />
+        <Analytics />
       </body>
     </html>
   );
