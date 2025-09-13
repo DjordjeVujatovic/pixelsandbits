@@ -1,4 +1,4 @@
-import svgToDataUri from "mini-svg-data-uri";
+const svgToDataUri = require("mini-svg-data-uri");
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 import type { Config } from "tailwindcss";
 import type { PluginAPI } from "tailwindcss/types/config";

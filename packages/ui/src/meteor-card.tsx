@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@repo/ui/utils";
 
 export function Meteors({
@@ -8,7 +8,12 @@ export function Meteors({
   number?: number;
   className?: string;
 }) {
+  const [isClient, setIsClient] = useState(false);
   const meteors = new Array(number || 20).fill(true);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   return (
     <>
       {meteors.map((el, idx) => (
@@ -21,9 +26,9 @@ export function Meteors({
           key={`meteor${idx}`}
           style={{
             top: 0,
-            left: `${Math.floor(Math.random() * (400 - -400) + -400)}px`,
-            animationDelay: `${Math.random() * (0.8 - 0.2) + 0.2}s`,
-            animationDuration: `${Math.floor(Math.random() * (10 - 2) + 2)}s`,
+            left: isClient ? `${Math.floor(Math.random() * (400 - -400) + -400)}px` : '-200px',
+            animationDelay: isClient ? `${Math.random() * (0.8 - 0.2) + 0.2}s` : '0.5s',
+            animationDuration: isClient ? `${Math.floor(Math.random() * (10 - 2) + 2)}s` : '4s',
           }}
         />
       ))}

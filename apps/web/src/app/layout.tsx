@@ -66,7 +66,7 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html className="dark" lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         {children}
         <ChatwootWidget />
         <Analytics />
