@@ -21,6 +21,7 @@ export function AnimatedTestimonials({
   autoplay?: boolean;
 }): JSX.Element {
   const [active, setActive] = useState(0);
+  const [isClient, setIsClient] = useState(false);
 
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -35,6 +36,10 @@ export function AnimatedTestimonials({
   };
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
     if (autoplay) {
       const interval = setInterval(handleNext, 5000);
       return () => {
@@ -44,7 +49,7 @@ export function AnimatedTestimonials({
   }, [autoplay]);
 
   const randomRotateY = () => {
-    return Math.floor(Math.random() * 21) - 10;
+    return isClient ? Math.floor(Math.random() * 21) - 10 : 0;
   };
 
   const handleDragEnd = (event: any, info: any) => {
