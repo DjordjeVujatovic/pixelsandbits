@@ -37,3 +37,7 @@ dist/
 
 # typescript
 *.tsbuildinfo
+
+# vercel
+.vercel
+.env*
