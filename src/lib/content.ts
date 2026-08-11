@@ -1,29 +1,5 @@
 /* Approved copy, verbatim from the design handoff. Do not reword. */
 
-export type TermLine =
-  | { cmd: string; phase?: number }
-  | { out: string; mark: string; ms?: string; cls: "pb-fl-dim" | "pb-fl-ok" };
-
-export const TERMINAL_SCRIPT: TermLine[] = [
-  { cmd: "engage --client acme --scope full-stack" },
-  { out: "connecting to acme.internal", mark: "→", ms: "18ms", cls: "pb-fl-dim" },
-  { out: "session opened · on site, week 01", mark: "✓", cls: "pb-fl-ok" },
-  { cmd: "scope --map-workflows --with-users", phase: 0 },
-  { out: "shadowing 6 operators across 3 teams", mark: "→", ms: "2d", cls: "pb-fl-dim" },
-  { out: "success defined in numbers, not adjectives", mark: "✓", cls: "pb-fl-ok" },
-  { cmd: "design --prototype --test-with real-users", phase: 1 },
-  { out: "clickable build in front of users · day 9", mark: "→", cls: "pb-fl-dim" },
-  { out: "flows revised twice before any prod code", mark: "✓", cls: "pb-fl-ok" },
-  { cmd: "build --stack next,postgres --deploy day-1", phase: 2 },
-  { out: "auth, data access, legacy integration", mark: "→", cls: "pb-fl-dim" },
-  { out: "evals wired to production transcripts", mark: "→", cls: "pb-fl-dim" },
-  { out: "ci green · 0 open regressions", mark: "✓", cls: "pb-fl-ok" },
-  { cmd: "ship --rollout progressive --handover", phase: 3 },
-  { out: "rollout to 400k wallets · 0 incidents", mark: "→", cls: "pb-fl-dim" },
-  { out: "docs, patterns, in-house team trained", mark: "→", cls: "pb-fl-dim" },
-  { out: "handed over — yours to run", mark: "✓", cls: "pb-fl-ok" },
-];
-
 export const PIPELINE_STEPS = ["ideation", "design", "engineering", "deployment"];
 
 export interface Offer {

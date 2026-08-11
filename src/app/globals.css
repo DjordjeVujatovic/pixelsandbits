@@ -161,7 +161,6 @@ button {
 @keyframes pb-pop { from { opacity: 0; transform: translateY(14px) scale(.985) } to { opacity: 1; transform: none } }
 @keyframes pb-halo { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
 @keyframes pb-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--acc) 55%, transparent) } 70%, 100% { box-shadow: 0 0 0 8px transparent } }
-@keyframes pb-fl-in { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: none } }
 @keyframes pb-redpulse { 0%, 100% { opacity: .5 } 50% { opacity: .85 } }
 @keyframes pb-tickdraw { to { stroke-dashoffset: 0 } }
 @keyframes pb-launch {
@@ -818,53 +817,253 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s
   animation: pb-pulse 1.6s ease-out infinite;
 }
 .pb-term-status { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc) }
-/* 268px content height in the handoff (content-box) + 22px/6px
-   vertical padding = 296px border-box. Fixed at every width. */
-.pb-term-body {
-  position: relative;
-  padding: 22px 20px 6px;
-  height: 296px;
-  overflow: hidden;
-}
-.pb-term-feed {
-  position: relative;
-  font-family: var(--font-mono), monospace;
-  font-size: 13px;
+/* ---------------- Engagement scenes ----------------
+   Four scenes driven by one stage index (7.2s each, ~29s per cycle).
+   Every scene animation is CSS keyed off .stage.on; scenes are flex
+   children with min-width: 0 and ellipsis on single-line strings so the
+   panel is never widened by its own content. */
+
+.stagewrap { position: relative; height: 292px; overflow: hidden }
+.stage {
+  position: absolute;
+  inset: 0;
+  padding: 18px 20px 40px; /* 40px reserves room for the caption */
+  opacity: 0;
+  transition: opacity .45s ease;
+  pointer-events: none;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  min-width: 0;
 }
-.pb-fl {
-  display: grid;
-  grid-template-columns: 14px 1fr auto;
+.stage.on { opacity: 1 }
+.st-cap {
+  position: absolute;
+  left: 20px;
+  bottom: 13px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--fg) 58%, transparent);
+  min-width: 0;
+}
+.st-cap > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.st-cap > span:last-child { flex: none }
+.st-cap b { color: var(--acc); font-weight: 400 }
+
+/* --- 01 ideation --- */
+.id-board { display: grid; grid-template-columns: 1fr 58px 1fr; flex: 1; align-items: start; min-height: 0 }
+.id-col { min-width: 0 }
+.id-colhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  align-items: baseline;
-  line-height: 1.85;
-  animation: pb-fl-in .3s ease both;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: .13em;
+  color: color-mix(in srgb, var(--fg) 60%, transparent);
+  padding-bottom: 9px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
 }
-.pb-fl-gutter { color: var(--acc); font-size: 12px }
-.pb-fl-text {
-  color: color-mix(in srgb, var(--fg) 72%, transparent);
+.id-count { font-size: 11.5px; letter-spacing: 0; color: color-mix(in srgb, var(--fg) 60%, transparent) }
+.id-count.on { color: var(--acc) }
+.id-stack { display: flex; flex-direction: column; gap: 6px }
+.idc {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--fg) 52%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fg) 11%, transparent);
+  background: color-mix(in srgb, var(--fg) 2.5%, transparent);
+  border-radius: 7px;
+  padding: 6px 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateX(-14px);
 }
-.pb-fl-ms { font-size: 10.5px; color: color-mix(in srgb, var(--fg) 42%, transparent) }
-.pb-fl-cmd .pb-fl-text { color: var(--fg-strong) }
-.pb-fl-cmd .pb-fl-tail { color: var(--acc) }
-.pb-fl-ok .pb-fl-text { color: var(--fg) }
-.pb-fl-ok .pb-fl-gutter { color: var(--acc) }
-.pb-fl-dim .pb-fl-text { color: color-mix(in srgb, var(--fg) 62%, transparent) }
-.pb-fl-num .pb-fl-tail { color: var(--acc) }
-.pb-caretblock {
-  display: inline-block;
-  width: 7px;
-  height: 14px;
+.stage.on .idc { animation: idc-in .42s cubic-bezier(.2,.9,.3,1) forwards }
+@keyframes idc-in { to { opacity: 1; transform: none } }
+.stage.on .c1 { animation-delay: .05s }
+.stage.on .c2 { animation-delay: .17s }
+.stage.on .c3 { animation-delay: .29s }
+.stage.on .c4 { animation-delay: .41s }
+.stage.on .c5 { animation-delay: .53s }
+.stage.on .c6 { animation-delay: .65s }
+/* the survivor */
+.stage.on .c2 {
+  animation: idc-in .42s cubic-bezier(.2,.9,.3,1) .17s forwards,
+             idc-keep .5s ease 1.5s forwards;
+}
+@keyframes idc-keep {
+  to {
+    border-color: color-mix(in srgb, var(--acc) 55%, transparent);
+    background: color-mix(in srgb, var(--acc) 10%, transparent);
+    color: var(--acc);
+  }
+}
+/* the discarded */
+.stage.on .c1, .stage.on .c3, .stage.on .c4, .stage.on .c5, .stage.on .c6 {
+  animation-name: idc-in, idc-fade;
+  animation-duration: .42s, .6s;
+  animation-timing-function: cubic-bezier(.2,.9,.3,1), ease;
+  animation-fill-mode: forwards, forwards;
+}
+.stage.on .c1 { animation-delay: .05s, 1.6s }
+.stage.on .c3 { animation-delay: .29s, 1.68s }
+.stage.on .c4 { animation-delay: .41s, 1.76s }
+.stage.on .c5 { animation-delay: .53s, 1.84s }
+.stage.on .c6 { animation-delay: .65s, 1.92s }
+@keyframes idc-fade { to { opacity: .26; filter: blur(1px); transform: translateX(6px) scale(.985) } }
+.id-mid { position: relative; height: 100%; display: flex; align-items: center; justify-content: center }
+.id-sortline {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--acc) 55%, transparent), transparent);
+}
+.id-sortline::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 14px;
+  height: 5px;
+  border-radius: 3px;
   background: var(--acc);
-  vertical-align: -2px;
-  margin-left: 2px;
-  animation: pb-cursor 1.05s steps(1) infinite;
+  box-shadow: 0 0 10px var(--acc);
+  opacity: 0;
 }
+.stage.on .id-sortline::after { animation: id-shuttle 1.5s cubic-bezier(.5,0,.4,1) .5s infinite }
+@keyframes id-shuttle { 0% { left: 0; opacity: 0 } 15% { opacity: 1 } 85% { opacity: 1 } 100% { left: calc(100% - 14px); opacity: 0 } }
+/* the one legitimately decorative label — may sit below fg 55% */
+.id-sortmark { font-family: var(--font-mono), monospace; font-size: 8.5px; letter-spacing: .14em; color: color-mix(in srgb, var(--fg) 28%, transparent); transform: translateY(16px) }
+.id-out { display: flex; flex-direction: column; gap: 10px; padding-top: 22px }
+.id-pick {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid var(--acc);
+  background: color-mix(in srgb, var(--acc) 11%, transparent);
+  border-radius: 9px;
+  padding: 12px 13px;
+  opacity: 0;
+}
+.stage.on .id-pick { animation: pick-in .6s cubic-bezier(.2,1.25,.3,1) 1.6s forwards }
+@keyframes pick-in { from { opacity: 0; transform: translateX(16px) scale(.94) } to { opacity: 1; transform: none } }
+.id-pick::after { content: ""; position: absolute; inset: -1px; border-radius: 9px; border: 1px solid var(--acc); opacity: 0 }
+.stage.on .id-pick::after { animation: pick-ping 2s cubic-bezier(.2,.7,.3,1) 2.1s infinite }
+@keyframes pick-ping { 0% { transform: scale(1); opacity: .65 } 100% { transform: scale(1.06); opacity: 0 } }
+.id-pickhead { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono), monospace; font-size: 12.5px; color: var(--acc) }
+.id-tick { width: 15px; height: 15px; border-radius: var(--r-pill); background: var(--acc); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 9px; flex: none }
+.id-picksub { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 60%, transparent) }
+.id-drop { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 62%, transparent); opacity: 0 }
+.stage.on .id-drop { animation: idc-in .5s ease 2.2s forwards }
+
+/* --- 02 design --- */
+.dz { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center }
+.dz svg { width: 92%; max-height: 100% }
+.dz-wire rect { stroke: #3d4a5c; stroke-width: 1.4; fill: none; stroke-dasharray: 4 4 }
+.dz-real { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; clip-path: inset(0 100% 0 0) }
+.stage.on .dz-real { animation: dz-wipe 1.5s cubic-bezier(.5,0,.5,1) .35s forwards }
+@keyframes dz-wipe { to { clip-path: inset(0 0 0 0) } }
+.dz-beam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  left: 0;
+  background: linear-gradient(180deg, transparent, var(--acc), transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--acc) 70%, transparent);
+  opacity: 0;
+}
+.stage.on .dz-beam { animation: dz-beam 1.5s cubic-bezier(.5,0,.5,1) .35s forwards }
+@keyframes dz-beam { 0% { left: 0; opacity: 0 } 10% { opacity: 1 } 90% { opacity: 1 } 100% { left: 100%; opacity: 0 } }
+
+/* --- 03 engineering --- */
+.en { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; flex: 1; min-height: 0 }
+.en > * { min-width: 0 }
+.en-code { font-family: var(--font-mono), monospace; font-size: 11.5px; line-height: 1.85; color: color-mix(in srgb, var(--fg) 62%, transparent) }
+.en-code div { opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.stage.on .en-code div { animation: ln-in .3s ease both }
+.stage.on .en-code div:nth-child(1) { animation-delay: .1s }
+.stage.on .en-code div:nth-child(2) { animation-delay: .28s }
+.stage.on .en-code div:nth-child(3) { animation-delay: .46s }
+.stage.on .en-code div:nth-child(4) { animation-delay: .64s }
+.stage.on .en-code div:nth-child(5) { animation-delay: .82s }
+.stage.on .en-code div:nth-child(6) { animation-delay: 1s }
+.stage.on .en-code div:nth-child(7) { animation-delay: 1.18s }
+@keyframes ln-in { from { opacity: 0; transform: translateX(-8px) } to { opacity: 1; transform: none } }
+.en-k { color: var(--acc2) }
+.en-f { color: var(--acc) }
+.en-c { color: color-mix(in srgb, var(--fg) 42%, transparent) } /* comments — syntax convention */
+.en-ok { color: var(--acc) }
+.en-graph { position: relative; display: flex; flex-direction: column; gap: 11px; min-width: 0; border-left: 1px solid color-mix(in srgb, var(--fg) 9%, transparent); padding-left: 18px; font-family: var(--font-mono), monospace }
+.en-ghead { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 10.5px; letter-spacing: .12em; color: color-mix(in srgb, var(--fg) 58%, transparent) }
+.en-gok { color: var(--acc); letter-spacing: .04em }
+.en-checks { display: flex; flex-direction: column; gap: 5px }
+.en-chk { display: flex; align-items: center; gap: 7px; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 68%, transparent); opacity: 0; transform: translateX(-8px); white-space: nowrap; min-width: 0 }
+.en-cm { width: 12px; height: 12px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--acc) 16%, transparent); color: var(--acc); display: flex; align-items: center; justify-content: center; font-size: 7.5px; flex: none }
+.en-ct { margin-left: auto; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); flex: none }
+.stage.on .en-chk { animation: chk-in .38s cubic-bezier(.2,.9,.3,1) forwards }
+@keyframes chk-in { to { opacity: 1; transform: none } }
+.stage.on .k1 { animation-delay: .25s }
+.stage.on .k2 { animation-delay: .5s }
+.stage.on .k3 { animation-delay: .75s }
+.stage.on .k4 { animation-delay: 1s }
+.en-scorewrap { margin-top: 2px; opacity: 0 }
+.stage.on .en-scorewrap { animation: chk-in .45s ease 1.3s forwards }
+.en-scorehead { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-bottom: 6px }
+.en-scoreval { font-size: 17px; color: var(--acc); line-height: 1 }
+.en-bar { height: 4px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--fg) 9%, transparent); overflow: hidden }
+.en-bar > span { display: block; height: 4px; border-radius: var(--r-pill); width: 0; background: linear-gradient(90deg, var(--acc2), var(--acc)); box-shadow: 0 0 10px color-mix(in srgb, var(--acc) 50%, transparent) }
+.stage.on .en-bar > span { animation: en-fill 1s cubic-bezier(.3,.8,.3,1) 1.45s forwards }
+@keyframes en-fill { to { width: 94% } }
+.en-delta { font-size: 10px; color: var(--acc2); margin-top: 6px }
+.en-deploy { margin-top: 12px; display: flex; align-items: center; gap: 7px; font-size: 10.5px; color: var(--acc); border-top: 1px solid color-mix(in srgb, var(--acc) 20%, transparent); padding-top: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0 }
+.stage.on .en-deploy { animation: chk-in .45s ease 2s forwards }
+.en-dot { width: 5px; height: 5px; border-radius: var(--r-pill); background: var(--acc); flex: none; animation: pb-tick 1.4s ease-in-out infinite }
+
+/* --- 04 deployment --- */
+.dp { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px }
+.dp-top { display: flex; align-items: center; gap: 12px }
+.dp-badge { position: relative; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--acc); background: color-mix(in srgb, var(--acc) 14%, transparent); color: var(--acc); border-radius: var(--r-pill); padding: 6px 13px; font-family: var(--font-mono), monospace; font-size: 11px; opacity: 0 }
+.stage.on .dp-badge { animation: scope-in2 .6s cubic-bezier(.2,1.2,.3,1) .12s forwards }
+@keyframes scope-in2 { from { opacity: 0; transform: translateY(10px) scale(.92) } to { opacity: 1; transform: none } }
+.dp-rule { flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--acc) 45%, transparent), transparent) }
+.dp-region { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); white-space: nowrap; opacity: 0 }
+.stage.on .dp-region { animation: scope-in2 .5s ease .5s forwards }
+.dp-chart { position: relative; flex: 1; overflow: hidden; border: 1px solid color-mix(in srgb, var(--fg) 9%, transparent); border-radius: 9px; background: color-mix(in srgb, var(--fg) 1.5%, transparent) }
+.dp-chart svg { position: absolute; inset: 0; width: 100%; height: 100% }
+.dp-grid line { stroke: color-mix(in srgb, var(--fg) 6%, transparent); stroke-width: 1 }
+.dp-area { fill: url(#dpg) }
+.dp-line { stroke: var(--acc); stroke-width: 2; fill: none; stroke-dasharray: 460; stroke-dashoffset: 460; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--acc) 55%, transparent)) }
+.stage.on .dp-line { animation: draw2 1.5s cubic-bezier(.4,0,.5,1) .25s forwards }
+@keyframes draw2 { to { stroke-dashoffset: 0 } }
+.dp-clip { clip-path: inset(0 100% 0 0) }
+.stage.on .dp-clip { animation: dz-wipe 1.5s cubic-bezier(.4,0,.5,1) .25s forwards }
+.dp-head { opacity: 0 }
+.stage.on .dp-head { animation: dp-head 1.5s cubic-bezier(.4,0,.5,1) .25s forwards }
+@keyframes dp-head { 0% { opacity: 0; offset-distance: 0% } 8% { opacity: 1 } 100% { opacity: 1; offset-distance: 100% } }
+/* must sit above the curve — the line reaches this corner */
+.dp-live { position: absolute; right: 9px; top: 8px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--surface) 88%, transparent); font-family: var(--font-mono), monospace; font-size: 9.5px; color: var(--acc) }
+.dp-live i { width: 5px; height: 5px; border-radius: var(--r-pill); background: var(--acc); font-style: normal; animation: pb-tick 1.4s ease-in-out infinite }
+.dp-stats { display: flex; gap: 26px; font-family: var(--font-mono), monospace }
+.dp-stats > * { min-width: 0 }
+.dp-stat { position: relative; padding-left: 11px }
+.dp-stat::before { content: ""; position: absolute; left: 0; top: 2px; bottom: 3px; width: 2px; border-radius: 2px; background: color-mix(in srgb, var(--acc) 45%, transparent) }
+.dp-stat:nth-child(2)::before { background: color-mix(in srgb, var(--acc2) 50%, transparent) }
+.dp-v { font-size: 19px; color: var(--acc); line-height: 1; font-variant-numeric: tabular-nums }
+.dp-stat:nth-child(2) .dp-v { color: var(--acc2) }
+.dp-k { font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+
 .pb-term-foot {
   padding: 16px 20px 18px;
   border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
@@ -880,7 +1079,10 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s
   padding: 4px 10px;
   white-space: nowrap;
   transition: all .35s ease;
+  background: transparent;
+  cursor: pointer;
 }
+.pb-pstep:hover { color: color-mix(in srgb, var(--fg) 70%, transparent) }
 .pb-pstep.pb-pon {
   color: var(--acc);
   border-color: color-mix(in srgb, var(--acc) 45%, transparent);
@@ -2363,6 +2565,10 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 }
 
 @media (max-width: 860px) {
+  .en { grid-template-columns: 1fr }
+  .en-graph { display: none } /* the code is the point; CI is supporting detail */
+  .id-board { grid-template-columns: 1fr 40px 1fr }
+  .idc { font-size: 10px; padding: 5px 8px }
   .pb-feature { grid-template-columns: 1fr }
   .pb-feature-stats { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); flex-direction: row }
   .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
@@ -2375,6 +2581,17 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-shead > p { max-width: none !important }
   .pb-capsule { display: none !important }
   .ct-capsule { display: none !important }
+  .stagewrap { height: 320px } /* taller — content stacks */
+  .stage { padding: 16px 14px 38px }
+  .st-cap { left: 14px; right: 14px }
+  .id-board { grid-template-columns: 1fr; gap: 14px }
+  .id-mid { display: none } /* the sort shuttle has no meaning stacked */
+  .id-out { padding-top: 0 }
+  .dp-stats { gap: 16px }
+  .dp-v { font-size: 16px }
+  .pb-pipeline { flex-wrap: wrap; gap: 6px }
+  .pb-pstep { font-size: 10px; padding: 6px 10px }
+  .pb-pconn { display: none } /* connectors can't span a wrapped row */
   .pb-navlinks { display: none !important }
   .pb-burger { display: flex }
   .pb-row { grid-template-columns: 1fr auto !important; gap: 6px 14px !important }
@@ -2396,6 +2613,12 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-scale { grid-template-columns: 1fr }
   .pb-scell { border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
   .pb-scell:last-child { border-bottom: 0 }
+}
+
+@media (max-width: 480px) {
+  .stagewrap { height: 300px }
+  .dp-stats { flex-wrap: wrap; gap: 12px 18px }
+  .dp-region { display: none }
 }
 
 /* ============================================================
@@ -2425,18 +2648,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   }
   .pb-fstat:last-child { border-bottom: 0 }
   .pb-fstat .pb-figure { font-size: 26px }
-}
-
-/* Fix 2 — shorter fixed terminal body on phones (fixed height stays:
-   auto would reflow the hero on every appended line). Heights are the
-   spec's content-box values converted to border-box (+24px padding). */
-@media (max-width: 720px) {
-  .pb-term-body { height: 232px; padding: 18px 16px 6px }
-  .pb-fl { font-size: 12px }
-}
-@media (max-width: 480px) {
-  .pb-term-body { height: 202px }
-  .pb-fl-ms { display: none }
 }
 
 /* Fix 3 — tab bar becomes an explicit 2×2 grid; a pill radius only

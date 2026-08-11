@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Terminal from "./Terminal";
+import Engagement from "./Engagement";
 
 export default function Hero(): JSX.Element {
   return (
@@ -30,7 +30,7 @@ export default function Hero(): JSX.Element {
         </div>
       </div>
       <div className="pb-in" style={{ animationDelay: ".15s" }}>
-        <Terminal />
+        <Engagement />
       </div>
     </section>
   );
