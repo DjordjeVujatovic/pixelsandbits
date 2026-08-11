@@ -40,7 +40,7 @@ export default function HomePage(): JSX.Element {
             and the closing proof band are adjacent below it. */}
         <Reveal as="section" variant="rev" id="ask" className="pb-ask">
           <div className="pb-ask-head">
-            <div className="pb-kicker">$ ./ask --anything</div>
+            <div className="pb-kicker">$ ./ask --faq</div>
             <div className="pb-ask-note">
               Four questions we get asked most, answered.
             </div>

@@ -403,10 +403,12 @@ header.pb-compact {
   color: var(--acc);
   padding: 9px 8px;
   white-space: nowrap;
-  transition: gap .22s ease;
 }
+/* Hover must not change the CTA's width — the paired spacers recentre
+   the capsule around it, so any growth shifts the whole nav. Brackets
+   brighten and the arrow slides; the gap stays put. */
 .pb-brk { color: color-mix(in srgb, var(--acc) 45%, transparent); transition: color .22s ease }
-.pb-cta:hover { gap: 9px; color: var(--acc) }
+.pb-cta:hover { color: var(--acc) }
 .pb-cta:hover .pb-brk { color: var(--acc) }
 .pb-cta:hover .pb-arrow { transform: translateX(3px) }
 
@@ -514,10 +516,12 @@ body.pb-navopen .pb-dlink:nth-child(1) { animation-delay: .10s }
 body.pb-navopen .pb-dlink:nth-child(2) { animation-delay: .16s }
 body.pb-navopen .pb-dlink:nth-child(3) { animation-delay: .22s }
 body.pb-navopen .pb-dlink:nth-child(4) { animation-delay: .28s }
+body.pb-navopen .pb-dlink:nth-child(5) { animation-delay: .34s }
+body.pb-navopen .pb-dlink:nth-child(6) { animation-delay: .40s }
 @keyframes pb-dlink-in { to { opacity: 1; transform: none } }
 
 .pb-dft { opacity: 0; transform: translateY(12px); will-change: transform, opacity }
-body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s forwards }
+body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s forwards }
 @keyframes pb-dft-in { to { opacity: 1; transform: none } }
 .pb-dcta {
   display: flex;
@@ -651,10 +655,12 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s
 }
 /* Taller hero on desktop, and more horizontal room for the terminal once
    the column is wide enough that the headline still holds one line
-   (owner request, 2026-08-10). Bottom padding stays at 52px so the
-   client strip sits directly under the hero grid. */
-@media (min-width: 961px) {
-  .pb-hero { padding: 112px 0 52px }
+   (owner request, 2026-08-10; raised again 2026-08-10). Bottom padding
+   stays modest so the client strip still reads as part of the hero.
+   Scoped to ≥1200px — below that the iPad band overrides the top and
+   must keep its tuned 52px bottom. */
+@media (min-width: 1200px) {
+  .pb-hero { padding: 152px 0 84px }
 }
 @media (min-width: 1420px) {
   .pb-hero { grid-template-columns: 1fr 1.14fr; gap: 64px }
@@ -669,7 +675,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s
     grid-template-columns: 1fr;
     gap: 36px;
     align-items: start;
-    padding-top: 60px;
+    /* Tight to the nav on mobile/tablet (owner request, 2026-08-10) —
+       the stacked hero is tall enough without dead air up top. */
+    padding-top: 24px;
   }
   .pb-hero .pb-hero-h { font-size: 54px }
   .pb-hero-lead { max-width: 640px }
@@ -2549,12 +2557,22 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 }
 
 @media (max-width: 860px) {
+  /* Five links no longer fit beside the wordmark and CTA with their
+     dash prefixes — drop the decoration, keep the labels. */
+  .pb-navlink { padding: 9px 9px }
+  .pb-navlink .pb-dash { display: none }
+}
+@media (max-width: 860px) {
   .en { grid-template-columns: 1fr }
   .en-graph { display: none } /* the code is the point; CI is supporting detail */
   .pb-feature { grid-template-columns: 1fr }
   .pb-feature-stats { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); flex-direction: row }
   .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
   .pb-fstat:last-child { border-right: 0 }
+}
+@media (max-width: 800px) {
+  .pb-navlink { padding: 9px 7px }
+  .pb-capsule { font-size: 11.5px }
 }
 
 @media (max-width: 720px) {

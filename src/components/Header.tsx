@@ -11,6 +11,8 @@ const NAV_ITEMS = [
   { id: "services", label: "services" },
   { id: "work", label: "work" },
   { id: "process", label: "process" },
+  { id: "ask", label: "faq" },
+  { id: "track-record", label: "track-record" },
 ];
 
 function useCompact(): boolean {
@@ -181,7 +183,12 @@ function NavDrawer({
       num: `0${i + 1}`,
       current: false,
     })),
-    { href: "/contact", label: "contact", num: "04", current: onContact },
+    {
+      href: "/contact",
+      label: "contact",
+      num: `0${NAV_ITEMS.length + 1}`,
+      current: onContact,
+    },
   ];
   return (
     <>
@@ -198,7 +205,9 @@ function NavDrawer({
               onClick={close}
             >
               <span className="pb-dn">{l.num}</span>
-              <span className="pb-dt">{l.label}</span>
+              {/* Flag-style hyphens belong to the mono capsule; the
+                  drawer's display type reads as words. */}
+              <span className="pb-dt">{l.label.replace(/-/g, " ")}</span>
               <span className="pb-darr" aria-hidden="true">
                 →
               </span>

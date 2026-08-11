@@ -7,7 +7,7 @@ import Reveal from "@/components/Reveal";
    pending confirmed counts — do not launch without verifying them. */
 export default function ClosingCta(): JSX.Element {
   return (
-    <Reveal as="section" variant="rev" className="cl">
+    <Reveal as="section" variant="rev" id="track-record" className="cl">
       <div className="k-lead">
         <span className="k-kick">The track record</span>
         <span className="k-rule" aria-hidden="true" />
