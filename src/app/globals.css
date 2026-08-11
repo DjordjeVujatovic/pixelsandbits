@@ -397,17 +397,23 @@ body.pb-navopen .pb-bar2 { opacity: 0; width: 0 }
 body.pb-navopen .pb-bar3 { transform: translateY(-5.5px) rotate(-45deg) }
 body.pb-navopen .pb-bar { background: var(--acc) }
 body.pb-navopen .pb-burger { border-color: color-mix(in srgb, var(--acc) 45%, transparent) }
+/* While the drawer is open the header sits over the solid drawer, so
+   its backdrop blur only burns frames re-blurring the moving page. */
+body.pb-navopen .pb-header {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--bg);
+}
 
 .pb-scrim {
   position: fixed;
   inset: 0;
   z-index: 45;
   background: rgba(2,4,8,.55);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
   opacity: 0;
   pointer-events: none;
   transition: opacity .45s ease;
+  will-change: opacity;
 }
 body.pb-navopen .pb-scrim { opacity: 1; pointer-events: auto }
 
@@ -430,7 +436,7 @@ body.pb-navopen .pb-drawer { transform: translateX(0); visibility: visible; tran
 
 .pb-recede {
   position: relative;
-  transition: transform .5s cubic-bezier(.32,.72,0,1), filter .4s ease, opacity .4s ease;
+  transition: transform .5s cubic-bezier(.32,.72,0,1), opacity .4s ease;
 }
 body.pb-navopen .pb-recede {
   transform: translateX(-14%) scale(.96);
@@ -446,6 +452,7 @@ body.pb-navopen .pb-recede {
   border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
   opacity: 0;
   transform: translateX(26px);
+  will-change: transform, opacity;
 }
 .pb-dn { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc); letter-spacing: .1em; width: 22px; flex: none }
 .pb-dt { font-size: 30px; font-weight: 600; letter-spacing: -.03em; color: var(--fg-strong); line-height: 1.1 }
@@ -459,7 +466,7 @@ body.pb-navopen .pb-dlink:nth-child(3) { animation-delay: .22s }
 body.pb-navopen .pb-dlink:nth-child(4) { animation-delay: .28s }
 @keyframes pb-dlink-in { to { opacity: 1; transform: none } }
 
-.pb-dft { opacity: 0; transform: translateY(12px) }
+.pb-dft { opacity: 0; transform: translateY(12px); will-change: transform, opacity }
 body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s forwards }
 @keyframes pb-dft-in { to { opacity: 1; transform: none } }
 .pb-dcta {
