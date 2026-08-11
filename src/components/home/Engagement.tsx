@@ -162,41 +162,74 @@ export default function Engagement(): JSX.Element {
         </div>
 
         <div className="stagewrap" aria-hidden="true">
-          {/* Stage 01 — ideation: six heard, one worth building */}
+          {/* Stage 01 — ideation: the interview on the support floor */}
           <div className={`stage${stage === 0 ? " on" : ""}`}>
-            <div className="id-board">
-              <div className="id-col">
-                <div className="id-colhead">
-                  <span>HEARD ON DAY ONE</span>
-                  <span className="id-count">6</span>
-                </div>
-                <div className="id-stack">
-                  <span className="idc c1">the demo works, prod doesn&apos;t</span>
-                  <span className="idc c2">6 support workflows</span>
-                  <span className="idc c3">no evals anywhere</span>
-                  <span className="idc c4">legacy data access</span>
-                  <span className="idc c5">agent has to escalate</span>
-                  <span className="idc c6">rebuild the whole stack?</span>
-                </div>
+            <div className="iv">
+              <div className="iv-head">
+                <span>ON SITE · SUPPORT FLOOR</span>
+                <span className="iv-rule" />
+                <span className="iv-rec">
+                  <i />
+                  listening
+                </span>
               </div>
-              <div className="id-mid">
-                <span className="id-sortline" />
-                <span className="id-sortmark">sorting</span>
-              </div>
-              <div className="id-col">
-                <div className="id-colhead">
-                  <span style={{ color: "var(--acc)" }}>WORTH BUILDING</span>
-                  <span className="id-count on">1</span>
-                </div>
-                <div className="id-out">
-                  <span className="id-pick">
-                    <span className="id-pickhead">
-                      <span className="id-tick">✓</span>one workflow, measured
-                    </span>
-                    <span className="id-picksub">refunds · eval&apos;d on 4k real transcripts</span>
+
+              <div className="iv-q">
+                <i>?</i>
+                <span className="iv-qwrap">
+                  <span className="iv-qt">
+                    what takes the longest, every day?
+                    <span className="iv-caret" />
                   </span>
-                  <span className="id-drop">5 deferred, written down, not built</span>
-                </div>
+                </span>
+              </div>
+
+              <div className="iv-turn" style={{ "--i": 0 } as React.CSSProperties}>
+                <span className="iv-av">AK</span>
+                <span className="iv-body">
+                  <span className="iv-who">TIER 1 · 4 YRS</span>
+                  <span className="iv-said">
+                    &quot;refunds. i check{" "}
+                    <span className="iv-key" style={{ "--i": 0 } as React.CSSProperties}>
+                      three systems
+                    </span>{" "}
+                    before i can answer.&quot;
+                  </span>
+                </span>
+              </div>
+
+              <div className="iv-turn" style={{ "--i": 1 } as React.CSSProperties}>
+                <span className="iv-av">RM</span>
+                <span className="iv-body">
+                  <span className="iv-who">TIER 2 · TEAM LEAD</span>
+                  <span className="iv-said">
+                    &quot;the bot gets it wrong, so i redo it{" "}
+                    <span className="iv-key" style={{ "--i": 1 } as React.CSSProperties}>
+                      by hand
+                    </span>
+                    .&quot;
+                  </span>
+                </span>
+              </div>
+
+              <div className="iv-turn iv-turn-3" style={{ "--i": 2 } as React.CSSProperties}>
+                <span className="iv-av">JP</span>
+                <span className="iv-body">
+                  <span className="iv-who">SUPPORT OPS</span>
+                  <span className="iv-said">
+                    &quot;nobody knows if it&apos;s{" "}
+                    <span className="iv-key" style={{ "--i": 2 } as React.CSSProperties}>
+                      getting better
+                    </span>
+                    .&quot;
+                  </span>
+                </span>
+              </div>
+
+              <div className="iv-note">
+                <span className="iv-tick">✓</span>
+                <span>scope: refunds, measured</span>
+                <span>4k transcripts</span>
               </div>
             </div>
             <div className="st-cap">

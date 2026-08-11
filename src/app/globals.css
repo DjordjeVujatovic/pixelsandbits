@@ -853,119 +853,52 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s
 .st-cap > span:last-child { flex: none }
 .st-cap b { color: var(--acc); font-weight: 400 }
 
-/* --- 01 ideation --- */
-.id-board { display: grid; grid-template-columns: 1fr 58px 1fr; flex: 1; align-items: start; min-height: 0 }
-.id-col { min-width: 0 }
-.id-colhead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
-  letter-spacing: .13em;
-  color: color-mix(in srgb, var(--fg) 60%, transparent);
-  padding-bottom: 9px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
-}
-.id-count { font-size: 11.5px; letter-spacing: 0; color: color-mix(in srgb, var(--fg) 60%, transparent) }
-.id-count.on { color: var(--acc) }
-.id-stack { display: flex; flex-direction: column; gap: 6px }
-.idc {
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  color: color-mix(in srgb, var(--fg) 52%, transparent);
-  border: 1px solid color-mix(in srgb, var(--fg) 11%, transparent);
-  background: color-mix(in srgb, var(--fg) 2.5%, transparent);
-  border-radius: 7px;
-  padding: 6px 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  opacity: 0;
-  transform: translateX(-14px);
-}
-.stage.on .idc { animation: idc-in .42s cubic-bezier(.2,.9,.3,1) forwards }
-@keyframes idc-in { to { opacity: 1; transform: none } }
-.stage.on .c1 { animation-delay: .05s }
-.stage.on .c2 { animation-delay: .17s }
-.stage.on .c3 { animation-delay: .29s }
-.stage.on .c4 { animation-delay: .41s }
-.stage.on .c5 { animation-delay: .53s }
-.stage.on .c6 { animation-delay: .65s }
-/* the survivor */
-.stage.on .c2 {
-  animation: idc-in .42s cubic-bezier(.2,.9,.3,1) .17s forwards,
-             idc-keep .5s ease 1.5s forwards;
-}
-@keyframes idc-keep {
-  to {
-    border-color: color-mix(in srgb, var(--acc) 55%, transparent);
-    background: color-mix(in srgb, var(--acc) 10%, transparent);
-    color: var(--acc);
-  }
-}
-/* the discarded */
-.stage.on .c1, .stage.on .c3, .stage.on .c4, .stage.on .c5, .stage.on .c6 {
-  animation-name: idc-in, idc-fade;
-  animation-duration: .42s, .6s;
-  animation-timing-function: cubic-bezier(.2,.9,.3,1), ease;
-  animation-fill-mode: forwards, forwards;
-}
-.stage.on .c1 { animation-delay: .05s, 1.6s }
-.stage.on .c3 { animation-delay: .29s, 1.68s }
-.stage.on .c4 { animation-delay: .41s, 1.76s }
-.stage.on .c5 { animation-delay: .53s, 1.84s }
-.stage.on .c6 { animation-delay: .65s, 1.92s }
-@keyframes idc-fade { to { opacity: .26; filter: blur(1px); transform: translateX(6px) scale(.985) } }
-.id-mid { position: relative; height: 100%; display: flex; align-items: center; justify-content: center }
-.id-sortline {
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  top: 50%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--acc) 55%, transparent), transparent);
-}
-.id-sortline::after {
+/* --- 01 ideation: the interview --- */
+.iv { flex: 1; display: flex; flex-direction: column; gap: 10px; min-height: 0; font-family: var(--font-mono), monospace }
+.iv-head { display: flex; align-items: center; gap: 12px; font-size: 10.5px; letter-spacing: .13em; color: color-mix(in srgb, var(--fg) 58%, transparent) }
+.iv-rule { flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--fg) 12%, transparent), transparent) }
+.iv-rec { display: inline-flex; align-items: center; gap: 6px; color: var(--acc); letter-spacing: .06em; flex: none }
+.iv-rec i { width: 5px; height: 5px; border-radius: var(--r-pill); background: var(--acc); font-style: normal; animation: pb-tick 1.6s ease-in-out infinite }
+.iv-q { display: flex; gap: 9px; font-size: 12.5px; color: var(--fg-strong); align-items: baseline; min-width: 0 }
+.iv-q i { color: var(--acc); font-style: normal; flex: none }
+.iv-qwrap { position: relative; flex: 1; min-width: 0 }
+/* Width target must be 100% inside a max-content wrapper — a ch value
+   clipped the tail of the question and hid the caret in an earlier
+   build. steps(34) matches the 34-character question; change both
+   together. */
+.iv-qt { position: relative; display: inline-block; white-space: nowrap; overflow: hidden; width: 0; max-width: max-content }
+.stage.on .iv-qt { animation: iv-type .9s steps(34) .15s forwards }
+@keyframes iv-type { to { width: 100% } }
+.iv-caret { display: inline-block; width: 6px; height: 13px; background: var(--acc); vertical-align: -2px; margin-left: 3px; opacity: 0 }
+.stage.on .iv-caret { animation: pb-cursor 1.05s steps(1) infinite, iv-caret-out .1s linear 3.3s forwards }
+@keyframes iv-caret-out { to { opacity: 0 } }
+.iv-turn { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; opacity: 0; transform: translateY(7px) }
+.stage.on .iv-turn { animation: iv-turn-in .5s cubic-bezier(.2,.9,.3,1) forwards; animation-delay: calc(1.2s + var(--i) * .62s) }
+@keyframes iv-turn-in { to { opacity: 1; transform: none } }
+.iv-av { width: 22px; height: 22px; border-radius: var(--r-pill); border: 1px solid color-mix(in srgb, var(--fg) 16%, transparent); background: color-mix(in srgb, var(--fg) 4%, transparent); display: flex; align-items: center; justify-content: center; font-size: 9px; color: color-mix(in srgb, var(--fg) 55%, transparent); flex: none }
+.iv-body { min-width: 0 }
+.iv-who { display: block; font-size: 9.5px; letter-spacing: .1em; color: color-mix(in srgb, var(--fg) 40%, transparent); margin-bottom: 3px }
+.iv-said { display: block; font-size: 11.5px; line-height: 1.5; color: color-mix(in srgb, var(--fg) 70%, transparent) }
+.iv-key { position: relative; color: var(--fg-strong) }
+.iv-key::after {
   content: "";
   position: absolute;
-  top: -2px;
   left: 0;
-  width: 14px;
-  height: 5px;
-  border-radius: 3px;
+  right: 0;
+  bottom: -2px;
+  height: 1.5px;
+  border-radius: 2px;
   background: var(--acc);
-  box-shadow: 0 0 10px var(--acc);
-  opacity: 0;
+  box-shadow: 0 0 7px color-mix(in srgb, var(--acc) 60%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
 }
-.stage.on .id-sortline::after { animation: id-shuttle 1.5s cubic-bezier(.5,0,.4,1) .5s infinite }
-@keyframes id-shuttle { 0% { left: 0; opacity: 0 } 15% { opacity: 1 } 85% { opacity: 1 } 100% { left: calc(100% - 14px); opacity: 0 } }
-/* the one legitimately decorative label — may sit below fg 55% */
-.id-sortmark { font-family: var(--font-mono), monospace; font-size: 8.5px; letter-spacing: .14em; color: color-mix(in srgb, var(--fg) 28%, transparent); transform: translateY(16px) }
-.id-out { display: flex; flex-direction: column; gap: 10px; padding-top: 22px }
-.id-pick {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  border: 1px solid var(--acc);
-  background: color-mix(in srgb, var(--acc) 11%, transparent);
-  border-radius: 9px;
-  padding: 12px 13px;
-  opacity: 0;
-}
-.stage.on .id-pick { animation: pick-in .6s cubic-bezier(.2,1.25,.3,1) 1.6s forwards }
-@keyframes pick-in { from { opacity: 0; transform: translateX(16px) scale(.94) } to { opacity: 1; transform: none } }
-.id-pick::after { content: ""; position: absolute; inset: -1px; border-radius: 9px; border: 1px solid var(--acc); opacity: 0 }
-.stage.on .id-pick::after { animation: pick-ping 2s cubic-bezier(.2,.7,.3,1) 2.1s infinite }
-@keyframes pick-ping { 0% { transform: scale(1); opacity: .65 } 100% { transform: scale(1.06); opacity: 0 } }
-.id-pickhead { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono), monospace; font-size: 12.5px; color: var(--acc) }
-.id-tick { width: 15px; height: 15px; border-radius: var(--r-pill); background: var(--acc); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 9px; flex: none }
-.id-picksub { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 60%, transparent) }
-.id-drop { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 62%, transparent); opacity: 0 }
-.stage.on .id-drop { animation: idc-in .5s ease 2.2s forwards }
+.stage.on .iv-key::after { animation: iv-mark .45s cubic-bezier(.3,.8,.3,1) forwards; animation-delay: calc(1.55s + var(--i) * .62s) }
+@keyframes iv-mark { to { transform: scaleX(1) } }
+.iv-note { margin-top: auto; display: flex; align-items: center; gap: 10px; border: 1px solid var(--acc); background: color-mix(in srgb, var(--acc) 11%, transparent); border-radius: 9px; padding: 10px 12px; font-size: 12px; color: var(--acc); opacity: 0; transform: translateY(9px) }
+.stage.on .iv-note { animation: iv-turn-in .55s cubic-bezier(.2,1.2,.3,1) 3.35s forwards }
+.iv-tick { width: 16px; height: 16px; border-radius: var(--r-pill); background: var(--acc); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 9px; flex: none }
+.iv-note span:last-child { margin-left: auto; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent) }
 
 /* --- 02 design --- */
 .dz { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center }
@@ -2566,8 +2499,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 @media (max-width: 860px) {
   .en { grid-template-columns: 1fr }
   .en-graph { display: none } /* the code is the point; CI is supporting detail */
-  .id-board { grid-template-columns: 1fr 40px 1fr }
-  .idc { font-size: 10px; padding: 5px 8px }
   .pb-feature { grid-template-columns: 1fr }
   .pb-feature-stats { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); flex-direction: row }
   .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
@@ -2583,9 +2514,13 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .stagewrap { height: 320px } /* taller — content stacks */
   .stage { padding: 16px 14px 38px }
   .st-cap { left: 14px; right: 14px }
-  .id-board { grid-template-columns: 1fr; gap: 14px }
-  .id-mid { display: none } /* the sort shuttle has no meaning stacked */
-  .id-out { padding-top: 0 }
+  .iv { gap: 8px }
+  .iv-q { font-size: 11.5px }
+  .iv-said { font-size: 11px }
+  .iv-turn { grid-template-columns: 19px 1fr; gap: 8px }
+  .iv-av { width: 19px; height: 19px; font-size: 8.5px }
+  .iv-note { font-size: 11px; padding: 9px 10px }
+  .iv-note span:last-child { display: none } /* drops before the label wraps */
   .dp-stats { gap: 16px }
   .dp-v { font-size: 16px }
   .pb-pipeline { flex-wrap: wrap; gap: 6px }
@@ -2616,6 +2551,9 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 
 @media (max-width: 480px) {
   .stagewrap { height: 300px }
+  .iv-head span:first-child { font-size: 9.5px }
+  .iv-who { font-size: 9px }
+  .iv-turn-3 { display: none } /* the note must fit; drop the third turn, not the type size */
   .dp-stats { flex-wrap: wrap; gap: 12px 18px }
   .dp-region { display: none }
 }
