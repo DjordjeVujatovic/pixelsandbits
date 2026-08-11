@@ -1,10 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PIPELINE_STEPS } from "@/lib/content";
 import { runCountUp, useReducedMotion } from "@/lib/motion";
 
-const STAGE_MS = 7200;
+/* Per-scene durations: each scene's animation end time plus a short
+   beat to read, so the panel moves on shortly after a scene finishes
+   instead of holding a flat interval.
+   ideation ends ~3.9s · design ~1.9s · engineering ~2.5s · deploy ~1.8s */
+const STAGE_MS = [5300, 3200, 3900, 3400];
 const METER = [12, 42, 74, 100];
 
 /* Design scene: one geometry set renders both SVGs, so the wireframe
@@ -83,48 +87,43 @@ function MockSvg({ styled }: { styled: boolean }): JSX.Element {
 const DP_PATH = "M0 84 C 60 82, 100 74, 150 62 C 200 50, 250 44, 300 30 C 350 18, 400 12, 460 6";
 
 /* The hero engagement panel: four scenes — ideation, design,
-   engineering, deployment — driven by ONE stage index on a 7.2s
-   interval. The pipeline chips and meter read the same index; chips are
-   buttons that jump stages. The interval is gated on an
-   IntersectionObserver (threshold: 0). Scenes are CSS animations keyed
-   off .stage.on; the only JS state is the index. */
+   engineering, deployment — driven by ONE stage index with per-scene
+   durations (each scene advances shortly after its animation ends).
+   The pipeline chips and meter read the same index; chips are buttons
+   that jump stages. The clock is gated on an IntersectionObserver
+   (threshold: 0). Scenes are CSS animations keyed off .stage.on; the
+   only JS state is the index. */
 export default function Engagement(): JSX.Element {
   const reduced = useReducedMotion();
   const [stage, setStage] = useState(0);
+  const [visible, setVisible] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
-  const st = useRef({ timer: 0, visible: true });
+  const timer = useRef(0);
 
-  const startInterval = useCallback(() => {
-    window.clearInterval(st.current.timer);
-    st.current.timer = window.setInterval(() => {
-      setStage((s) => (s + 1) % 4);
-    }, STAGE_MS);
-  }, []);
-
+  // Gate on visibility (threshold: 0); the scheduling effect below
+  // pauses while hidden and restarts the current scene's clock on
+  // return.
   useEffect(() => {
     if (reduced) return;
-    const s = st.current;
-    startInterval();
-    let io: IntersectionObserver | null = null;
     const root = rootRef.current;
-    if (root) {
-      io = new IntersectionObserver(
-        (entries) => {
-          const vis = entries[0].isIntersecting;
-          if (vis === s.visible) return;
-          s.visible = vis;
-          if (vis) startInterval();
-          else window.clearInterval(s.timer);
-        },
-        { threshold: 0 },
-      );
-      io.observe(root);
-    }
-    return () => {
-      window.clearInterval(s.timer);
-      io?.disconnect();
-    };
-  }, [reduced, startInterval]);
+    if (!root) return;
+    const io = new IntersectionObserver(
+      (entries) => setVisible(entries[0].isIntersecting),
+      { threshold: 0 },
+    );
+    io.observe(root);
+    return () => io.disconnect();
+  }, [reduced]);
+
+  // One timeout per scene, sized to that scene's animation. A chip jump
+  // re-runs this effect, giving the chosen scene its full duration.
+  useEffect(() => {
+    if (reduced || !visible) return;
+    timer.current = window.setTimeout(() => {
+      setStage((s) => (s + 1) % 4);
+    }, STAGE_MS[stage]);
+    return () => window.clearTimeout(timer.current);
+  }, [stage, visible, reduced]);
 
   // Deployment figures count up each time the stage becomes active,
   // writing textContent directly.
@@ -137,8 +136,7 @@ export default function Engagement(): JSX.Element {
   }, [stage]);
 
   const jump = (i: number) => {
-    setStage(i);
-    if (!reduced) startInterval();
+    setStage(i); // the scheduling effect restarts the clock for this scene
   };
 
   const stepClass = (i: number): string => {
