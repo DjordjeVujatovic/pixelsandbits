@@ -195,7 +195,7 @@ export default function CaseRedacted(): JSX.Element {
   }, []);
 
   return (
-    <article className="pb-rev-l pb-card pb-redcard" ref={cardRef}>
+    <article className="pb-rev-l pb-card pb-redcard" id="c1" ref={cardRef}>
       <div className="pb-redcard-left">
         <div className="pb-redcard-tags">
           <span className="pb-case-num">CASE_01</span>

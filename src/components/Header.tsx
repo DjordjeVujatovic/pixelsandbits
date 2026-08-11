@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AVAILABILITY, CTA_LABEL } from "@/lib/content";
 
 /* Single source of truth for section nav: rendered links, the drawer,
    the contact capsule, the scroll observer and the pill index all derive
@@ -216,11 +217,11 @@ function NavDrawer({
         </div>
         <div className="pb-drawer-foot pb-dft">
           <Link className="pb-dcta" href="/contact" onClick={close}>
-            get in touch →
+            {CTA_LABEL} →
           </Link>
           <div className="pb-dmeta">
             <span className="pb-ddot" aria-hidden="true" />
-            taking work this quarter
+            {AVAILABILITY}
           </div>
         </div>
       </nav>
@@ -325,7 +326,8 @@ export function HomeHeader(): JSX.Element {
           <div className="pb-spacer" />
           <div className="pb-navlinks">
             <Link className="pb-cta" href="/contact">
-              <span className="pb-brk">[</span>get in touch
+              <span className="pb-brk">[</span>
+              {CTA_LABEL}
               <span className="pb-brk">]</span>
               <span className="pb-arrow">→</span>
             </Link>

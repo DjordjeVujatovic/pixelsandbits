@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CTA_LABEL } from "@/lib/content";
 
 export default function Footer({ linkBrand = false }: { linkBrand?: boolean }): JSX.Element {
   return (
@@ -13,7 +14,7 @@ export default function Footer({ linkBrand = false }: { linkBrand?: boolean }): 
         )}
         <span>product engineering &amp; ai deployment</span>
         <span className="pb-spacer" />
-        <Link href="/contact">get in touch →</Link>
+        <Link href="/contact">{CTA_LABEL} →</Link>
       </div>
     </footer>
   );

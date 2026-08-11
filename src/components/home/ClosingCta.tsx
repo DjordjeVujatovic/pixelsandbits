@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import { CTA_LABEL } from "@/lib/content";
 
 /* Closing section: claim → proof band → the full-lime close (the one
    light surface on the site — plain sans on purpose, not mono). All
@@ -13,9 +14,14 @@ export default function ClosingCta(): JSX.Element {
         <span className="k-rule" aria-hidden="true" />
       </div>
 
+      {/* The $100B+ scale figure lives in the stat band below and the
+          hero client strip — never in a heading slot. This heading leads
+          with an outcome we produced. */}
       <h2 className="k-h">
-        We have built inside <em className="pb-grad">frontier labs</em>, a Fortune 500, and
-        companies now worth more than <em className="pb-grad">$100B</em> combined.
+        Agents in production at a <em className="pb-grad">Fortune 500</em>, a
+        frontier lab, and a crypto exchange —{" "}
+        <em className="pb-grad">120k conversations</em> handled, 68% without a
+        human.
       </h2>
       <p className="k-sub">
         Nine years of it, mostly as the engineers embedded in someone
@@ -73,7 +79,7 @@ export default function ClosingCta(): JSX.Element {
         </div>
         <div className="close-act">
           <Link className="ibtn" href="/contact">
-            Get in touch →
+            {CTA_LABEL} →
           </Link>
           <a className="ialt" href="#work">
             See the work

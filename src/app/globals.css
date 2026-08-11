@@ -213,63 +213,6 @@ button {
 @keyframes pb-halo { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
 @keyframes pb-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--acc) 55%, transparent) } 70%, 100% { box-shadow: 0 0 0 8px transparent } }
 @keyframes pb-redpulse { 0%, 100% { opacity: .5 } 50% { opacity: .85 } }
-@keyframes pb-tickdraw { to { stroke-dashoffset: 0 } }
-@keyframes pb-launch {
-  0%   { opacity: 0; transform: translate(0, 3.5px) scale(.88); animation-timing-function: ease-out }
-  9%   { opacity: 1; transform: translate(0, 3.5px) scale(.92) }
-  14%  { transform: translate(-.5px, 3.8px) scale(.92) }
-  18%  { transform: translate(.5px, 3.4px) scale(.93) }
-  22%  { transform: translate(-.4px, 4.2px) scaleX(1.07) scaleY(.88) }
-  27%  { transform: translate(.4px, 3.9px) scaleX(1.05) scaleY(.9); animation-timing-function: cubic-bezier(.55,0,.85,.35) }
-  58%  { transform: translate(0, -1.5px) scale(1.05) }
-  74%  { transform: translate(0, -3.2px) scale(1.07); animation-timing-function: cubic-bezier(.25,.6,.3,1) }
-  100% { opacity: 1; transform: translate(0, 0) scale(1) }
-}
-@keyframes pb-core {
-  0%   { opacity: 0; transform: translate(-50%, -1px) scaleY(.1) }
-  10%  { opacity: 1; transform: translate(-50%, 0) scaleY(1) }
-  18%  { opacity: .6; transform: translate(-50%, 0) scaleY(.7) }
-  26%  { opacity: 1; transform: translate(-50%, 0) scaleY(1.25) }
-  40%  { opacity: .8; transform: translate(-50%, 1px) scaleY(1) }
-  55%  { opacity: 1; transform: translate(-50%, 1px) scaleY(1.15) }
-  72%  { opacity: .7; transform: translate(-50%, 2px) scaleY(.9) }
-  100% { opacity: 0; transform: translate(-50%, 4px) scaleY(.35) }
-}
-@keyframes pb-flare {
-  0%   { opacity: 0;   transform: translate(-50%, -1px) scaleY(.1)  scaleX(.6) }
-  14%  { opacity: .85; transform: translate(-50%, 0)    scaleY(1)   scaleX(1) }
-  30%  { opacity: .6;  transform: translate(-50%, 1px)  scaleY(1.4) scaleX(1.15) }
-  48%  { opacity: .8;  transform: translate(-50%, 2px)  scaleY(1.7) scaleX(1) }
-  70%  { opacity: .45; transform: translate(-50%, 5px)  scaleY(1.3) scaleX(1.3) }
-  100% { opacity: 0;   transform: translate(-50%, 12px) scaleY(.8)  scaleX(1.6) }
-}
-@keyframes pb-smoke {
-  0%   { opacity: 0;   transform: translate(-50%, 0)    scale(.25) }
-  16%  { opacity: .42; transform: translate(-50%, 3px)  scale(.9) }
-  45%  { opacity: .26; transform: translate(-50%, 8px)  scale(1.7) }
-  100% { opacity: 0;   transform: translate(-50%, 17px) scale(2.7) }
-}
-@keyframes pb-shock {
-  0%   { opacity: 0; transform: translate(-50%,-50%) scale(.4) }
-  12%  { opacity: .85 }
-  100% { opacity: 0; transform: translate(-50%,-50%) scale(9) }
-}
-@keyframes pb-judder {
-  0%  { transform: none }
-  6%  { transform: translate(1.2px,-.6px) }
-  12% { transform: translate(-1.4px,.5px) }
-  18% { transform: translate(1px,.6px) }
-  24% { transform: translate(-.8px,-.5px) }
-  32% { transform: translate(.5px,.3px) }
-  40% { transform: translate(-.3px,0) }
-  55% { transform: translateY(-9px) scale(1.03) }
-  100%{ transform: translateY(-6px) }
-}
-@keyframes pb-sheen { from { transform: translateX(-130%) } to { transform: translateX(130%) } }
-@keyframes pb-burst { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--acc) 60%, transparent), 0 0 0 0 color-mix(in srgb, var(--acc) 35%, transparent) } 100% { box-shadow: 0 0 0 22px transparent, 0 0 0 40px transparent } }
-@keyframes pb-ship { from { opacity: 0; transform: translateY(10px) scale(.9) } to { opacity: 1; transform: none } }
-@keyframes pb-ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--acc) 45%, transparent) } 70%, 100% { box-shadow: 0 0 0 12px transparent } }
-@keyframes pb-tag { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
 @keyframes pb-pane-in { from { opacity: 0; transform: translateY(14px); filter: blur(5px) } to { opacity: 1; transform: none; filter: none } }
 @keyframes pb-token { from { opacity: 0; filter: blur(5px); transform: translateY(3px) } to { opacity: 1; filter: none; transform: none } }
 @keyframes pb-wave { 0%, 100% { transform: scaleY(.18) } 50% { transform: scaleY(1) } }
@@ -296,10 +239,6 @@ button {
 .pb-stag > *:nth-child(4) { animation-delay: .27s }
 .pb-stag > *:nth-child(5) { animation-delay: .36s }
 .pb-stag > *:nth-child(6) { animation-delay: .45s }
-
-.pb-on .pb-tags > * { animation: pb-tag .5s ease both }
-.pb-on .pb-tags > *:nth-child(2) { animation-delay: .08s }
-.pb-on .pb-tags > *:nth-child(3) { animation-delay: .16s }
 
 /* ---------------- Header ---------------- */
 
@@ -607,10 +546,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 .pb-card:hover .pb-arrow { transform: translateX(5px) }
 
-.pb-row { transition: background .2s ease, padding-left .2s ease }
-.pb-row:hover { background: color-mix(in srgb, var(--fg) 3%, transparent); padding-left: 18px }
-.pb-row:hover .pb-arrow { transform: translateX(6px) }
-
 /* ---------------- Type scale ---------------- */
 
 .pb-h-lg { font-size: 52px; line-height: 1.04; letter-spacing: -.035em; font-weight: 600 }
@@ -825,10 +760,33 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   flex-wrap: wrap;
   align-items: center;
 }
+/* Risk reversal at the point of friction, right under the ask. */
+.pb-hero-note {
+  font-size: 15px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--fg) 60%, transparent);
+  max-width: 520px;
+  margin: 16px 0 0;
+}
 
 /* ---------------- Terminal ---------------- */
 
 .pb-term { position: relative }
+/* The one control under the engagement panel. Muted until hovered so it
+   never competes with the CTA for the accent. */
+.pb-replay-row { display: flex; justify-content: flex-end; margin-top: 10px }
+.pb-replay {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 12px 6px;
+  min-height: 44px; /* tap target */
+  transition: color .2s ease;
+}
+.pb-replay:hover { color: var(--acc) }
 .pb-term-halo {
   position: absolute;
   inset: -30px -20px;
@@ -1035,7 +993,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .dp-chart svg { position: absolute; inset: 0; width: 100%; height: 100% }
 .dp-grid line { stroke: color-mix(in srgb, var(--fg) 6%, transparent); stroke-width: 1 }
 .dp-area { fill: url(#dpg) }
-.dp-line { stroke: var(--acc); stroke-width: 2; fill: none; stroke-dasharray: 460; stroke-dashoffset: 460; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--acc) 55%, transparent)) }
+.dp-line { stroke: var(--acc2); stroke-width: 2; fill: none; stroke-dasharray: 460; stroke-dashoffset: 460; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--acc2) 55%, transparent)) }
 .stage.on .dp-line { animation: draw2 1.5s cubic-bezier(.4,0,.5,1) .25s forwards }
 @keyframes draw2 { to { stroke-dashoffset: 0 } }
 .dp-clip { clip-path: inset(0 100% 0 0) }
@@ -1126,16 +1084,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 .pb-pct { color: var(--acc) }
 
-/* ---------------- Section heads ---------------- */
-
-.pb-shead {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-}
 /* ---------------- Offerings tabs ---------------- */
 
 .pb-services { padding: 44px 0 60px }
@@ -1146,6 +1094,35 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   gap: 30px;
   margin-bottom: 22px;
   flex-wrap: wrap;
+}
+.pb-services-h { margin: 12px 0 0 }
+/* One outcome per service, readable before any tab is touched. */
+.pb-outcomes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 34px;
+  margin-bottom: 26px;
+}
+/* The tab switcher sits on its own row between the outcomes summary
+   and the pane it controls, pushed to the right edge. */
+.pb-tabs-row { display: flex; justify-content: flex-end; margin-bottom: 18px }
+.pb-outcome {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+  padding-bottom: 13px;
+}
+.pb-outcome-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  color: var(--acc);
+  white-space: nowrap;
+}
+.pb-outcome-line {
+  font-size: 14px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
 }
 .pb-tabs {
   display: flex;
@@ -1249,6 +1226,18 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   flex-wrap: wrap;
 }
 .pb-ask-note { font-size: 14px; color: color-mix(in srgb, var(--fg) 45%, transparent) }
+.pb-ask-h { margin: 12px 0 0 }
+/* Static Q&A: every pair is present, visible text — the terminal shell
+   is chrome around it, not a gate in front of it. */
+.pb-ask-static .pb-ask-body { gap: 24px }
+.pb-ask-item { display: flex; flex-direction: column; gap: 14px }
+.pb-ask-item + .pb-ask-item {
+  border-top: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
+  padding-top: 24px;
+}
+.pb-ask-static .pb-ask-q { margin: 0; font-weight: 500; line-height: 1.5; font-size: 15px }
+.pb-ask-static .pb-ask-answer { min-height: 0 }
+.pb-ask-static .pb-ask-words { display: block }
 .pb-ask-shell {
   border: 1px solid color-mix(in srgb, var(--fg) 13%, transparent);
   border-radius: 14px;
@@ -1401,19 +1390,116 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-ask-fill { display: block; height: 2px; background: var(--acc); width: 0; transition: width .18s linear }
 .pb-ask-status { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 35%, transparent) }
 
-/* ---------------- Trust ---------------- */
+/* ---------------- Selected work: sticky rail ----------------
+   PORTFOLIO_sticky_rail.md — the kicker/heading/lead/index pin in a
+   316px left column while the cards scroll past on the right. */
 
-.pb-trust-h { margin: 0 0 18px; max-width: 900px }
-.pb-trust-p {
-  margin: 0 0 34px;
-  font-size: 16px;
-  line-height: 1.7;
+.pb-work { padding: 62px 0 66px }
+
+.sr { display: grid; grid-template-columns: 316px 1fr; gap: 54px; align-items: start }
+/* align-items: start is REQUIRED — a stretched grid item leaves sticky
+   no room to travel in and it never engages. */
+
+/* 74px clears the ~51px compact sticky header with breathing room; if
+   the header height changes, this must change with it. */
+.sr-side { position: sticky; top: 74px }
+
+.sr-h { font-size: 37px; line-height: 1.06; letter-spacing: -.036em; font-weight: 600; margin: 0 }
+.sr-lead {
+  margin: 14px 0 0;
+  font-size: 14.5px;
+  line-height: 1.68;
   color: color-mix(in srgb, var(--fg) 58%, transparent);
-  max-width: 620px;
 }
-/* ---------------- Selected work ---------------- */
 
-.pb-work { padding: 44px 0 20px }
+.sr-idx { margin-top: 28px; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent) }
+.sr-i {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  padding: 11px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+  transition: color .3s ease, padding-left .3s ease;
+}
+.sr-i b {
+  flex: none;
+  width: 20px;
+  font-weight: 400;
+  font-size: 10.5px;
+  letter-spacing: .1em;
+  color: color-mix(in srgb, var(--fg) 30%, transparent);
+  transition: color .3s ease;
+}
+.sr-i:hover { color: var(--fg-strong) }
+/* active — the card currently in reading position */
+.sr-i.on { color: var(--fg-strong); padding-left: 12px }
+.sr-i.on b { color: var(--acc) }
+.sr-i.on::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--acc);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--acc) 60%, transparent);
+}
+/* already scrolled past — dimmer than active, brighter than pending */
+.sr-i.past { color: color-mix(in srgb, var(--fg) 62%, transparent) }
+.sr-i.past b { color: color-mix(in srgb, var(--acc) 55%, transparent) }
+
+.sr-prog {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 18px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  color: color-mix(in srgb, var(--fg) 42%, transparent);
+}
+.sr-bar { flex: 1; height: 2px; border-radius: 2px; background: color-mix(in srgb, var(--fg) 10%, transparent); overflow: hidden }
+.sr-bar > i { display: block; height: 2px; border-radius: 2px; background: var(--acc); transition: width .5s cubic-bezier(.3,.8,.3,1) }
+
+/* Index clicks are plain anchors; this clears the sticky header. */
+.pb-cases > [id] { scroll-margin-top: 90px }
+
+/* The card column is ~750px inside the rail — give the cards the same
+   single-column internals they already use below 960px viewports, so
+   the stat rows get the full width and stay on one line. */
+@media (min-width: 1101px) {
+  .sr .pb-case,
+  .sr .pb-redcard { grid-template-columns: 1fr; gap: 32px; padding: 28px }
+  .sr .pb-redcard-stats { flex-direction: row; flex-wrap: wrap; gap: 20px 36px }
+  .sr .pb-feature { grid-template-columns: 1fr }
+  /* 460px was tuned for the old narrow side column; in the rail the
+     text has the full card width — keep a readable measure, not a slot. */
+  .sr .pb-feature-body { max-width: 640px }
+  .sr .pb-feature-stats {
+    border-left: 0;
+    border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+    flex-direction: row;
+  }
+  .sr .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
+  .sr .pb-fstat:last-child { border-right: 0 }
+}
+
+/* Below 1100px the rail is gone: single column, no index, no pin. */
+@media (max-width: 1100px) {
+  .sr { grid-template-columns: 1fr; gap: 30px }
+  .sr-side { position: static } /* explicit — a sticky full-width block pins over the cards */
+  .sr-idx, .sr-prog { display: none } /* stacked above the cards they'd duplicate them */
+  .sr-h { font-size: 34px }
+}
+@media (max-width: 720px) {
+  .pb-work { padding: 44px 0 48px }
+  .sr-h { font-size: 27px }
+  .sr-lead { font-size: 14px }
+}
 .pb-cases { display: flex; flex-direction: column; gap: 14px }
 .pb-case {
   border: 1px solid color-mix(in srgb, var(--fg) 11%, transparent);
@@ -1593,9 +1679,10 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   margin-bottom: 8px;
 }
 .pb-rows { display: flex; flex-direction: column }
+/* Plain-text rows — no hover affordances, nothing to click away to. */
 .pb-row {
   display: grid;
-  grid-template-columns: 200px 1fr 20px;
+  grid-template-columns: 200px 1fr;
   gap: 28px;
   align-items: baseline;
   padding: 20px 8px;
@@ -1603,449 +1690,525 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   color: var(--fg);
   border-radius: 8px;
 }
-.pb-row:hover { color: var(--fg) }
 .pb-row-name { font-family: var(--font-mono), monospace; font-size: 17px }
 .pb-row-desc { font-size: 14px; color: color-mix(in srgb, var(--fg) 50%, transparent) }
-.pb-row .pb-arrow { color: var(--acc) }
 
-/* ---------------- Process timeline ---------------- */
+/* Testimony beside the proof it backs (the ZeroDown row above it). */
+.pb-inline-quote {
+  margin: 26px 8px 0;
+  padding: 4px 0 4px 22px;
+  border-left: 2px solid color-mix(in srgb, var(--acc) 45%, transparent);
+}
+.pb-inline-quote blockquote {
+  margin: 0 0 14px;
+  font-size: 17px;
+  line-height: 1.65;
+  letter-spacing: -.012em;
+  color: color-mix(in srgb, var(--fg) 80%, transparent);
+  max-width: 760px;
+  text-wrap: pretty;
+}
+
+/* ---------------- Process schedule (PROCESS_schedule.md) ----------------
+   Four horizontal bars on a shared axis — the phases overlap and Build
+   dominates. Two semantic voices: cyan for 01–02 (before any code
+   exists), lime for 03–04 (building and shipping); the axis runs cyan
+   START → lime SHIPPED. No fixed durations anywhere — the 8 tracks are
+   proportion, not weeks; never label them. */
 
 .pb-process { padding: 64px 0 20px }
-.pb-process-head { margin-bottom: 34px }
-.pb-process-stats { display: flex; gap: 28px; align-items: baseline; font-family: var(--font-mono), monospace }
-.pb-process-stat-v { font-size: 24px }
-.pb-process-stat-v.pb-acc { color: var(--acc) }
-.pb-process-stat-c { font-size: 11px; color: color-mix(in srgb, var(--fg) 40%, transparent); margin-top: 4px }
-.pb-timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: stretch }
-.pb-phase { display: flex; flex-direction: column; gap: 14px }
-.pb-phase-top { display: flex; align-items: center; gap: 10px }
-/* 19px content circle + 2px border in the handoff (content-box) = 23px border-box */
-.pb-node {
-  width: 23px;
-  height: 23px;
-  flex: none;
-  border-radius: var(--r-pill);
-  border: 2px solid color-mix(in srgb, var(--fg) 28%, transparent);
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .35s ease, border-color .35s ease, transform .45s cubic-bezier(.2,1.4,.4,1), box-shadow .3s ease;
-}
-.pb-phase:hover .pb-node { box-shadow: 0 0 0 5px color-mix(in srgb, var(--acc) 18%, transparent) }
-.pb-line {
-  height: 2px;
-  flex: 1;
-  background: color-mix(in srgb, var(--fg) 12%, transparent);
-  display: block;
-  position: relative;
-  overflow: hidden;
-  border-radius: 2px;
-}
-.pb-flow {
-  position: absolute;
-  inset: 0;
-  display: block;
-  background: var(--acc);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .85s cubic-bezier(.35,.75,.3,1);
-  box-shadow: 0 0 10px color-mix(in srgb, var(--acc) 55%, transparent);
-}
-.pb-flow.pb-flow-on { transform: scaleX(1) }
-.pb-tick { stroke-dasharray: 30; stroke-dashoffset: 30 }
-.pb-phase-card {
-  border: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--fg) 2%, transparent);
-  padding: 22px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  transition: border-color .25s ease, background .25s ease, transform .25s ease;
-}
-.pb-phase-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(105deg, transparent 35%, color-mix(in srgb, var(--acc) 26%, transparent) 50%, transparent 65%);
-  transform: translateX(-130%);
-}
-.pb-phase:hover .pb-phase-card {
-  border-color: color-mix(in srgb, var(--acc) 50%, transparent);
-  background: color-mix(in srgb, var(--fg) 4%, transparent);
-  transform: translateY(-4px);
-}
-.pb-phase-cardhead { display: flex; align-items: center; justify-content: space-between; gap: 10px }
-.pb-phase-num { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc); letter-spacing: .1em }
-.pb-phase-week { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 35%, transparent) }
-.pb-phase h4 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.02em; line-height: 1.25 }
-.pb-phase p { margin: 0; font-size: 13.5px; line-height: 1.6; color: color-mix(in srgb, var(--fg) 55%, transparent) }
-.pb-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; padding-top: 8px }
-.pb-ptag {
-  font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
-  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
-  border-radius: var(--r-pill);
-  padding: 4px 9px;
-  color: color-mix(in srgb, var(--fg) 50%, transparent);
-}
-.pb-phase-active .pb-node { border-color: var(--acc); animation: pb-ping 1.6s ease-out infinite }
-.pb-phase-active .pb-phase-card {
-  border-color: color-mix(in srgb, var(--acc) 55%, transparent);
-  background: color-mix(in srgb, var(--fg) 4.5%, transparent);
-  transform: translateY(-4px);
-}
-.pb-phase-active h4 { color: var(--fg-strong) }
-.pb-node.pb-check-on {
-  background: var(--acc);
-  border-color: var(--acc);
-  transform: scale(1.15);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--acc) 45%, transparent);
-}
-.pb-node.pb-check-on .pb-tick { animation: pb-tickdraw .5s cubic-bezier(.3,.9,.3,1) .1s forwards }
-/* Handover launch — six layers: rocket, flame core, flame flare, smoke
-   (::before), three shock rings, card judder. The rocket's per-stage
-   easings live INSIDE the keyframes, so the shorthand must be linear. */
-.pb-rocket { opacity: 0; transform: translateY(3.5px) scale(.88); transform-origin: 50% 85% }
-.pb-node.pb-check-on .pb-rocket { animation: pb-launch 1.15s linear .1s forwards }
-.pb-node-launch { position: relative }
-.pb-core {
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 3px;
-  height: 11px;
-  border-radius: 0 0 999px 999px;
-  background: linear-gradient(180deg, #fff, #eaffb0 55%, transparent);
-  transform: translate(-50%, -1px) scaleY(.1);
-  transform-origin: 50% 0;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 2; /* above the flare, or the blur washes it out */
-}
-.pb-flare {
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 8px;
-  height: 22px;
-  border-radius: 0 0 60% 60%;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 85%, transparent), color-mix(in srgb, var(--acc) 25%, transparent) 55%, transparent);
-  filter: blur(1.6px);
-  transform: translate(-50%, -1px) scaleY(.1);
-  transform-origin: 50% 0;
-  opacity: 0;
-  pointer-events: none;
-}
-.pb-node-launch.pb-check-on .pb-core { animation: pb-core .95s linear .16s forwards }
-.pb-node-launch.pb-check-on .pb-flare { animation: pb-flare 1.25s linear .16s forwards }
-.pb-node-launch::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 13px;
-  height: 13px;
-  border-radius: var(--r-pill);
-  background: radial-gradient(circle, color-mix(in srgb, var(--acc) 26%, transparent) 0%, color-mix(in srgb, var(--fg) 10%, transparent) 45%, transparent 72%);
-  filter: blur(2px);
-  transform: translate(-50%, 0) scale(.25);
-  transform-origin: 50% 0;
-  opacity: 0;
-  pointer-events: none;
-}
-.pb-node-launch.pb-check-on::before { animation: pb-smoke 1.5s ease-out .18s forwards }
-.pb-shock {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 19px;
-  height: 19px;
-  border-radius: var(--r-pill);
-  border: 1.5px solid color-mix(in srgb, var(--acc) 70%, transparent);
-  transform: translate(-50%, -50%) scale(.4);
-  opacity: 0;
-  pointer-events: none;
-}
-.pb-node-launch.pb-check-on .pb-shock { animation: pb-shock 1.1s cubic-bezier(.15,.7,.3,1) forwards }
-.pb-node-launch.pb-check-on .pb-shock-b { animation-delay: .14s }
-.pb-node-launch.pb-check-on .pb-shock-c { animation-delay: .28s }
-.pb-phase-done .pb-node { background: var(--acc) }
-.pb-phase-done .pb-phase-card { border-color: color-mix(in srgb, var(--acc) 26%, transparent) }
-.pb-phase-final .pb-phase-card::after { animation: pb-sheen 1.2s ease-out .1s both }
-.pb-phase-final .pb-phase-card {
-  border-color: var(--acc);
-  background: color-mix(in srgb, var(--acc) 7%, color-mix(in srgb, var(--fg) 2%, transparent));
-  box-shadow: 0 22px 60px color-mix(in srgb, var(--acc) 22%, transparent);
-  animation: pb-judder 1.2s ease-out .12s both;
-  transform: translateY(-6px);
-}
-.pb-phase-final .pb-node { background: var(--acc); animation: pb-burst 1.4s ease-out .1s both }
-.pb-phase-final h4 { color: var(--fg-strong) }
-.pb-ship {
-  opacity: 0;
-  transform: translateY(10px);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid color-mix(in srgb, var(--acc) 25%, transparent);
-}
-.pb-ship.pb-ship-on { animation: pb-ship .7s cubic-bezier(.2,.9,.3,1) .55s both }
-.pb-ship-badge {
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  color: var(--bg);
-  background: var(--acc);
-  border-radius: var(--r-pill);
-  padding: 4px 10px;
-  font-weight: 600;
-}
-.pb-ship-note { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 50%, transparent) }
 
-/* ---------------- Process stepper (721–1100px) ---------------- */
+.sc-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+.sc-lead {
+  margin: 0;
+  max-width: 380px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+}
 
-.pb-steps { display: none }
-@media (min-width: 721px) and (max-width: 1100px) {
-  .pb-timeline { display: none !important }
-  .pb-steps { display: block }
-}
-.pb-sline { display: flex; align-items: center; margin-bottom: 22px }
-.pb-stop {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 9px;
-  flex: none;
-  cursor: pointer;
-  background: none;
-  border: 0;
-  padding: 0;
-  font: inherit;
-}
-.pb-sseg {
-  flex: 1;
-  height: 2px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--fg) 10%, transparent);
-  margin: 0 0 24px; /* aligns with the ring's centre */
+/* 9 tracks: the phase column plus 8 equal proportion tracks. 190px is
+   the width at which "Prototype / design" fits on one line at 12.5px
+   mono — do not reduce below the 150px tablet step. */
+.sc-ruler, .sc-lane { display: grid; grid-template-columns: var(--sc-col, 190px) repeat(8, 1fr) }
+
+/* ---------- the axis ---------- */
+.sc-ruler {
   position: relative;
-  overflow: hidden;
-}
-.pb-sseg > span {
-  position: absolute;
-  inset: 0;
-  background: var(--acc);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--acc) 50%, transparent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .6s cubic-bezier(.35,.75,.3,1);
-}
-.pb-sseg.pb-son > span { transform: scaleX(1) }
-.pb-sring {
-  position: relative;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-pill);
-  border: 2px solid color-mix(in srgb, var(--fg) 20%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
-  color: color-mix(in srgb, var(--fg) 40%, transparent);
-  background: var(--bg);
-  transition: border-color .3s ease, background .3s ease, color .3s ease, transform .3s ease, box-shadow .3s ease;
-}
-/* Completed rings cross-fade the number to a checkmark — the shared
-   completion language with desktop and mobile. */
-.pb-snum, .pb-stk { transition: opacity .25s ease }
-.pb-stk { position: absolute; opacity: 0 }
-.pb-stop.pb-sdone .pb-snum { opacity: 0 }
-.pb-stop.pb-sdone .pb-stk { opacity: 1 }
-.pb-stop.pb-sdone .pb-sring { border-color: var(--acc); background: var(--acc); color: var(--bg) }
-.pb-stop.pb-snow .pb-sring {
-  border-color: var(--acc);
-  color: var(--acc);
-  background: color-mix(in srgb, var(--acc) 14%, transparent);
-  transform: scale(1.12);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--acc) 45%, transparent);
-}
-.pb-slab {
-  font-family: var(--font-mono), monospace;
-  font-size: 11.5px;
-  color: color-mix(in srgb, var(--fg) 34%, transparent);
-  white-space: nowrap;
-  transition: color .3s ease;
-}
-.pb-stop.pb-snow .pb-slab { color: var(--fg-strong) }
-.pb-stop.pb-sdone .pb-slab { color: color-mix(in srgb, var(--fg) 62%, transparent) }
-.pb-spanel {
-  border: 1px solid color-mix(in srgb, var(--acc) 26%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--acc) 4%, transparent);
-  padding: 24px 26px 26px;
-  display: grid;
-  grid-template-columns: 1.3fr .7fr;
-  gap: 30px;
-  align-items: start;
-  min-height: 164px; /* stops the panel resizing between phases (covers the tallest phase body in the band) */
-}
-.pb-spanel > * { min-width: 0 }
-.pb-spk {
-  display: block;
-  font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
-  color: var(--acc);
+  font-size: 9.5px;
   letter-spacing: .12em;
-  margin-bottom: 8px;
+  color: color-mix(in srgb, var(--fg) 36%, transparent);
+  padding-bottom: 9px;
 }
-.pb-sph { font-size: 24px; font-weight: 600; letter-spacing: -.025em; margin: 0 0 10px; color: var(--fg-strong) }
-.pb-spb { margin: 0; font-size: 14.5px; line-height: 1.6; color: color-mix(in srgb, var(--fg) 62%, transparent) }
-.pb-smeta {
+.sc-ruler::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--acc2) 45%, transparent),
+    color-mix(in srgb, var(--acc) 38%, transparent) 62%,
+    color-mix(in srgb, var(--fg) 10%, transparent));
+}
+.sc-axis {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border-left: 1px solid color-mix(in srgb, var(--fg) 11%, transparent);
-  padding-left: 26px;
+  align-items: center;
+  gap: 12px;
+  padding-left: 9px;
+  border-left: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
 }
-/* Deliverables as pill chips — the desktop card's tag values.
-   (Named pb-sdtag: "pb-stag" is taken by the stagger utility.) */
-.pb-sdtags { display: flex; flex-wrap: wrap; gap: 6px }
-.pb-sdtag {
+.sc-axis > span:first-child { color: color-mix(in srgb, var(--acc2) 75%, transparent); flex: none }
+.sc-axis > span:last-child { color: color-mix(in srgb, var(--acc) 80%, transparent); flex: none }
+.sc-axline {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--fg) 16%, transparent) 0 3px, transparent 3px 8px);
+}
+
+/* ---------- lanes ---------- */
+.sc-lanes { list-style: none; margin: 0; padding: 0 }
+.sc-lane {
+  align-items: center;
+  min-height: 50px;
+  position: relative;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
+}
+.sc-lane:last-of-type { border-bottom: 0 }
+.sc-cols {
+  position: absolute;
+  inset: 0 0 0 var(--sc-col, 190px);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  pointer-events: none;
+}
+.sc-cols span + span { border-left: 1px solid color-mix(in srgb, var(--fg) 5%, transparent) }
+.sc-lbl {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  color: color-mix(in srgb, var(--fg) 36%, transparent);
+  padding-right: 14px;
+}
+
+.sc-name {
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  color: var(--fg-strong);
+  padding-right: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity .38s ease, transform .45s cubic-bezier(.2,.9,.3,1);
+}
+.sc-name b { font-weight: 400; font-size: 10.5px; letter-spacing: .1em; flex: none; color: var(--acc) }
+.sc-lane.pre .sc-name b { color: var(--acc2) }
+.sc-lane.on .sc-name { opacity: 1; transform: none }
+
+/* ---------- the bar ----------
+   The slot is NEVER given overflow: hidden — the tick and the leading
+   edge are positioned relative to it, and clipping slices them. */
+.sc-slot { grid-row: 1; position: relative; height: 28px; z-index: 2 }
+.sc-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  transition: width var(--dur, .6s) cubic-bezier(.32,.72,0,1) .16s, box-shadow .5s ease;
+}
+.sc-lane.on .sc-fill { width: 100% }
+
+/* the lit leading edge rides the fill's right side */
+.sc-edge {
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--eg, var(--acc));
+  box-shadow: 0 0 12px var(--eg, var(--acc));
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.sc-lane.on .sc-edge { opacity: 1 }
+.sc-lane.done .sc-edge { opacity: 0 }
+
+.sc-in {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
   font-family: var(--font-mono), monospace;
   font-size: 10.5px;
-  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
-  border-radius: var(--r-pill);
-  padding: 4px 9px;
-  color: color-mix(in srgb, var(--fg) 52%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity .4s ease, transform .4s cubic-bezier(.2,.9,.3,1);
 }
-.pb-sfade-a { animation: pb-sfade .45s cubic-bezier(.2,.8,.3,1) both }
-@keyframes pb-sfade { from { opacity: 0; transform: translateY(8px); filter: blur(4px) } to { opacity: 1; transform: none; filter: none } }
+.sc-lane.done .sc-in { opacity: 1; transform: none }
+.sc-in.hastick { padding-right: 30px } /* reserves room for the tick */
 
-/* --- Handover launch on the stepper: the desktop finale's six-layer
-   construction sized for the 28px ring (smoke and judder deliberately
-   dropped at this scale; the panel takes a lift instead). These rules
-   sit after the .pb-snow block so .pb-slit wins the cascade. --- */
-.pb-sring-launch .pb-srk {
+/* the tick sits INSIDE the bar at its right end */
+.sc-tick {
   position: absolute;
+  right: 7px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  border-radius: 999px;
+  background: var(--tk, var(--acc));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
   opacity: 0;
-  transform: translateY(3px) scale(.88);
-  transform-origin: 50% 85%;
+  transform: scale(.4);
+  transition: opacity .28s ease, transform .42s cubic-bezier(.2,1.35,.35,1);
 }
-.pb-sring-launch.pb-slit .pb-snum { opacity: 0 }
-.pb-sring-launch.pb-slit { background: var(--acc); border-color: var(--acc) }
-.pb-sring-launch.pb-slit .pb-srk { animation: pb-slaunch 1.15s linear .1s forwards }
-@keyframes pb-slaunch {
-  0%   { opacity: 0; transform: translate(0,3px) scale(.88); animation-timing-function: ease-out }
-  9%   { opacity: 1; transform: translate(0,3px) scale(.92) }
-  14%  { transform: translate(-.5px,3.4px) scale(.92) }
-  18%  { transform: translate(.5px,3px) scale(.93) }
-  22%  { transform: translate(-.4px,3.8px) scaleX(1.07) scaleY(.88) }
-  27%  { transform: translate(.4px,3.5px) scaleX(1.05) scaleY(.9); animation-timing-function: cubic-bezier(.55,0,.85,.35) }
-  58%  { transform: translate(0,-1.4px) scale(1.05) }
-  74%  { transform: translate(0,-3px) scale(1.07); animation-timing-function: cubic-bezier(.25,.6,.3,1) }
-  100% { opacity: 1; transform: none }
+.sc-lane.done .sc-tick { opacity: 1; transform: none }
+
+/* the two voices */
+.sc-b2 { background: color-mix(in srgb, var(--acc2) 22%, transparent); border-color: color-mix(in srgb, var(--acc2) 52%, transparent) }
+.sc-t2 { color: var(--acc2) }
+.sc-b1 { background: color-mix(in srgb, var(--acc) 25%, transparent); border-color: color-mix(in srgb, var(--acc) 55%, transparent) }
+.sc-t1 { color: var(--acc) }
+.sc-bfin { background: var(--acc); border-color: var(--acc) }
+.sc-lane.done .sc-bfin { box-shadow: 0 0 26px color-mix(in srgb, var(--acc) 48%, transparent) }
+.sc-tfin { color: var(--ink); font-weight: 600 }
+
+/* ---------- deliverables row ---------- */
+.sc-mile {
+  display: block;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid color-mix(in srgb, var(--acc2) 20%, transparent);
 }
-.pb-score {
+.sc-mhead {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 15px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .4s ease, transform .45s cubic-bezier(.2,.9,.3,1);
+}
+.sc-mile.on .sc-mhead { opacity: 1; transform: none }
+.sc-mlbl {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  color: color-mix(in srgb, var(--acc2) 85%, transparent);
+  white-space: nowrap;
+}
+.sc-mrule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--acc2) 30%, transparent),
+    color-mix(in srgb, var(--acc) 26%, transparent) 65%, transparent);
+}
+.sc-mnote {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: color-mix(in srgb, var(--fg) 42%, transparent);
+  white-space: nowrap;
+}
+
+.sc-mgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; list-style: none; margin: 0; padding: 0 }
+
+/* --mc is the whole colour mechanism — hairline, diamond and number all
+   read from it; .lime is the only change cards 03–04 need. */
+.sc-m {
+  --mc: var(--acc2);
+  position: relative;
+  min-width: 0;
+  padding: 14px 15px 15px;
+  border: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--fg) 2%, transparent);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(9px);
+  transition: opacity .45s ease, transform .5s cubic-bezier(.2,1.15,.3,1),
+              border-color .25s ease, background .25s ease;
+}
+.sc-m.lime { --mc: var(--acc) }
+.sc-m.on { opacity: 1; transform: none }
+.sc-m:hover {
+  border-color: color-mix(in srgb, var(--mc) 42%, transparent);
+  background: color-mix(in srgb, var(--mc) 5%, transparent);
+}
+.sc-m::after {
+  content: "";
   position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 3px;
-  height: 11px;
-  border-radius: 0 0 999px 999px;
-  background: linear-gradient(180deg, #fff, #eaffb0 55%, transparent);
-  transform: translate(-50%,-1px) scaleY(.1);
-  transform-origin: 50% 0;
-  opacity: 0;
-  z-index: 2; /* above the flare, or the blur washes it out */
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--mc);
+  opacity: .55;
 }
-.pb-sflare {
+.sc-mtop { display: flex; align-items: center; gap: 8px; margin-bottom: 9px }
+.sc-mdi {
+  width: 7px;
+  height: 7px;
+  background: var(--mc);
+  transform: rotate(45deg);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--mc) 70%, transparent);
+  flex: none;
+}
+.sc-mv { font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .1em; color: color-mix(in srgb, var(--mc) 88%, transparent) }
+.sc-mph { margin-left: auto; font-family: var(--font-mono), monospace; font-size: 9.5px; color: color-mix(in srgb, var(--fg) 38%, transparent); white-space: nowrap }
+.sc-mk { display: block; font-size: 13px; line-height: 1.45; letter-spacing: -.008em; color: color-mix(in srgb, var(--fg) 80%, transparent); text-wrap: pretty }
+
+/* ---------- Handover launch — the finale ---------- */
+.sc-rkn {
   position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 8px;
-  height: 22px;
-  border-radius: 0 0 60% 60%;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 85%, transparent), color-mix(in srgb, var(--acc) 25%, transparent) 55%, transparent);
-  filter: blur(1.6px);
-  transform: translate(-50%,-1px) scaleY(.1);
-  transform-origin: 50% 0;
+  right: 6px;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  border-radius: 999px;
+  background: var(--ink);
+  z-index: 5;
   opacity: 0;
+  transform: scale(.4);
+  transition: opacity .26s ease, transform .4s cubic-bezier(.2,1.35,.35,1);
 }
-.pb-sring-launch.pb-slit .pb-score { animation: pb-score .95s linear .16s forwards }
-.pb-sring-launch.pb-slit .pb-sflare { animation: pb-sflare 1.25s linear .16s forwards }
-@keyframes pb-score {
-  0%   { opacity: 0; transform: translate(-50%,-1px) scaleY(.1) }
-  10%  { opacity: 1; transform: translate(-50%,0) scaleY(1) }
-  18%  { opacity: .6; transform: translate(-50%,0) scaleY(.7) }
-  26%  { opacity: 1; transform: translate(-50%,0) scaleY(1.25) }
-  40%  { opacity: .8; transform: translate(-50%,1px) scaleY(1) }
-  55%  { opacity: 1; transform: translate(-50%,1px) scaleY(1.15) }
-  100% { opacity: 0; transform: translate(-50%,4px) scaleY(.35) }
-}
-@keyframes pb-sflare {
-  0%   { opacity: 0;   transform: translate(-50%,-1px) scaleY(.1)  scaleX(.6) }
-  14%  { opacity: .85; transform: translate(-50%,0)    scaleY(1)   scaleX(1) }
-  30%  { opacity: .6;  transform: translate(-50%,1px)  scaleY(1.4) scaleX(1.15) }
-  48%  { opacity: .8;  transform: translate(-50%,2px)  scaleY(1.7) scaleX(1) }
-  70%  { opacity: .45; transform: translate(-50%,5px)  scaleY(1.3) scaleX(1.3) }
-  100% { opacity: 0;   transform: translate(-50%,12px) scaleY(.8)  scaleX(1.6) }
-}
-.pb-sshk {
+.sc-lane.done .sc-rkn { opacity: 1; transform: none }
+.sc-pad { position: absolute; left: 0; right: 0; top: 0; bottom: 0 }
+
+/* the rocket travels 62px past the badge, so its layer must not clip.
+   sc-fly must run `linear` — the per-stage curves live inside the
+   keyframes and an easing on the shorthand silently overrides them. */
+.sc-rk {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-pill);
-  border: 1.5px solid color-mix(in srgb, var(--acc) 70%, transparent);
-  transform: translate(-50%,-50%) scale(.4);
+  width: 15px;
+  height: 15px;
+  margin: -8px 0 0 -7.5px;
   opacity: 0;
-  pointer-events: none;
+  transform: translateY(2px) scale(.9);
+  transform-origin: 50% 80%;
+  z-index: 3;
 }
-.pb-sring-launch.pb-slit .pb-sshk { animation: pb-sshock 1.1s cubic-bezier(.15,.7,.3,1) forwards }
-.pb-sring-launch.pb-slit .pb-sshk-b { animation-delay: .14s }
-.pb-sring-launch.pb-slit .pb-sshk-c { animation-delay: .28s }
-@keyframes pb-sshock {
-  0%   { opacity: 0; transform: translate(-50%,-50%) scale(.4) }
-  12%  { opacity: .85 }
-  100% { opacity: 0; transform: translate(-50%,-50%) scale(6) }
+.sc-lane.done .sc-rk { animation: sc-fly 1.5s linear .2s forwards }
+@keyframes sc-fly {
+  0%   { opacity: 1; transform: translateY(2px) scale(.9) }
+  10%  { transform: translate(-.6px,2.4px) scale(.92) }
+  16%  { transform: translate(.6px,1.8px) scale(.92) }
+  22%  { transform: translate(-.5px,2.8px) scaleX(1.08) scaleY(.86) }
+  30%  { transform: translate(.5px,2.2px) scaleX(1.05) scaleY(.92); animation-timing-function: cubic-bezier(.5,0,.75,.2) }
+  52%  { opacity: 1;   transform: translateY(-14px) scale(1) }
+  76%  { opacity: .75; transform: translateY(-34px) scale(.9) }
+  100% { opacity: 0;   transform: translateY(-62px) scale(.66) }
 }
-.pb-spanel.pb-slit { animation: pb-slift 1s cubic-bezier(.2,.9,.3,1) .1s both }
-@keyframes pb-slift {
-  0%   { transform: none }
-  40%  { transform: translateY(-6px) scale(1.01) }
-  100% { transform: translateY(-3px) }
+
+/* two flame layers, flickering deliberately OUT OF PHASE — sync them
+   and they collapse into one object */
+.sc-core, .sc-flare { position: absolute; left: 50%; top: 100%; transform-origin: 50% 0; opacity: 0 }
+.sc-core {
+  width: 3px;
+  height: 11px;
+  margin-left: -1.5px;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(180deg,#fff,#eaffb0 55%,transparent);
+  transform: scaleY(.1);
+  z-index: 2;
 }
-.pb-sship {
+.sc-flare {
+  width: 8px;
+  height: 20px;
+  margin-left: -4px;
+  border-radius: 0 0 60% 60%;
+  background: linear-gradient(180deg,#eaffb0,color-mix(in srgb,#eaffb0 26%,transparent) 55%,transparent);
+  filter: blur(1.5px);
+  transform: scaleY(.1);
+}
+.sc-lane.done .sc-core { animation: sc-core 1.35s linear .24s forwards }
+.sc-lane.done .sc-flare { animation: sc-flare 1.4s linear .24s forwards }
+@keyframes sc-core {
+  0% { opacity: 0; transform: scaleY(.1) }   8% { opacity: 1;   transform: scaleY(1) }
+  14% { opacity: .55; transform: scaleY(.7) } 21% { opacity: 1; transform: scaleY(1.3) }
+  30% { opacity: .8; transform: scaleY(1) }   42% { opacity: 1; transform: scaleY(1.2) }
+  62% { opacity: .7; transform: scaleY(.85) } 100% { opacity: 0; transform: scaleY(.3) }
+}
+@keyframes sc-flare {
+  0% { opacity: 0; transform: scaleY(.1) scaleX(.6) }  12% { opacity: .85; transform: scaleY(1) scaleX(1) }
+  26% { opacity: .55; transform: scaleY(1.5) scaleX(1.15) } 40% { opacity: .8; transform: scaleY(1.8) scaleX(1) }
+  64% { opacity: .5; transform: scaleY(1.4) scaleX(1.25) }  100% { opacity: 0; transform: scaleY(.7) scaleX(1.5) }
+}
+
+/* smoke left on the pad */
+.sc-puff {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 34%, transparent), transparent 68%);
+  filter: blur(2px);
+  opacity: 0;
+  transform: scale(.3);
+}
+.sc-lane.done .sc-puff { animation: sc-puff 1.1s ease-out .5s forwards }
+@keyframes sc-puff { 0% { opacity: 0; transform: scale(.3) } 22% { opacity: .8; transform: scale(1) } 100% { opacity: 0; transform: scale(2.1) } }
+
+/* the check strokes in after the rocket has gone */
+.sc-ck { position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; z-index: 4 }
+.sc-ck path {
+  stroke: var(--acc);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 18;
+  stroke-dashoffset: 18;
+}
+.sc-lane.done .sc-ck path { animation: sc-draw .42s cubic-bezier(.3,.85,.3,1) 1.34s forwards }
+@keyframes sc-draw { to { stroke-dashoffset: 0 } }
+.sc-lane.done .sc-rkn { animation: sc-pad-fill .5s ease 1.34s forwards }
+@keyframes sc-pad-fill { to { background: var(--ink); box-shadow: 0 0 0 2px color-mix(in srgb, var(--acc) 30%, transparent) } }
+
+/* ---------- mobile (≤720px) ---------- */
+.sc-mobile { display: none }
+
+.mb-p {
+  --mv: var(--acc);
+  padding: 16px 0 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .45s ease, transform .5s cubic-bezier(.2,.9,.3,1);
+}
+.mb-p.pre { --mv: var(--acc2) }
+.mb-p.on { opacity: 1; transform: none }
+.mb-p:last-of-type { border-bottom: 0 }
+
+.mb-top { display: flex; align-items: center; gap: 10px }
+.mb-n { font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .1em; color: var(--mv) }
+.mb-t { font-size: 16px; font-weight: 600; letter-spacing: -.015em; color: var(--fg-strong) }
+
+.mb-steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 9px 0 10px }
+.mb-steps span {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--mv) 38%, transparent);
+  color: color-mix(in srgb, var(--mv) 90%, transparent);
+}
+
+.mb-track { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; height: 6px; margin-bottom: 10px }
+.mb-seg { border-radius: 2px; background: color-mix(in srgb, var(--fg) 8%, transparent) }
+.mb-seg.f { background: color-mix(in srgb, var(--mv) 55%, transparent) }
+.mb-p.fin .mb-seg.f { background: var(--acc) }
+
+.mb-b { margin: 0; font-size: 13px; line-height: 1.55; color: color-mix(in srgb, var(--fg) 55%, transparent) }
+
+/* the shipped pill: rocket launches out of it, a check strokes into
+   the vacated spot — the desktop finale at pill scale */
+.mb-ship {
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  margin-top: 4px;
   font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  color: var(--acc);
-  border-top: 1px solid color-mix(in srgb, var(--acc) 25%, transparent);
-  padding-top: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--acc);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.mb-pad { position: relative; width: 12px; height: 12px; flex: none }
+.mb-rk { position: absolute; inset: 0; opacity: 0; transform: translateY(1px) scale(.9); transform-origin: 50% 80% }
+.mb-p.fin.on .mb-rk { animation: mb-fly 1.3s linear .5s forwards }
+@keyframes mb-fly {
+  0%   { opacity: 1; transform: translateY(1px) scale(.9) }
+  14%  { transform: translate(-.5px,1.6px) scale(.92) }
+  24%  { transform: translate(.5px,1.9px) scaleX(1.07) scaleY(.88); animation-timing-function: cubic-bezier(.5,0,.75,.2) }
+  55%  { opacity: 1;  transform: translateY(-11px) scale(1) }
+  100% { opacity: 0;  transform: translateY(-40px) scale(.7) }
+}
+.mb-core {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 2.5px;
+  height: 8px;
+  margin-left: -1.25px;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(180deg,#fff,#eaffb0 55%,transparent);
+  transform-origin: 50% 0;
+  transform: scaleY(.1);
   opacity: 0;
 }
-.pb-sship.pb-slit { animation: pb-sship-in .7s cubic-bezier(.2,.9,.3,1) .55s both }
-@keyframes pb-sship-in { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
+.mb-p.fin.on .mb-core { animation: sc-core 1.2s linear .54s forwards }
+.mb-ck2 { position: absolute; inset: 0; width: 12px; height: 12px }
+.mb-ck2 path {
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 18;
+  stroke-dashoffset: 18;
+}
+.mb-p.fin.on .mb-ck2 path { animation: sc-draw .4s cubic-bezier(.3,.85,.3,1) 1.7s forwards }
 
-/* ---------------- Testimonials carousel ---------------- */
+/* ---------- responsive ---------- */
+/* 721–1100: the desktop chart with a narrower phase column. Do NOT
+   reintroduce the tablet stepper. */
+@media (max-width: 1100px) {
+  .sc-ruler, .sc-lane { --sc-col: 150px }
+  .sc-cols { inset: 0 0 0 150px }
+  .sc-in { font-size: 10px }
+  /* "Prototype / design" cannot hold one line in 150px — wrap the name
+     rather than clip it or shrink the column further. */
+  .sc-name { white-space: normal; font-size: 11.5px; line-height: 1.3 }
+  .sc-mgrid { grid-template-columns: repeat(2, 1fr) }
+}
+@media (max-width: 720px) {
+  .sc-chart { display: none }
+  .sc-mobile { display: block }
+  .sc-head { flex-direction: column; align-items: flex-start; gap: 14px }
+  .sc-lead { max-width: none }
+  .sc-mile-m .sc-mgrid { grid-template-columns: 1fr }
+}
+
+/* ---------------- Testimonial (static, pre-CTA) ---------------- */
 
 .pb-carsec { padding: 72px 0 8px }
-.pb-quote-kicker { margin-bottom: 26px }
-/* min-height is load-bearing: the two quotes differ in length and the
-   page must not jump when the carousel advances. */
-.car { position: relative; min-height: 236px; display: flex; flex-direction: column; justify-content: space-between; gap: 26px }
+.pb-quote-kicker { margin-bottom: 12px }
+.pb-quote-h { margin: 0 0 26px }
+.car { position: relative; margin: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 26px }
 .car-mark {
   position: absolute;
   right: 4px;
@@ -2056,8 +2219,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   pointer-events: none;
   user-select: none;
 }
-.car-slide { display: flex; flex-direction: column; gap: 24px; animation: car-in .5s cubic-bezier(.2,.8,.3,1) both }
-@keyframes car-in { from { opacity: 0; transform: translateY(12px); filter: blur(4px) } to { opacity: 1; transform: none; filter: none } }
 .car-q {
   margin: 0;
   font-size: 25px;
@@ -2067,62 +2228,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   max-width: 860px;
   text-wrap: pretty;
 }
-.car-cap { display: flex; align-items: center; gap: 13px }
-.car-av {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--r-pill);
-  border: 1px solid color-mix(in srgb, var(--acc) 45%, transparent);
-  background: color-mix(in srgb, var(--acc) 12%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono), monospace;
-  font-size: 13px;
-  color: var(--acc);
-  flex: none;
-}
+.car-cap { display: flex; align-items: center; gap: 13px; margin: 0 }
 .car-name { display: block; font-size: 15px; font-weight: 600; letter-spacing: -.01em; color: var(--fg-strong) }
 .car-role { display: block; font-family: var(--font-mono), monospace; font-size: 11.5px; color: color-mix(in srgb, var(--fg) 45%, transparent) }
-.car-bar { display: flex; align-items: center; gap: 14px; border-top: 1px solid color-mix(in srgb, var(--fg) 9%, transparent); padding-top: 16px }
-.car-bars { display: flex; gap: 6px; flex: 1 }
-.car-seg {
-  flex: 1;
-  max-width: 90px;
-  height: 2px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--fg) 12%, transparent);
-  overflow: hidden;
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  display: block;
-}
-.car-seg > span { display: block; height: 2px; background: var(--acc); width: 0 }
-.car-seg.done > span { width: 100% }
-/* The sweep is a keyframe animation restarted via key remount — a width
-   transition silently stops replaying after the first cycle. */
-.car-seg .sweep { animation: car-sweep 6s linear forwards }
-@keyframes car-sweep { from { width: 0 } to { width: 100% } }
-.car-paused .car-seg .sweep, .car-paused .car-slide { animation-play-state: paused }
-.car-count { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 34%, transparent) }
-.car-nav { display: flex; gap: 6px }
-.car-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--r-pill);
-  border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
-  background: none;
-  color: color-mix(in srgb, var(--fg) 55%, transparent);
-  font-family: var(--font-mono), monospace;
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color .2s ease, color .2s ease;
-}
-.car-btn:hover { border-color: color-mix(in srgb, var(--acc) 55%, transparent); color: var(--acc) }
 
 /* ---------------- Closing section ---------------- */
 /* Claim → proof band → the full-lime close. The lime block is the one
@@ -2233,7 +2341,8 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   flex-wrap: wrap;
   font-family: var(--font-mono), monospace;
   font-size: 12px;
-  color: color-mix(in srgb, var(--fg) 40%, transparent);
+  /* 58% clears WCAG 4.5:1 against --bg; 40% failed the contrast audit. */
+  color: color-mix(in srgb, var(--fg) 58%, transparent);
 }
 .pb-footer-brand { color: var(--fg) }
 a.pb-footer-brand:hover { color: var(--fg) }
@@ -2489,8 +2598,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
    ============================================================ */
 
 @media (max-width: 1100px) {
-  .pb-timeline { grid-template-columns: repeat(2, 1fr) !important }
-  .pb-timeline .pb-line { display: none !important }
   .bg-grid { background-size: 40px 40px }
 }
 
@@ -2510,6 +2617,9 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-case, .pb-redcard { padding: 28px !important }
   h1, .pb-hero-h { font-size: 46px !important }
   h2 { font-size: 34px !important }
+  /* The offer pane title moved from h2 to h3 for hierarchy; keep it on
+     the h2 scale it always had. */
+  .pb-offer-title { font-size: 34px !important }
   .pb-h-lg { font-size: 38px }
   .car-q { font-size: 21px }
   .ct-shell { grid-template-columns: 1fr !important }
@@ -2533,12 +2643,14 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 @media (max-width: 800px) {
   .pb-navlink { padding: 9px 7px }
   .pb-capsule { font-size: 11.5px }
+  /* The longer "send us the problem" CTA overflows this band with its
+     brackets on — drop them here, keep the label and arrow. */
+  .pb-cta .pb-brk { display: none }
+  .pb-cta { font-size: 12px; padding: 9px 4px }
 }
 
 @media (max-width: 720px) {
   .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 18px !important; padding-right: 18px !important }
-  .pb-shead { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important }
-  .pb-shead > p { max-width: none !important }
   .pb-capsule { display: none !important }
   .ct-capsule { display: none !important }
   .stagewrap { height: 320px } /* taller — content stacks */
@@ -2564,17 +2676,20 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-pconn { display: none } /* connectors can't span a wrapped row */
   .pb-navlinks { display: none !important }
   .pb-burger { display: flex }
-  .pb-row { grid-template-columns: 1fr auto !important; gap: 6px 14px !important }
-  .pb-row .pb-row-desc { grid-column: 1 / -1 }
-  .pb-row:hover { padding-left: 8px !important }
+  .pb-row { grid-template-columns: 1fr !important; gap: 6px 14px !important }
+  .pb-outcomes { grid-template-columns: 1fr; gap: 12px }
   h1, .pb-hero-h { font-size: 34px !important; letter-spacing: -.025em !important }
   h2 { font-size: 27px !important }
   h3 { font-size: 24px !important }
+  /* Headings that are h3 for hierarchy but deliberately not on the
+     display scale: keep their own sizes. */
+  .pb-offer-title { font-size: 27px !important }
+  .mb-t { font-size: 16px !important }
+  .pb-ask-static .pb-ask-q { font-size: 16px !important }
   .pb-chip, .ct-chip { font-size: 11.5px !important; padding: 8px 12px !important }
   .ct-chip { padding: 9px 13px !important }
   .car-q { font-size: 18px }
   .car-mark { font-size: 110px; top: -32px }
-  .car { min-height: 300px }
   .ct-h1 { font-size: 33px !important; letter-spacing: -.025em !important }
   .ct-two { grid-template-columns: 1fr !important; gap: 16px !important }
 }
@@ -2635,175 +2750,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
     padding: 11px 8px;
     font-size: 11.5px;
   }
-}
-
-/* ---------------- Mobile process rail (≤720px) ----------------
-   "Ticking off" treatment: every step reads at full strength from
-   first paint; only the rail fill, the node checks and the Handover
-   launch animate. Replaces the stacked cards and the earlier spine. */
-
-.pb-mrail { display: none; position: relative; padding-left: 28px }
-@media (max-width: 720px) {
-  .pb-timeline { display: none !important }
-  .pb-mrail { display: block }
-}
-.pb-mtrack {
-  position: absolute;
-  left: 7px;
-  top: 6px;
-  bottom: 26px;
-  width: 2px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--fg) 10%, transparent);
-}
-.pb-mfill {
-  position: absolute;
-  left: 7px;
-  top: 6px;
-  width: 2px;
-  border-radius: 2px;
-  background: var(--acc);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--acc) 55%, transparent);
-  height: 0;
-  transition: height .7s cubic-bezier(.35,.75,.3,1);
-}
-.pb-mstep { position: relative; padding: 0 0 22px }
-.pb-mnd {
-  position: absolute;
-  left: -28px;
-  top: 1px;
-  width: 15px;
-  height: 15px;
-  border-radius: var(--r-pill);
-  background: var(--acc);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 10px color-mix(in srgb, var(--acc) 35%, transparent);
-  transition: background .35s ease, border-color .35s ease, box-shadow .35s ease;
-}
-.pb-mnd.pb-mhollow {
-  background: var(--bg);
-  border: 1.5px solid color-mix(in srgb, var(--fg) 22%, transparent);
-  box-shadow: none;
-}
-.pb-mtk { opacity: 0; transition: opacity .3s ease }
-.pb-mnd:not(.pb-mhollow) .pb-mtk { opacity: 1 }
-.pb-mtop { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap }
-.pb-mn { font-family: var(--font-mono), monospace; font-size: 10px; color: var(--acc); letter-spacing: .1em }
-.pb-mt { font-size: 16px; font-weight: 600; letter-spacing: -.015em; margin: 0; color: var(--fg-strong) }
-.pb-mw { font-family: var(--font-mono), monospace; font-size: 9.5px; color: color-mix(in srgb, var(--fg) 30%, transparent); margin-left: auto }
-.pb-mb { margin: 6px 0 0; font-size: 13px; line-height: 1.55; color: color-mix(in srgb, var(--fg) 55%, transparent) }
-.pb-mship {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 9px;
-  font-family: var(--font-mono), monospace;
-  font-size: 10px;
-  color: var(--acc);
-  border: 1px solid color-mix(in srgb, var(--acc) 40%, transparent);
-  background: color-mix(in srgb, var(--acc) 10%, transparent);
-  border-radius: var(--r-pill);
-  padding: 5px 10px;
-  opacity: 0;
-}
-.pb-mship.pb-mlit { animation: pb-mship-in .7s cubic-bezier(.2,.9,.3,1) .55s both }
-@keyframes pb-mship-in { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
-
-/* Launch node — the desktop finale scaled to a 17px node. pb-mlaunch
-   must stay `linear`: the per-stage curves live inside the keyframes.
-   Smoke and card judder are dropped at this scale. */
-.pb-mrkn {
-  position: absolute;
-  left: -29px;
-  top: 0;
-  width: 17px;
-  height: 17px;
-  border-radius: var(--r-pill);
-  border: 1.5px solid color-mix(in srgb, var(--acc) 45%, transparent);
-  background: color-mix(in srgb, var(--acc) 12%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.pb-mrkn.pb-mlit { background: var(--acc); border-color: var(--acc) }
-.pb-mrk { opacity: 0; transform: translateY(3px) scale(.88); transform-origin: 50% 85% }
-.pb-mrkn.pb-mlit .pb-mrk { animation: pb-mlaunch 1.15s linear .1s forwards }
-@keyframes pb-mlaunch {
-  0%   { opacity: 0; transform: translate(0,3px) scale(.88); animation-timing-function: ease-out }
-  9%   { opacity: 1; transform: translate(0,3px) scale(.92) }
-  14%  { transform: translate(-.5px,3.3px) scale(.92) }
-  18%  { transform: translate(.5px,2.9px) scale(.93) }
-  22%  { transform: translate(-.4px,3.7px) scaleX(1.07) scaleY(.88) }
-  27%  { transform: translate(.4px,3.4px) scaleX(1.05) scaleY(.9); animation-timing-function: cubic-bezier(.55,0,.85,.35) }
-  58%  { transform: translate(0,-1.2px) scale(1.05) }
-  74%  { transform: translate(0,-2.8px) scale(1.07); animation-timing-function: cubic-bezier(.25,.6,.3,1) }
-  100% { opacity: 1; transform: none }
-}
-.pb-mcore {
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 3px;
-  height: 10px;
-  border-radius: 0 0 999px 999px;
-  background: linear-gradient(180deg, #fff, #eaffb0 55%, transparent);
-  transform: translate(-50%,-1px) scaleY(.1);
-  transform-origin: 50% 0;
-  opacity: 0;
-  z-index: 2; /* above the flare, or the blur washes it out */
-}
-.pb-mflare {
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: 7px;
-  height: 19px;
-  border-radius: 0 0 60% 60%;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 85%, transparent), color-mix(in srgb, var(--acc) 25%, transparent) 55%, transparent);
-  filter: blur(1.5px);
-  transform: translate(-50%,-1px) scaleY(.1);
-  transform-origin: 50% 0;
-  opacity: 0;
-}
-.pb-mrkn.pb-mlit .pb-mcore { animation: pb-mcore .95s linear .16s forwards }
-.pb-mrkn.pb-mlit .pb-mflare { animation: pb-mflare 1.25s linear .16s forwards }
-@keyframes pb-mcore {
-  0%   { opacity: 0; transform: translate(-50%,-1px) scaleY(.1) }
-  10%  { opacity: 1; transform: translate(-50%,0) scaleY(1) }
-  18%  { opacity: .6; transform: translate(-50%,0) scaleY(.7) }
-  26%  { opacity: 1; transform: translate(-50%,0) scaleY(1.25) }
-  40%  { opacity: .8; transform: translate(-50%,1px) scaleY(1) }
-  55%  { opacity: 1; transform: translate(-50%,1px) scaleY(1.15) }
-  100% { opacity: 0; transform: translate(-50%,4px) scaleY(.35) }
-}
-@keyframes pb-mflare {
-  0%   { opacity: 0;   transform: translate(-50%,-1px) scaleY(.1)  scaleX(.6) }
-  14%  { opacity: .85; transform: translate(-50%,0)    scaleY(1)   scaleX(1) }
-  30%  { opacity: .6;  transform: translate(-50%,1px)  scaleY(1.4) scaleX(1.15) }
-  48%  { opacity: .8;  transform: translate(-50%,2px)  scaleY(1.7) scaleX(1) }
-  70%  { opacity: .45; transform: translate(-50%,5px)  scaleY(1.3) scaleX(1.3) }
-  100% { opacity: 0;   transform: translate(-50%,12px) scaleY(.8)  scaleX(1.6) }
-}
-.pb-mshk {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 17px;
-  height: 17px;
-  border-radius: var(--r-pill);
-  border: 1.5px solid color-mix(in srgb, var(--acc) 70%, transparent);
-  transform: translate(-50%,-50%) scale(.4);
-  opacity: 0;
-}
-.pb-mrkn.pb-mlit .pb-mshk { animation: pb-mshock 1.1s cubic-bezier(.15,.7,.3,1) forwards }
-.pb-mrkn.pb-mlit .pb-mshk-b { animation-delay: .14s }
-.pb-mrkn.pb-mlit .pb-mshk-c { animation-delay: .28s }
-@keyframes pb-mshock {
-  0%   { opacity: 0; transform: translate(-50%,-50%) scale(.4) }
-  12%  { opacity: .85 }
-  100% { opacity: 0; transform: translate(-50%,-50%) scale(7) }
 }
 
 /* Fix 5 — hero buttons stack full-width and aligned. */
@@ -2888,7 +2834,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
     color: var(--acc);
     animation: none;
   }
-  .pb-flow { transform: scaleX(1) }
   .pb-wave > span { transform: scaleY(.18) !important }
   .bg-aurora, .bg-grid { animation: none !important }
   .pb-drawer {

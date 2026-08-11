@@ -1,22 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { PHASES } from "@/lib/content";
+import { useEffect, useRef } from "react";
+import { SCHEDULE } from "@/lib/content";
 import { observeReveal, prefersReducedMotion } from "@/lib/motion";
 
-/* Sequence math derives from the phase count (four since the Measure
-   phase was removed): the counter runs 1..N+1, where N+1 is the finale. */
-const N = PHASES.length;
-const FINALE = N + 1;
+/* Schedule animation constants (PROCESS_schedule.md): duration is a
+   floor plus the phase's track span, so Build visibly takes longer to
+   draw but short bars still read as drawing; each row starts at 66% of
+   the previous one. Timeout chain, not rAF — every animated value is a
+   CSS transition. */
+const FLOOR = 420;
+const PER_WEEK = 150;
+const OVERLAP = 0.66;
+
+const CYAN = "var(--acc2)";
+const LIME = "var(--acc)";
 
 function TickSvg(): JSX.Element {
   return (
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true">
       <path
-        className="pb-tick"
-        d="M5 12.5 L10 17.5 L19 7"
-        stroke="var(--bg)"
-        strokeWidth="3.8"
+        d="M2.5 6.2l2.3 2.3 4.7-5"
+        fill="none"
+        stroke="var(--ink)"
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -24,142 +31,138 @@ function TickSvg(): JSX.Element {
   );
 }
 
-function RocketSvg(): JSX.Element {
+/* The Handover pad: rocket shudders, launches out of the bar, leaves a
+   smoke puff, then a check strokes into the vacated pad. */
+function LaunchPad(): JSX.Element {
   return (
-    <svg className="pb-rocket" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 2.5c3.2 2.1 5 5.6 5 9.4l-2.2 2.6h-5.6L7 11.9c0-3.8 1.8-7.3 5-9.4Z"
-        fill="var(--bg)"
-      />
-      <path
-        d="M9.2 15.6 8 19l2.4-1.2M14.8 15.6 16 19l-2.4-1.2"
-        stroke="var(--bg)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <span className="sc-rkn">
+      <span className="sc-pad">
+        <span className="sc-puff" aria-hidden="true" />
+        <span className="sc-rk" aria-hidden="true">
+          <span className="sc-flare" />
+          <span className="sc-core" />
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 1.8c3.4 2.3 5.3 6 5.3 10l-2.3 2.8H9L6.7 11.8c0-4 1.9-7.7 5.3-10Z" fill="#c6f24e" />
+            <path d="M9 14.6h6l-.7 2.4H9.7L9 14.6Z" fill="#c6f24e" />
+            <path d="M6.7 10.4 4 13.4l1.1 1.9 1.9-1.4M17.3 10.4 20 13.4l-1.1 1.9-1.9-1.4" fill="#c6f24e" />
+          </svg>
+        </span>
+        <svg className="sc-ck" viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M5.4 10.6l3.1 3.1 6.3-6.9" />
+        </svg>
+      </span>
+    </span>
   );
 }
 
-/* Phases complete left→right, one every 780ms, once the section scrolls
-   into view. One phase counter drives all three layouts: the card
-   timeline (≥1101px), the tablet stepper (721–1100px) and the mobile
-   spine (≤720px). The Handover finale replays on hover/tap of that card
-   only, guarded while the main sequence runs. */
-/* Mobile rail fill: tuned to land just past each node. */
-const RAIL_FILL = [12, 38, 64, 92];
+function Deliverables({ className }: { className?: string }): JSX.Element {
+  return (
+    <div className={`sc-mile${className ? ` ${className}` : ""}`}>
+      <div className="sc-mhead">
+        <span className="sc-mlbl">WHAT YOU RECEIVE</span>
+        <span className="sc-mrule" aria-hidden="true" />
+        <span className="sc-mnote">one deliverable per phase · yours to keep</span>
+      </div>
+      <ul className="sc-mgrid">
+        {SCHEDULE.map((p, k) => (
+          <li className={`sc-m${p.pre ? "" : " lime"}`} data-after={k} key={p.num}>
+            <div className="sc-mtop">
+              <span className="sc-mdi" aria-hidden="true" />
+              <span className="sc-mv">{p.num}</span>
+              <span className="sc-mph">{p.deliverable.tag}</span>
+            </div>
+            <span className="sc-mk">{p.deliverable.text}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function ProcessTimeline(): JSX.Element {
-  const [phase, setPhase] = useState(0);
-  const [tapped, setTapped] = useState<number | null>(null);
-  const [panelSeq, setPanelSeq] = useState(0);
-  const [railUnlit, setRailUnlit] = useState(false);
-  const [stepLit, setStepLit] = useState(false);
-  const litTimer = useRef(0);
   const rootRef = useRef<HTMLElement>(null);
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const timers = useRef<{ seq: number; final: number }>({ seq: 0, final: 0 });
-  const phaseRef = useRef(phase);
-  phaseRef.current = phase;
+  const timers = useRef<number[]>([]);
 
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
     const unreveal = observeReveal(el);
 
+    const later = (fn: () => void, ms: number) => {
+      timers.current.push(window.setTimeout(fn, ms));
+    };
+
+    /* Desktop chart: per lane — name in, fill draws, edge resolves into
+       a tick, label settles; the next lane starts at 66%. Each
+       deliverable card lands as ITS phase completes. */
+    const runChart = () => {
+      const lanes = Array.from(el.querySelectorAll<HTMLElement>(".sc-lane"));
+      const cards = Array.from(el.querySelectorAll<HTMLElement>(".sc-chart .sc-m"));
+      const mile = el.querySelector(".sc-chart .sc-mile");
+      let t = 60;
+      lanes.forEach((lane, k) => {
+        const span = Number(lane.dataset.span || 1);
+        const dur = FLOOR + span * PER_WEEK;
+        lane.querySelector<HTMLElement>(".sc-fill")?.style.setProperty("--dur", `${dur}ms`);
+        later(() => lane.classList.add("on"), t);
+        if (k === 0 && mile) later(() => mile.classList.add("on"), t + 120);
+        later(() => {
+          lane.classList.add("done");
+          cards.forEach((c) => {
+            if (Number(c.dataset.after) === k) c.classList.add("on");
+          });
+        }, t + 160 + dur);
+        t += Math.round(dur * OVERLAP);
+      });
+    };
+
+    /* Mobile: phases stagger in; each deliverable lands with its phase,
+       not after all of them. */
+    const runMobile = () => {
+      const ps = Array.from(el.querySelectorAll<HTMLElement>(".mb-p"));
+      const ms = Array.from(el.querySelectorAll<HTMLElement>(".sc-mobile .sc-m"));
+      const mile = el.querySelector(".sc-mobile .sc-mile");
+      later(() => mile?.classList.add("on"), 80);
+      ps.forEach((p, k) => later(() => p.classList.add("on"), 80 + k * 380));
+      ms.forEach((m) => {
+        const k = Number(m.dataset.after || 0);
+        later(() => m.classList.add("on"), 80 + k * 380 + 260);
+      });
+    };
+
+    const finish = () => {
+      el.querySelectorAll(".sc-lane").forEach((l) => l.classList.add("on", "done"));
+      el.querySelectorAll(".sc-mile, .sc-m, .mb-p").forEach((n) => n.classList.add("on"));
+    };
+
     if (prefersReducedMotion()) {
-      setPhase(FINALE);
+      finish();
       return unreveal;
     }
-    const t = timers.current;
+
+    let ran = false;
     const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting || t.seq || phaseRef.current > 0) return;
-          io.disconnect();
-          setPhase(1);
-          t.seq = window.setInterval(() => {
-            setPhase((p) => {
-              if (p + 1 > FINALE) {
-                window.clearInterval(t.seq);
-                t.seq = 0;
-                return p;
-              }
-              return p + 1;
-            });
-          }, 780);
-        });
+        if (!entries[0].isIntersecting || ran) return;
+        ran = true;
+        io.disconnect();
+        runChart();
+        runMobile();
       },
       { threshold: 0, rootMargin: "0px 0px -15% 0px" },
     );
     io.observe(el);
+    const t = timers.current;
     return () => {
       unreveal();
       io.disconnect();
-      window.clearInterval(t.seq);
-      window.clearTimeout(t.final);
+      t.forEach((id) => window.clearTimeout(id));
     };
   }, []);
 
-  const replayFinal = () => {
-    const t = timers.current;
-    if (t.seq || t.final || phaseRef.current < FINALE || prefersReducedMotion()) return;
-    setPhase(N);
-    t.final = window.setTimeout(() => {
-      setPhase(FINALE);
-      t.final = 0;
-    }, 90);
-  };
-
-  const phaseClass = (i: number): string => {
-    if (i === N - 1 && phase > N) return " pb-phase-done pb-phase-final";
-    if (phase > i + 1) return " pb-phase-done";
-    if (phase === i + 1) return " pb-phase-active";
-    return "";
-  };
-
-  // Stepper: manual selection wins; otherwise follow the sequence.
-  const activeStep = tapped ?? Math.min(Math.max(phase - 1, 0), N - 1);
-  const panelPhase = PHASES[activeStep];
-
-  // Stepper launch: fire whenever the active step BECOMES Handover —
-  // from the sequence or a tap. The class is dropped and re-added a beat
-  // later so the CSS animations replay; the cleared timeout stops repeat
-  // taps from stacking.
-  useEffect(() => {
-    window.clearTimeout(litTimer.current);
-    if (activeStep === N - 1) {
-      if (prefersReducedMotion()) {
-        setStepLit(true);
-        return;
-      }
-      setStepLit(false);
-      litTimer.current = window.setTimeout(() => setStepLit(true), 50);
-    } else {
-      setStepLit(false);
-    }
-    return () => window.clearTimeout(litTimer.current);
-  }, [activeStep]);
-
-  // Mobile rail: -1 before the sequence starts so nodes begin hollow.
-  const railIndex = phase === 0 ? -1 : Math.min(phase - 1, N - 1);
-  const railLit = railIndex === N - 1 && !railUnlit;
-
-  // CSS animations only restart if the class is removed and re-added a
-  // frame later. Guarded so it cannot fire while the sequence runs.
-  const replayRail = () => {
-    const t = timers.current;
-    if (t.seq || t.final || phaseRef.current < N || prefersReducedMotion()) return;
-    setRailUnlit(true);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setRailUnlit(false));
-    });
-  };
-
   return (
     <section id="process" className="pb-rev-r pb-process" ref={rootRef}>
-      <div className="pb-shead pb-process-head">
+      <div className="sc-head">
         <div>
           <div className="pb-kicker" style={{ marginBottom: 14 }}>
             $ cat ./process
@@ -168,238 +171,112 @@ export default function ProcessTimeline(): JSX.Element {
             How an engagement runs
           </h2>
         </div>
-        <div className="pb-process-stats">
-          <div>
-            <div className="pb-process-stat-v pb-acc">6–8 wks</div>
-            <div className="pb-process-stat-c">to first production release</div>
-          </div>
-          <div>
-            <div className="pb-process-stat-v">day 9</div>
-            <div className="pb-process-stat-c">in front of real users</div>
-          </div>
+        <p className="sc-lead">
+          Every engagement runs this shape. How long each phase takes depends
+          on what you are building — the proportions do not.
+        </p>
+      </div>
+
+      {/* Desktop chart (>720px): 9 tracks — the phase column plus 8
+          proportion tracks. They are proportion, not weeks; never
+          labelled. The overlaps (01/02 share track 3, 02/03 share 4)
+          are the point of the layout. */}
+      <div className="sc-chart">
+        <div className="sc-ruler">
+          <span className="sc-lbl">PHASE</span>
+          <span className="sc-axis" style={{ gridColumn: "2 / 10" }}>
+            <span>START</span>
+            <span className="sc-axline" aria-hidden="true" />
+            <span>SHIPPED</span>
+          </span>
         </div>
-      </div>
 
-      <div className="pb-timeline" ref={timelineRef}>
-        {PHASES.map((p, i) => {
-          const isLast = i === N - 1;
-          const checked = isLast ? phase > N : phase > i + 1;
-          return (
-            <div
-              className={`pb-phase${phaseClass(i)}`}
-              key={p.num}
-              onMouseEnter={isLast ? replayFinal : undefined}
-              onClick={isLast ? replayFinal : undefined}
-            >
-              <div className="pb-phase-top">
-                <span
-                  className={`pb-node${isLast ? " pb-node-launch" : ""}${checked ? " pb-check-on" : ""}`}
-                >
-                  {isLast ? (
-                    <>
-                      <span className="pb-shock" />
-                      <span className="pb-shock pb-shock-b" />
-                      <span className="pb-shock pb-shock-c" />
-                      <span className="pb-flare" />
-                      <span className="pb-core" />
-                      <RocketSvg />
-                    </>
-                  ) : (
-                    <TickSvg />
-                  )}
-                </span>
-                {!isLast ? (
-                  <span className="pb-line">
-                    <span className={`pb-flow${phase > i + 1 ? " pb-flow-on" : ""}`} />
-                  </span>
-                ) : (
-                  <span className="pb-spacer" />
-                )}
-              </div>
-              <div className="pb-phase-card">
-                <div className="pb-phase-cardhead">
-                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span className="pb-phase-num">{p.num}</span>
-                  </span>
-                  <span className="pb-phase-week">{p.week}</span>
-                </div>
-                <h4>{p.title}</h4>
-                <p>{p.body}</p>
-                <div className="pb-tags">
-                  {p.tags.map((tag) => (
-                    <span className="pb-ptag" key={tag}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                {isLast ? (
-                  <div className={`pb-ship${phase > N ? " pb-ship-on" : ""}`}>
-                    <span className="pb-ship-badge">shipped ✓</span>
-                    <span className="pb-ship-note">yours to run</span>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Tablet stepper (721–1100px): the diagram separated from the
-          content — rings on one line, one full-size panel below. Driven
-          by the same phase counter; no second timer. */}
-      <div className="pb-steps">
-        <div className="pb-sline">
-          {PHASES.map((p, i) => {
-            const isLastStep = i === N - 1;
+        <ol className="sc-lanes">
+          {SCHEDULE.map((p) => {
+            const voice = p.pre ? CYAN : LIME;
+            const fillCls = p.fin ? "sc-bfin" : p.pre ? "sc-b2" : "sc-b1";
+            const textCls = p.fin ? "sc-tfin" : p.pre ? "sc-t2" : "sc-t1";
             return (
-              <span key={p.num} style={{ display: "contents" }}>
-                {i > 0 ? (
-                  <span className={`pb-sseg${activeStep >= i ? " pb-son" : ""}`}>
-                    <span />
-                  </span>
-                ) : null}
-                <button
-                  className={`pb-stop${isLastStep ? " pb-stop-final" : ""}${
-                    i < activeStep ? " pb-sdone" : i === activeStep ? " pb-snow" : ""
-                  }`}
-                  type="button"
-                  aria-current={i === activeStep ? "step" : undefined}
-                  onClick={() => {
-                    setTapped(i);
-                    setPanelSeq((s) => s + 1);
-                  }}
-                >
-                  {isLastStep ? (
+              <li className={`sc-lane${p.pre ? " pre" : ""}`} data-span={p.span} key={p.num}>
+                <span className="sc-cols" aria-hidden="true">
+                  {Array.from({ length: 8 }, (_, i) => (
+                    <span key={i} />
+                  ))}
+                </span>
+                <span className="sc-name">
+                  <b>{p.num}</b>
+                  {p.name}
+                </span>
+                <span className="sc-slot" style={{ gridColumn: `${p.col[0]} / ${p.col[1]}` }}>
+                  <span className={`sc-fill ${fillCls}`}>
                     <span
-                      className={`pb-sring pb-sring-launch${stepLit ? " pb-slit" : ""}`}
+                      className="sc-edge"
+                      style={{ "--eg": voice } as React.CSSProperties}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <span className={`sc-in ${textCls} hastick`}>{p.steps.join(" → ")}</span>
+                  {p.fin ? (
+                    <LaunchPad />
+                  ) : (
+                    <span
+                      className="sc-tick"
+                      style={{ "--tk": voice } as React.CSSProperties}
                       aria-hidden="true"
                     >
-                      <span className="pb-sshk" />
-                      <span className="pb-sshk pb-sshk-b" />
-                      <span className="pb-sshk pb-sshk-c" />
-                      <span className="pb-sflare" />
-                      <span className="pb-score" />
-                      <span className="pb-snum">{p.num}</span>
-                      <svg className="pb-srk" width="13" height="13" viewBox="0 0 24 24" fill="none">
-                        <path
-                          d="M12 2.5c3.2 2.1 5 5.6 5 9.4l-2.2 2.6h-5.6L7 11.9c0-3.8 1.8-7.3 5-9.4Z"
-                          fill="var(--bg)"
-                        />
-                        <path d="M9.2 14.5h5.6l-.6 2.2h-4.4l-.6-2.2Z" fill="var(--bg)" />
-                      </svg>
-                    </span>
-                  ) : (
-                    <span className="pb-sring" aria-hidden="true">
-                      <span className="pb-snum">{p.num}</span>
-                      <svg className="pb-stk" width="11" height="11" viewBox="0 0 12 12">
-                        <path
-                          d="M2.5 6.2l2.3 2.3 4.7-5"
-                          fill="none"
-                          stroke="var(--bg)"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <TickSvg />
                     </span>
                   )}
-                  <span className="pb-slab">{p.title}</span>
-                </button>
-              </span>
+                </span>
+              </li>
             );
           })}
-        </div>
-        <div
-          className={`pb-spanel pb-sfade-a${stepLit ? " pb-slit" : ""}`}
-          key={`${activeStep}-${panelSeq}`}
-        >
-          <div>
-            <span className="pb-spk">{panelPhase.week.toUpperCase()}</span>
-            <h4 className="pb-sph">{panelPhase.title}</h4>
-            <p className="pb-spb">{panelPhase.body}</p>
-          </div>
-          <div className="pb-smeta">
-            <div className="pb-sdtags">
-              {panelPhase.tags.map((tag) => (
-                <span className="pb-sdtag" key={tag}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-            {/* Always in the DOM so the panel height never jumps; only
-                lights up on Handover. */}
-            <span className={`pb-sship${stepLit ? " pb-slit" : ""}`}>
-              ✓ shipped · yours to run
-            </span>
-          </div>
-        </div>
+        </ol>
+
+        <Deliverables />
       </div>
 
-      {/* Mobile rail (≤720px): every step fully readable from first
-          paint; only the rail fill, node checks and launch animate.
-          Tag chips are intentionally dropped at this size. */}
-      <div className="pb-mrail">
-        <span className="pb-mtrack" aria-hidden="true" />
-        <span
-          className="pb-mfill"
-          aria-hidden="true"
-          style={{ height: railIndex < 0 ? 0 : `${RAIL_FILL[railIndex]}%` }}
-        />
-        {PHASES.map((p, i) => {
-          const isLast = i === N - 1;
-          const done = railIndex >= i;
-          return (
-            <div
-              className="pb-mstep"
-              key={p.num}
-              onClick={isLast ? replayRail : undefined}
-            >
-              {isLast ? (
-                <span className={`pb-mrkn${railLit ? " pb-mlit" : ""}`} aria-hidden="true">
-                  <span className="pb-mshk" />
-                  <span className="pb-mshk pb-mshk-b" />
-                  <span className="pb-mshk pb-mshk-c" />
-                  <span className="pb-mflare" />
-                  <span className="pb-mcore" />
-                  <svg className="pb-mrk" width="10" height="10" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 2.5c3.2 2.1 5 5.6 5 9.4l-2.2 2.6h-5.6L7 11.9c0-3.8 1.8-7.3 5-9.4Z"
-                      fill="var(--bg)"
-                    />
-                    <path d="M9.2 14.5h5.6l-.6 2.2h-4.4l-.6-2.2Z" fill="var(--bg)" />
-                  </svg>
-                </span>
-              ) : (
-                <span
-                  className={`pb-mnd${done ? "" : " pb-mhollow"}`}
-                  aria-hidden="true"
-                >
-                  <svg className="pb-mtk" width="8" height="8" viewBox="0 0 12 12">
-                    <path
-                      d="M2.5 6.2l2.3 2.3 4.7-5"
-                      fill="none"
-                      stroke="var(--bg)"
-                      strokeWidth="2.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              )}
-              <div className="pb-mtop">
-                <span className="pb-mn">{p.num}</span>
-                <h4 className="pb-mt">{p.title}</h4>
-                <span className="pb-mw">{p.week}</span>
-              </div>
-              <p className="pb-mb">{p.body}</p>
-              {isLast ? (
-                <span className={`pb-mship${railLit ? " pb-mlit" : ""}`}>
-                  ✓ shipped · yours to run
+      {/* Mobile (≤720px): the 8-track grid cannot survive 390px, but the
+          proportion does — each phase lights its own share of an
+          8-segment track. Copy is identical to desktop. */}
+      <div className="sc-mobile">
+        {SCHEDULE.map((p) => (
+          <div className={`mb-p${p.pre ? " pre" : ""}${p.fin ? " fin" : ""}`} key={p.num}>
+            <div className="mb-top">
+              <span className="mb-n">{p.num}</span>
+              <span className="mb-t">{p.name}</span>
+              {p.fin ? (
+                <span className="mb-ship">
+                  <span className="mb-pad" aria-hidden="true">
+                    <span className="mb-rk">
+                      <span className="mb-core" />
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 1.8c3.4 2.3 5.3 6 5.3 10l-2.3 2.8H9L6.7 11.8c0-4 1.9-7.7 5.3-10Z" fill="var(--ink)" />
+                        <path d="M9 14.6h6l-.7 2.4H9.7L9 14.6Z" fill="var(--ink)" />
+                      </svg>
+                    </span>
+                    <svg className="mb-ck2" viewBox="0 0 20 20">
+                      <path d="M5.4 10.6l3.1 3.1 6.3-6.9" />
+                    </svg>
+                  </span>
+                  shipped · yours to run
                 </span>
               ) : null}
             </div>
-          );
-        })}
+            <div className="mb-steps">
+              {p.steps.map((s) => (
+                <span key={s}>{s}</span>
+              ))}
+            </div>
+            <div className="mb-track" aria-hidden="true">
+              {Array.from({ length: 8 }, (_, i) => (
+                <span className={`mb-seg${p.segs.includes(i + 1) ? " f" : ""}`} key={i} />
+              ))}
+            </div>
+            <p className="mb-b">{p.body}</p>
+          </div>
+        ))}
+        <Deliverables className="sc-mile-m" />
       </div>
     </section>
   );

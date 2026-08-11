@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { OFFERS } from "@/lib/content";
+import { CTA_LABEL, OFFERS, SERVICE_OUTCOMES } from "@/lib/content";
 
 /* Tab switcher. The incrementing key on the panes remounts them on every
    switch, restarting the blur-in stagger even when the same tab is
@@ -15,7 +15,26 @@ export default function OfferingsTabs(): JSX.Element {
   return (
     <>
       <div className="pb-services-head">
-        <div className="pb-kicker">$ ls ./services</div>
+        {/* The shell command is a kicker; the heading beneath it carries
+            the meaning on its own. */}
+        <div>
+          <div className="pb-kicker">$ ls ./services</div>
+          <h2 className="pb-h-md pb-services-h">What we do</h2>
+        </div>
+      </div>
+      {/* One outcome per service, readable without touching a tab —
+          directly under the heading so the summary reads first. */}
+      <div className="pb-outcomes">
+        {SERVICE_OUTCOMES.map((s) => (
+          <div className="pb-outcome" key={s.label}>
+            <span className="pb-outcome-label">{s.label}</span>
+            <span className="pb-outcome-line">{s.line}</span>
+          </div>
+        ))}
+      </div>
+      {/* The switcher sits between the summary and the pane it controls,
+          right-aligned. */}
+      <div className="pb-tabs-row">
         <div className="pb-tabs" role="tablist" aria-label="Services">
           {OFFERS.map((o, i) => (
             <button
@@ -37,10 +56,10 @@ export default function OfferingsTabs(): JSX.Element {
       <div className="pb-ai">
         <div className="pb-pane" key={`a-${seq}`}>
           <div className="pb-pi pb-offer-kicker">{offer.kicker}</div>
-          <h2 className="pb-pi pb-h-md pb-offer-title">{offer.title}</h2>
+          <h3 className="pb-pi pb-h-md pb-offer-title">{offer.title}</h3>
           <p className="pb-pi pb-offer-body">{offer.body}</p>
           <Link className="pb-btn pb-pi pb-offer-cta" href="/contact">
-            {offer.cta}
+            {CTA_LABEL}
           </Link>
         </div>
         <div className="pb-pane pb-offer-points" key={`b-${seq}`}>

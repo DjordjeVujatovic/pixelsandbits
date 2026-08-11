@@ -1,13 +1,41 @@
-/* Approved copy, verbatim from the design handoff. Do not reword. */
+/* Approved copy, verbatim from the design handoff and the conversion
+   review's rewritten-copy appendix. Do not reword. */
 
 export const PIPELINE_STEPS = ["ideation", "design", "engineering", "deployment"];
+
+/* One rolling availability string, shared by the hero ribbon, the nav
+   drawer, the contact page and the form confirmation — so the four can
+   never contradict each other and nothing says "q3" in November. */
+export const AVAILABILITY = "next engagement starts in ~3 weeks";
+
+/* Every conversion CTA on both pages reads the same. */
+export const CTA_LABEL = "send us the problem";
+
+/* The four service outcomes, readable without touching the tabs. */
+export const SERVICE_OUTCOMES: { label: string; line: string }[] = [
+  {
+    label: "Forward deployed",
+    line: "We sit with your team until the thing is live in their hands.",
+  },
+  {
+    label: "Zero to scoped",
+    line: 'A week on site turns "we should use AI here" into a measurable brief.',
+  },
+  {
+    label: "Product design",
+    line: "Interfaces for agent products, tested on operators before code.",
+  },
+  {
+    label: "Full-stack build",
+    line: "React/Next, services, CI and evals, deployed from week one.",
+  },
+];
 
 export interface Offer {
   tab: string;
   kicker: string;
   title: string;
   body: string;
-  cta: string;
   points: [string, string, string][];
 }
 
@@ -18,7 +46,6 @@ export const OFFERS: Offer[] = [
     kicker: "FORWARD DEPLOYED ENGINEERING",
     title: "Most teams can build with an LLM. Few can land one inside a real business.",
     body: "Two years as forward deployed engineers — at Decagon AI and Scotts Miracle-Gro — sitting with the customer, learning the workflow, and turning a demo into something their staff actually uses.",
-    cta: "get in touch",
     points: [
       ["01", "On site, not over email", "We watch the work happen and design against what people really do, not the process on the slide."],
       ["02", "Evals before opinions", "Prompts, retrieval and agent flows measured against real transcripts, so quality is a number the team can argue with."],
@@ -31,7 +58,6 @@ export const OFFERS: Offer[] = [
     kicker: "PRODUCT IDEATION",
     title: "The cheapest decision is what not to build.",
     body: "Most engagements start with a scoping week. We map the workflow, talk to the people inside it, and come back with the smallest thing worth building — plus an honest read on what to cut.",
-    cta: "get in touch",
     points: [
       ["01", "A scoping week, not a discovery phase", "Five days on site, ending in a written scope and a number. Not a two-month audit."],
       ["02", "Talk to the people doing the work", "The workflow on the slide and the workflow in the building are different documents. We design against the second."],
@@ -44,7 +70,6 @@ export const OFFERS: Offer[] = [
     kicker: "PRODUCT DESIGN",
     title: "Design that survives contact with the engineering team.",
     body: "We design as the people who will build it. Flows, interfaces and systems drawn against real constraints — data you actually have, latency you actually pay, deadlines you actually hold.",
-    cta: "get in touch",
     points: [
       ["01", "Flows before pixels", "The argument is about what happens, in what order, for whom. Visual design comes after that is settled."],
       ["02", "Prototypes people can click", "Working prototypes rather than static screens, so feedback is about the product and not the picture."],
@@ -57,7 +82,6 @@ export const OFFERS: Offer[] = [
     kicker: "PRODUCT ENGINEERING",
     title: "Ship the whole thing, then keep it shippable.",
     body: "Full-stack delivery from data model to interface. Nine years of it, on products that took real traffic — 500k transactions across a single Coinbase campaign — and on internal tools nobody outside the company ever sees.",
-    cta: "get in touch",
     points: [
       ["01", "One team, front to back", "React and Next.js on the front, real services and data behind it. No handoff seam to lose things in."],
       ["02", "Deploy from week one", "A working environment before there is a product, so progress is visible and integration risk lands early."],
@@ -140,73 +164,120 @@ export const ASK_QA: AskItem[] = [
   },
 ];
 
-export const ALSO_SHIPPED: { name: string; desc: string; href: string }[] = [
+/* Plain text on purpose: six outbound links here leaked visitors
+   mid-pitch. Where an outbound link IS the proof (cases 04/05), it stays
+   on the case card instead. */
+export const ALSO_SHIPPED: { name: string; desc: string }[] = [
   {
     name: "Athena",
     desc: "Their initial playbook system, plus the marketing site rebrand with the in-house team.",
-    href: "https://www.athena.com/",
   },
   {
     name: "Apparel Impact",
     desc: "Customer-facing impact dashboard and the ingestion pipeline feeding it.",
-    href: "https://apparelimpact.org/",
   },
   {
     name: "Certn",
     desc: "Internal tooling, dashboards and the customer-facing background check product.",
-    href: "https://certn.co/",
   },
   {
     name: "Spindl",
     desc: "Attribution dashboard with real-time tracking of key metrics. Acquired by Coinbase.",
-    href: "https://www.spindl.xyz/",
   },
   {
     name: "Delphia",
     desc: "Homepage designed and built directly with the CEO, around the company's core message.",
-    href: "https://delphia.com/",
   },
   {
     name: "ZeroDown",
     desc: "Offer tracking, property management and lead search tools. Acquired by Flyhomes.",
-    href: "https://zerodown.com/",
   },
 ];
 
-export const PHASES: {
+export interface Testimonial {
+  text: string;
+  name: string;
+  role: string;
+}
+
+/* Approved copy, verbatim — de-personalised deliberately: the site
+   speaks as a team. Placed next to the proof they belong to: the
+   ZeroDown quote sits under the ZeroDown row, the second quote sits
+   immediately above the closing CTA. */
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    text: '"The team stepped in as full-stack engineers for our internal tools team, quickly took a product ownership role and made an immediate impact. Their end-to-end ownership of our internal app was exactly what we needed. What impressed me most was their ability to understand complex business requirements and translate them into intuitive user experiences."',
+    name: "Laks Srini",
+    role: "CTO, ZeroDown · acquired by Flyhomes",
+  },
+  {
+    text: '"They were an absolute pleasure to work with. Their work ethic was top-tier, consistently going above and beyond to ensure that every assignment was completed to the highest standard. They are sharp critical thinkers who approach problems thoughtfully, finding creative and effective solutions, rather than just mindlessly completing assigned work."',
+    name: "Dan Xavier",
+    role: "Head of Software · Apparel Impact Institute",
+  },
+];
+
+/* The process schedule (PROCESS_schedule.md). NO fixed durations
+   anywhere — the 8 proportion tracks claim the shape, not the calendar.
+   col is the desktop grid-column span (of tracks 2–10); segs are the
+   1-based mobile segments lit (they mirror col); span drives animation
+   duration only. pre = the cyan "before any code exists" voice. */
+export const SCHEDULE: {
   num: string;
-  week: string;
-  title: string;
+  name: string;
+  steps: string[];
+  span: number;
+  col: [number, number];
+  segs: number[];
+  pre: boolean;
+  fin?: boolean;
   body: string;
-  tags: string[];
+  deliverable: { tag: string; text: string };
 }[] = [
   {
     num: "01",
-    week: "week 01",
-    title: "Scoping",
+    name: "Scoping",
+    steps: ["research", "interview", "scope"],
+    span: 2,
+    col: [2, 4],
+    segs: [1, 2],
+    pre: true,
     body: "Workflows mapped on site with the people who do the work, and success defined in numbers.",
-    tags: ["on-site", "interviews", "success metrics"],
+    deliverable: { tag: "scoping", text: "A written scope document with a quote and timeline" },
   },
   {
     num: "02",
-    week: "week 02",
-    title: "Prototype",
+    name: "Prototype / design",
+    steps: ["wireframe", "hi-fi", "prototype"],
+    span: 2,
+    col: [3, 5],
+    segs: [2, 3],
+    pre: true,
     body: "Something clickable in front of real users, not stakeholders, before a line of production code.",
-    tags: ["flows", "prototype", "user tests"],
+    deliverable: { tag: "prototype", text: "A high-fidelity design / prototype that can be tested by you" },
   },
   {
     num: "03",
-    week: "week 03–06",
-    title: "Build",
+    name: "Build",
+    steps: ["build", "integrate", "eval", "deploy"],
+    span: 4,
+    col: [4, 8],
+    segs: [3, 4, 5, 6],
+    pre: false,
     body: "Full-stack delivery with a working deploy from the first week, so nothing lands as a surprise.",
-    tags: ["react/next", "services", "ci"],
+    deliverable: { tag: "build", text: "A deployed production release" },
   },
   {
     num: "04",
-    week: "close",
-    title: "Handover",
+    name: "Handover",
+    steps: ["document", "pair", "hand over"],
+    span: 2,
+    col: [8, 10],
+    segs: [7, 8],
+    pre: false,
+    fin: true,
     body: "Docs, patterns and a team that can extend the work without us on the payroll.",
-    tags: ["docs", "pairing", "handover"],
+    deliverable: { tag: "handover", text: "Handover documents and code that can be extended upon" },
   },
 ];
 

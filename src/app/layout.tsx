@@ -34,11 +34,11 @@ export const metadata: Metadata = {
     template: "%s — pixels&bits",
   },
   description:
-    "Whiteboard sketch to production system. Nine years across the full stack. The last two embedded inside AI companies as forward deployed engineers, turning LLM demos into things people use on Monday morning.",
+    "Your LLM demo, in production and in front of real operators. Nine years across the full stack. The last two embedded inside AI companies as forward deployed engineers, turning LLM demos into things people use on Monday morning.",
   openGraph: {
     title: "pixels&bits — product engineering & ai deployment",
     description:
-      "Whiteboard sketch to production system. Product engineering & AI deployment.",
+      "Your LLM demo, in production and in front of real operators. Product engineering & AI deployment.",
     url: "/",
     siteName: "pixels&bits",
     type: "website",
@@ -47,8 +47,25 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "pixels&bits — product engineering & ai deployment",
     description:
-      "Whiteboard sketch to production system. Product engineering & AI deployment.",
+      "Your LLM demo, in production and in front of real operators. Product engineering & AI deployment.",
   },
+};
+
+/* Site-wide Organization schema. NDA rule applies here too: the
+   frontier-lab client is never named in structured data. */
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "pixels&bits",
+  url: siteUrl,
+  description:
+    "Product engineering & AI deployment. Nine years across the full stack, the last two embedded inside AI companies as forward deployed engineers.",
+  knowsAbout: [
+    "forward deployed engineering",
+    "AI deployment",
+    "product design",
+    "full-stack engineering",
+  ],
 };
 
 export default function RootLayout({
@@ -59,6 +76,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plexSans.variable} ${plexMono.variable}`}>
       <body>
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
         {children}
         <Analytics />
       </body>

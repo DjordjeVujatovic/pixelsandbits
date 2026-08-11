@@ -89,16 +89,33 @@ const DP_PATH = "M0 84 C 60 82, 100 74, 150 62 C 200 50, 250 44, 300 30 C 350 18
 /* The hero engagement panel: four scenes — ideation, design,
    engineering, deployment — driven by ONE stage index with per-scene
    durations (each scene advances shortly after its animation ends).
-   The pipeline chips and meter read the same index; chips are buttons
-   that jump stages. The clock is gated on an IntersectionObserver
+   The panel opens on ideation and plays the full arc once, resting on
+   the deployment finale instead of looping; the replay control and the
+   stage chips restart it on demand. Reduced motion holds the static
+   end state. The pipeline chips and meter read the same index. The
+   clock is gated on an IntersectionObserver
    (threshold: 0). Scenes are CSS animations keyed off .stage.on; the
-   only JS state is the index. */
+   only JS state is the index and the playing flag. */
+const END = STAGE_MS.length - 1;
+
 export default function Engagement(): JSX.Element {
   const reduced = useReducedMotion();
+  // Opens on ideation and plays the full arc once, parking on the
+  // deployment finale (owner request 2026-08-11 — the end-to-end story
+  // IS the hero). Replay and the chips restart it on demand.
   const [stage, setStage] = useState(0);
+  const [playing, setPlaying] = useState(true);
   const [visible, setVisible] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
   const timer = useRef(0);
+
+  // Reduced motion holds the static end state instead of the opening
+  // scene — the "after" without the journey.
+  useEffect(() => {
+    if (!reduced) return;
+    setStage(END);
+    setPlaying(false);
+  }, [reduced]);
 
   // Gate on visibility (threshold: 0); the scheduling effect below
   // pauses while hidden and restarts the current scene's clock on
@@ -116,19 +133,26 @@ export default function Engagement(): JSX.Element {
   }, [reduced]);
 
   // One timeout per scene, sized to that scene's animation. A chip jump
-  // re-runs this effect, giving the chosen scene its full duration.
+  // re-runs this effect, giving the chosen scene its full duration. The
+  // sequence parks on the final scene rather than wrapping around.
   useEffect(() => {
-    if (reduced || !visible) return;
+    if (reduced || !visible || !playing) return;
     timer.current = window.setTimeout(() => {
-      setStage((s) => (s + 1) % 4);
+      if (stage + 1 >= END) {
+        setStage(END);
+        setPlaying(false);
+      } else {
+        setStage(stage + 1);
+      }
     }, STAGE_MS[stage]);
     return () => window.clearTimeout(timer.current);
-  }, [stage, visible, reduced]);
+  }, [stage, visible, reduced, playing]);
 
   // Deployment figures count up each time the stage becomes active,
-  // writing textContent directly.
+  // writing textContent directly. The SSR markup already holds the final
+  // figures, so this is enhancement over text that is present.
   useEffect(() => {
-    if (stage !== 3) return;
+    if (stage !== END) return;
     rootRef.current?.querySelectorAll<HTMLElement>(".dp-v[data-count]").forEach((el) => {
       delete el.dataset.done;
       runCountUp(el);
@@ -137,6 +161,12 @@ export default function Engagement(): JSX.Element {
 
   const jump = (i: number) => {
     setStage(i); // the scheduling effect restarts the clock for this scene
+    setPlaying(i < END); // landing on the finale rests there
+  };
+
+  const replay = () => {
+    setStage(0);
+    setPlaying(true);
   };
 
   const stepClass = (i: number): string => {
@@ -156,7 +186,7 @@ export default function Engagement(): JSX.Element {
           <span className="pb-term-name">pixelsandbits — engagement</span>
           <span className="pb-spacer" />
           <span className="pb-live-dot" />
-          <span className="pb-term-status">{stage === 3 ? "shipped" : "live"}</span>
+          <span className="pb-term-status">{stage === END ? "shipped" : "live"}</span>
         </div>
 
         <div className="stagewrap" aria-hidden="true">
@@ -336,9 +366,12 @@ export default function Engagement(): JSX.Element {
               <div className="dp-chart">
                 <svg viewBox="0 0 460 96" preserveAspectRatio="none">
                   <defs>
+                    {/* The traffic curve is the one sanctioned cyan
+                        surface in the panel (owner request) — light,
+                        not text. */}
                     <linearGradient id="dpg" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#c6f24e" stopOpacity=".3" />
-                      <stop offset="100%" stopColor="#c6f24e" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#5ee0e0" stopOpacity=".28" />
+                      <stop offset="100%" stopColor="#5ee0e0" stopOpacity="0" />
                     </linearGradient>
                     <path id="dpp" d={DP_PATH} />
                   </defs>
@@ -351,7 +384,7 @@ export default function Engagement(): JSX.Element {
                     <path className="dp-area" d={`M0 92 L0 84 ${DP_PATH.slice(5)} L460 96 L0 96 Z`} />
                   </g>
                   <use className="dp-line" href="#dpp" />
-                  <circle className="dp-head" r="3.5" fill="#c6f24e" style={{ offsetPath: `path('${DP_PATH}')` }} />
+                  <circle className="dp-head" r="3.5" fill="#5ee0e0" style={{ offsetPath: `path('${DP_PATH}')` }} />
                 </svg>
                 <span className="dp-live">
                   <i />
@@ -409,11 +442,20 @@ export default function Engagement(): JSX.Element {
             <span className="pb-meter-fill" style={{ width: `${METER[stage]}%` }} />
           </div>
           <div className="pb-term-footrow">
-            <span>{stage === 3 ? "shipped & handed over" : "engagement in progress"}</span>
+            <span>{stage === END ? "shipped & handed over" : "engagement in progress"}</span>
             <span className="pb-pct">{METER[stage]}%</span>
           </div>
         </div>
       </div>
+      {/* The one control under the panel. Hidden under reduced motion,
+          where the end state simply holds. */}
+      {!reduced ? (
+        <div className="pb-replay-row">
+          <button className="pb-replay" type="button" onClick={replay}>
+            replay the engagement <span aria-hidden="true">↻</span>
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

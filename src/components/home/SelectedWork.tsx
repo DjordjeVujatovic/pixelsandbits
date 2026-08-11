@@ -1,5 +1,6 @@
 import Reveal from "@/components/Reveal";
-import { ALSO_SHIPPED } from "@/lib/content";
+import { ALSO_SHIPPED, TESTIMONIALS } from "@/lib/content";
+import CaseIndex from "./CaseIndex";
 import CaseRedacted from "./CaseRedacted";
 
 interface CaseStat {
@@ -83,35 +84,37 @@ const CASES: StandardCase[] = [
   },
 ];
 
-/* The merged client-portfolio section: the heading and paragraph open
-   it, the five case cards and ALSO_SHIPPED rows are the evidence. The
-   scale argument itself lives in the closing track-record band — this
-   section deliberately doesn't repeat it. A span#trust anchors inbound
-   links to the old section id. */
+/* The merged client-portfolio section, laid out as a sticky rail
+   (PORTFOLIO_sticky_rail.md): kicker, heading, lead and the case index
+   pin in a narrow left column while the five cards scroll past on the
+   right. The scale argument lives in the closing track-record band —
+   this section deliberately doesn't repeat it. A span#trust anchors
+   inbound links to the old section id. ALSO_SHIPPED stays full width
+   below the rail. */
 export default function SelectedWork(): JSX.Element {
   return (
     <section id="work" className="pb-work">
       <span id="trust" aria-hidden="true" />
 
-      <Reveal variant="rev">
-        <div className="pb-kicker" style={{ marginBottom: 18 }}>
-          $ cat ./client-portfolio
+      <div className="sr">
+        <div className="sr-side">
+          <Reveal variant="rev">
+            <div className="pb-kicker" style={{ marginBottom: 18 }}>
+              $ cat ./client-portfolio
+            </div>
+            <h2 className="sr-h">The companies we have built inside.</h2>
+            <p className="sr-lead">
+              Crypto exchanges, frontier AI labs, a Fortune 500 retailer,
+              sports platforms with millions of collectors.
+            </p>
+            <CaseIndex />
+          </Reveal>
         </div>
-        <h2 className="pb-h-lg pb-trust-h">The companies we have built inside.</h2>
-        <p className="pb-trust-p">
-          Crypto exchanges, frontier AI labs, a Fortune 500 retailer, sports
-          platforms with millions of collectors. The constraints at that size
-          are not the ones a demo teaches you, and they are the ones we build
-          for by default.
-        </p>
-      </Reveal>
 
-      <div style={{ height: 40 }} />
-
-      <div className="pb-stag pb-cases">
+        <div className="pb-stag pb-cases">
         <CaseRedacted />
 
-        <Reveal as="article" variant="r" className="pb-feature">
+        <Reveal as="article" variant="r" id="c2" className="pb-feature">
           <div className="pb-feature-side">
             <span className="pb-case-num">CASE_02</span>
             <h3 className="pb-h-md pb-feature-h">Decagon AI — forward deployed</h3>
@@ -145,19 +148,27 @@ export default function SelectedWork(): JSX.Element {
           </div>
         </Reveal>
 
-        {CASES.map((c) => (
-          <Reveal as="article" key={c.num} variant={c.variant} className="pb-card pb-case">
+        {CASES.map((c, i) => (
+          <Reveal
+            as="article"
+            key={c.num}
+            variant={c.variant}
+            id={`c${i + 3}`}
+            className="pb-card pb-case"
+          >
             <div className="pb-case-left">
               <span className="pb-case-num">{c.num}</span>
               <h3 className="pb-h-sm pb-case-h">{c.title}</h3>
               <p className="pb-case-blurb">{c.blurb}</p>
               {c.meta ? <span className="pb-case-meta">{c.meta}</span> : null}
+              {/* Kept: here the outbound link IS the proof. New tab so
+                  the page survives the click. */}
               {c.link ? (
                 <a
                   className="pb-case-link"
                   href={c.link.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   {c.link.label}
                 </a>
@@ -173,19 +184,28 @@ export default function SelectedWork(): JSX.Element {
             </div>
           </Reveal>
         ))}
+        </div>
       </div>
 
       <Reveal variant="rev" className="pb-also">
         <div className="pb-also-label">ALSO_SHIPPED</div>
         <div className="pb-stag pb-rows">
           {ALSO_SHIPPED.map((r) => (
-            <a className="pb-row" key={r.name} href={r.href} target="_blank" rel="noreferrer">
+            <div className="pb-row" key={r.name}>
               <span className="pb-row-name">{r.name}</span>
               <span className="pb-row-desc">{r.desc}</span>
-              <span className="pb-arrow">→</span>
-            </a>
+            </div>
           ))}
         </div>
+        {/* The ZeroDown quote sits directly beneath the ZeroDown row —
+            testimony next to the claim it backs. */}
+        <figure className="pb-inline-quote">
+          <blockquote>{TESTIMONIALS[0].text}</blockquote>
+          <figcaption>
+            <span className="car-name">{TESTIMONIALS[0].name}</span>
+            <span className="car-role">{TESTIMONIALS[0].role}</span>
+          </figcaption>
+        </figure>
       </Reveal>
     </section>
   );

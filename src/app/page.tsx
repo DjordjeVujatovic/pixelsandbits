@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer";
 import { HomeHeader } from "@/components/Header";
 import Reveal from "@/components/Reveal";
+import { ASK_QA } from "@/lib/content";
 import AskPanel from "@/components/home/AskPanel";
 import ClientStrip from "@/components/home/ClientStrip";
 import ClosingCta from "@/components/home/ClosingCta";
@@ -9,6 +10,25 @@ import OfferingsTabs from "@/components/home/OfferingsTabs";
 import ProcessTimeline from "@/components/home/ProcessTimeline";
 import SelectedWork from "@/components/home/SelectedWork";
 import Testimonial from "@/components/home/Testimonial";
+
+/* The intro sentence derives its count from the data so the two can
+   never drift apart again. */
+const COUNT_WORDS = [
+  "zero", "one", "two", "three", "four", "five",
+  "six", "seven", "eight", "nine", "ten",
+];
+const faqCount = COUNT_WORDS[ASK_QA.length] ?? String(ASK_QA.length);
+
+/* FAQPage schema over the same five pairs that render on the page. */
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: ASK_QA.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
 
 export default function HomePage(): JSX.Element {
   return (
@@ -39,10 +59,17 @@ export default function HomePage(): JSX.Element {
         {/* FAQ by function — sits near the end; the testimonial carousel
             and the closing proof band are adjacent below it. */}
         <Reveal as="section" variant="rev" id="faq" className="pb-ask">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          />
           <div className="pb-ask-head">
-            <div className="pb-kicker">$ ./ask --faq</div>
+            <div>
+              <div className="pb-kicker">$ ./ask --faq</div>
+              <h2 className="pb-h-md pb-ask-h">Questions we get asked most</h2>
+            </div>
             <div className="pb-ask-note">
-              The questions we get asked most, answered.
+              {`The ${faqCount} questions we get asked most, answered.`}
             </div>
           </div>
           <AskPanel />
