@@ -38,46 +38,41 @@ const MOCK_BLOCKS: { x: number; y: number; w: number; h: number; c: MockTint }[]
   { x: 244, y: 146, w: 66, h: 7, c: "plain" },
 ];
 
+/* The start state is a PURE wireframe: empty plain-grey dashed frames.
+   The wipe fills in the tinted borders, the pills and the bars — but
+   everything stays dashed: a design in progress, not a hi-fi handoff.
+   Blocks render invisibly in the wireframe pass so both SVGs keep
+   identical geometry. */
 function MockSvg({ styled }: { styled: boolean }): JSX.Element {
-  const frameStyle = (tint: MockTint) => {
-    const stroke =
-      tint === "lime"
-        ? "color-mix(in srgb, var(--acc) 50%, transparent)"
-        : tint === "cyan"
-          ? "color-mix(in srgb, var(--acc2) 50%, transparent)"
-          : styled
-            ? "color-mix(in srgb, var(--fg) 16%, transparent)"
-            : "#3d4a5c";
-    if (!styled) {
-      return {
-        stroke,
-        strokeWidth: 1.4,
-        strokeDasharray: "4 4",
-        fill: "color-mix(in srgb, var(--fg) 2.5%, transparent)",
-      };
-    }
-    const fill =
-      tint === "lime"
-        ? "color-mix(in srgb, var(--acc) 8%, #0f1620)"
-        : tint === "cyan"
-          ? "color-mix(in srgb, var(--acc2) 10%, #0f1620)"
-          : "#0f1620";
-    return { stroke, strokeWidth: 1, fill };
+  const frameStroke = (tint: MockTint) => {
+    if (!styled) return "#3d4a5c";
+    if (tint === "lime") return "color-mix(in srgb, var(--acc) 50%, transparent)";
+    if (tint === "cyan") return "color-mix(in srgb, var(--acc2) 50%, transparent)";
+    return "#3d4a5c";
   };
-  const blockFill = (c: MockTint) =>
-    c === "lime"
-      ? "var(--acc)"
-      : c === "cyan"
-        ? "var(--acc2)"
-        : styled
-          ? "color-mix(in srgb, var(--fg) 30%, transparent)"
-          : "#3d4a5c";
+  const blockFill = (c: MockTint) => {
+    if (!styled) return "none";
+    if (c === "lime") return "var(--acc)";
+    if (c === "cyan") return "var(--acc2)";
+    return "#3d4a5c";
+  };
   return (
     <svg className={styled ? undefined : "dz-wire"} viewBox="0 0 340 176" fill="none" aria-hidden="true">
       {MOCK_FRAMES.map((r, i) => (
-        <rect key={`f${i}`} x={r.x} y={r.y} width={r.w} height={r.h} rx={styled ? 10 : 8} {...frameStyle(r.tint)} />
+        <rect
+          key={`f${i}`}
+          x={r.x}
+          y={r.y}
+          width={r.w}
+          height={r.h}
+          rx={8}
+          stroke={frameStroke(r.tint)}
+          strokeWidth={1.4}
+          strokeDasharray="4 4"
+          fill={styled ? "color-mix(in srgb, var(--fg) 2.5%, transparent)" : "color-mix(in srgb, var(--fg) 1.5%, transparent)"}
+        />
       ))}
-      <circle cx="20" cy="21" r="3.5" fill="var(--acc)" />
+      <circle cx="20" cy="21" r="3.5" fill={styled ? "var(--acc)" : "none"} />
       {MOCK_BLOCKS.map((r, i) => (
         <rect key={`b${i}`} x={r.x} y={r.y} width={r.w} height={r.h} rx={r.h / 2} fill={blockFill(r.c)} />
       ))}
