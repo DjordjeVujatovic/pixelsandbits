@@ -970,7 +970,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s
 /* --- 02 design --- */
 .dz { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center }
 .dz svg { width: 92%; max-height: 100% }
-.dz-wire rect { stroke: #3d4a5c; stroke-width: 1.4; fill: none; stroke-dasharray: 4 4 }
 .dz-real { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; clip-path: inset(0 100% 0 0) }
 .stage.on .dz-real { animation: dz-wipe 1.5s cubic-bezier(.5,0,.5,1) .35s forwards }
 @keyframes dz-wipe { to { clip-path: inset(0 0 0 0) } }

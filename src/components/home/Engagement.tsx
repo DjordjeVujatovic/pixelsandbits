@@ -7,53 +7,79 @@ import { runCountUp, useReducedMotion } from "@/lib/motion";
 const STAGE_MS = 7200;
 const METER = [12, 42, 74, 100];
 
-/* Design scene: one geometry array renders both SVGs, so the wireframe
+/* Design scene: one geometry set renders both SVGs, so the wireframe
    and the styled mock are identical by construction — the effect only
-   reads if the shapes stay put and just the treatment changes. */
-type MockKind = "plain" | "lime" | "limeSolid" | "cyan" | "cyanSoft";
-const MOCK: { x: number; y: number; w: number; h: number; kind: MockKind }[] = [
-  { x: 10, y: 12, w: 70, h: 12, kind: "plain" }, // sidebar head
-  { x: 10, y: 32, w: 54, h: 10, kind: "plain" },
-  { x: 10, y: 48, w: 62, h: 10, kind: "cyanSoft" }, // active row (cyan accent 1)
-  { x: 10, y: 64, w: 46, h: 10, kind: "plain" },
-  { x: 10, y: 80, w: 58, h: 10, kind: "plain" },
-  { x: 10, y: 96, w: 50, h: 10, kind: "plain" },
-  { x: 92, y: 12, w: 238, h: 14, kind: "plain" }, // header bar
-  { x: 92, y: 40, w: 148, h: 16, kind: "plain" }, // agent bubble
-  { x: 178, y: 64, w: 152, h: 16, kind: "lime" }, // reply (lime)
-  { x: 92, y: 88, w: 128, h: 16, kind: "plain" },
-  { x: 92, y: 112, w: 64, h: 10, kind: "cyan" }, // status chip (cyan accent 2)
-  { x: 196, y: 112, w: 134, h: 16, kind: "lime" },
-  { x: 92, y: 142, w: 180, h: 20, kind: "plain" }, // input
-  { x: 280, y: 142, w: 50, h: 20, kind: "limeSolid" }, // send (lime primary)
+   reads if the shapes stay put and just the treatment changes.
+   Layout (a dashboard, per the approved mock): a top bar with a lime
+   CTA pill, a hero card with two side cards, and three stat cards. */
+type MockTint = "plain" | "lime" | "cyan";
+const MOCK_FRAMES: { x: number; y: number; w: number; h: number; tint: MockTint }[] = [
+  { x: 8, y: 8, w: 324, h: 26, tint: "plain" }, // top bar
+  { x: 8, y: 42, w: 182, h: 62, tint: "lime" }, // hero card
+  { x: 198, y: 42, w: 134, h: 30, tint: "cyan" }, // side card (cyan)
+  { x: 198, y: 80, w: 134, h: 24, tint: "plain" }, // side card
+  { x: 8, y: 112, w: 103, h: 56, tint: "lime" }, // stat card 1
+  { x: 119, y: 112, w: 103, h: 56, tint: "lime" }, // stat card 2
+  { x: 230, y: 112, w: 102, h: 56, tint: "cyan" }, // stat card 3 (cyan)
+];
+const MOCK_BLOCKS: { x: number; y: number; w: number; h: number; c: MockTint }[] = [
+  { x: 34, y: 16, w: 62, h: 10, c: "plain" }, // top-bar title
+  { x: 262, y: 16, w: 52, h: 10, c: "lime" }, // top-bar CTA
+  { x: 22, y: 54, w: 76, h: 11, c: "lime" }, // hero heading
+  { x: 22, y: 73, w: 118, h: 7, c: "plain" },
+  { x: 22, y: 86, w: 52, h: 7, c: "plain" },
+  { x: 210, y: 51, w: 46, h: 11, c: "cyan" },
+  { x: 210, y: 88, w: 88, h: 8, c: "plain" },
+  { x: 22, y: 126, w: 42, h: 11, c: "lime" },
+  { x: 133, y: 126, w: 42, h: 11, c: "lime" },
+  { x: 244, y: 126, w: 42, h: 11, c: "cyan" },
+  { x: 22, y: 146, w: 66, h: 7, c: "plain" },
+  { x: 133, y: 146, w: 66, h: 7, c: "plain" },
+  { x: 244, y: 146, w: 66, h: 7, c: "plain" },
 ];
 
 function MockSvg({ styled }: { styled: boolean }): JSX.Element {
-  const style = (kind: MockKind) => {
-    if (!styled) return { fill: "none" };
-    switch (kind) {
-      case "limeSolid":
-        return { fill: "var(--acc)" };
-      case "lime":
-        return { fill: "color-mix(in srgb, var(--acc) 16%, transparent)", stroke: "color-mix(in srgb, var(--acc) 55%, transparent)", strokeWidth: 1 };
-      case "cyan":
-        return { fill: "color-mix(in srgb, var(--acc2) 35%, transparent)" };
-      case "cyanSoft":
-        return { fill: "color-mix(in srgb, var(--acc2) 16%, transparent)" };
-      default:
-        return { fill: "#0f1620", stroke: "color-mix(in srgb, var(--fg) 10%, transparent)", strokeWidth: 1 };
+  const frameStyle = (tint: MockTint) => {
+    const stroke =
+      tint === "lime"
+        ? "color-mix(in srgb, var(--acc) 50%, transparent)"
+        : tint === "cyan"
+          ? "color-mix(in srgb, var(--acc2) 50%, transparent)"
+          : styled
+            ? "color-mix(in srgb, var(--fg) 16%, transparent)"
+            : "#3d4a5c";
+    if (!styled) {
+      return {
+        stroke,
+        strokeWidth: 1.4,
+        strokeDasharray: "4 4",
+        fill: "color-mix(in srgb, var(--fg) 2.5%, transparent)",
+      };
     }
+    const fill =
+      tint === "lime"
+        ? "color-mix(in srgb, var(--acc) 8%, #0f1620)"
+        : tint === "cyan"
+          ? "color-mix(in srgb, var(--acc2) 10%, #0f1620)"
+          : "#0f1620";
+    return { stroke, strokeWidth: 1, fill };
   };
+  const blockFill = (c: MockTint) =>
+    c === "lime"
+      ? "var(--acc)"
+      : c === "cyan"
+        ? "var(--acc2)"
+        : styled
+          ? "color-mix(in srgb, var(--fg) 30%, transparent)"
+          : "#3d4a5c";
   return (
-    <svg
-      className={styled ? undefined : "dz-wire"}
-      viewBox="0 0 340 176"
-      fill="none"
-      aria-hidden="true"
-    >
-      <rect x=".7" y=".7" width="338.6" height="174.6" rx={styled ? 10 : 4} {...(styled ? { stroke: "color-mix(in srgb, var(--fg) 14%, transparent)", strokeWidth: 1, fill: "#0b121b" } : {})} />
-      {MOCK.map((r, i) => (
-        <rect key={i} x={r.x} y={r.y} width={r.w} height={r.h} rx={styled ? 9 : 3} {...style(r.kind)} />
+    <svg className={styled ? undefined : "dz-wire"} viewBox="0 0 340 176" fill="none" aria-hidden="true">
+      {MOCK_FRAMES.map((r, i) => (
+        <rect key={`f${i}`} x={r.x} y={r.y} width={r.w} height={r.h} rx={styled ? 10 : 8} {...frameStyle(r.tint)} />
+      ))}
+      <circle cx="20" cy="21" r="3.5" fill="var(--acc)" />
+      {MOCK_BLOCKS.map((r, i) => (
+        <rect key={`b${i}`} x={r.x} y={r.y} width={r.w} height={r.h} rx={r.h / 2} fill={blockFill(r.c)} />
       ))}
     </svg>
   );
