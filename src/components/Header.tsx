@@ -270,6 +270,9 @@ export function HomeHeader(): JSX.Element {
     els.forEach((el) => io.observe(el));
     const onResize = () => measurePill(activeRef.current);
     window.addEventListener("resize", onResize);
+    // Mono or not, label widths shift between platforms — re-measure
+    // once the real font is in.
+    document.fonts?.ready.then(() => measurePill(activeRef.current));
     return () => {
       io.disconnect();
       window.removeEventListener("resize", onResize);
@@ -300,6 +303,7 @@ export function HomeHeader(): JSX.Element {
                 key={n.id}
                 className={`pb-navlink${active === n.id ? " pb-navon" : ""}`}
                 href={`#${n.id}`}
+                aria-current={active === n.id ? "true" : undefined}
                 onMouseEnter={() => measurePill(n.id)}
               >
                 <span className="pb-dash">--</span>
@@ -307,6 +311,9 @@ export function HomeHeader(): JSX.Element {
               </a>
             ))}
           </div>
+          {/* Paired spacers keep the capsule centred regardless of how
+              wide the wordmark and CTA are. */}
+          <div className="pb-spacer" />
           <div className="pb-navlinks">
             <Link className="pb-cta" href="/contact">
               <span className="pb-brk">[</span>get in touch

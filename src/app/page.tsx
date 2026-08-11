@@ -2,7 +2,6 @@ import Footer from "@/components/Footer";
 import { HomeHeader } from "@/components/Header";
 import Reveal from "@/components/Reveal";
 import AskPanel from "@/components/home/AskPanel";
-import Backdrop from "@/components/home/Backdrop";
 import ClientStrip from "@/components/home/ClientStrip";
 import ClosingCta from "@/components/home/ClosingCta";
 import Hero from "@/components/home/Hero";
@@ -18,10 +17,17 @@ export default function HomePage(): JSX.Element {
       {/* Everything that recedes behind the mobile drawer lives in this
           wrapper — the fixed drawer must not have a transformed ancestor. */}
       <div className="pb-recede">
-        <Backdrop />
         <main id="top" className="pb-main">
-        <Hero />
-        <ClientStrip />
+        {/* Aurora field over a masked grid, confined to the hero band and
+            resolved by the fade. Full-bleed via the margin/padding trick;
+            pulled up behind the translucent sticky header. */}
+        <section className="pb-hero-wrap">
+          <span className="bgL bg-aurora" aria-hidden="true" />
+          <span className="bgL bg-grid" aria-hidden="true" />
+          <span className="bgL bg-fade" aria-hidden="true" />
+          <Hero />
+          <ClientStrip />
+        </section>
 
         <Reveal as="section" variant="s" id="services" className="pb-services">
           <OfferingsTabs />

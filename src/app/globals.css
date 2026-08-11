@@ -111,7 +111,58 @@ button {
   padding: 0 48px 90px;
 }
 
-/* Backdrops */
+/* ---------------- Hero background: aurora + grid + fade ----------------
+   Full-bleed inside the column via the margin/padding trick; isolated so
+   the layers can never escape. Pulled up 80px so the aurora glows
+   through the translucent sticky header. Decorative only — content sits
+   above at z-index 1+. */
+.pb-hero-wrap {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
+  margin-top: -80px;
+  padding-top: 80px;
+}
+.pb-hero-wrap > .pb-hero,
+.pb-hero-wrap > .pb-cstrip {
+  position: relative;
+  z-index: 1;
+}
+.bgL { position: absolute; inset: 0; pointer-events: none; z-index: 0 }
+/* the light — corner-concentrated: one wash, not three blobs.
+   Pre-blurred via soft multi-stop falloffs instead of filter: blur(46px)
+   — the live blur measurably dropped frames (the spec's sanctioned
+   fallback), so the gradients carry the softness and the drift is
+   slightly slower. */
+.bg-aurora {
+  background:
+    radial-gradient(52% 62% at 12% 0%, color-mix(in srgb, var(--acc) 24%, transparent), color-mix(in srgb, var(--acc) 10%, transparent) 38%, transparent 72%),
+    radial-gradient(48% 58% at 62% 10%, color-mix(in srgb, var(--acc2) 19%, transparent), color-mix(in srgb, var(--acc2) 8%, transparent) 40%, transparent 74%),
+    radial-gradient(44% 54% at 96% 34%, color-mix(in srgb, var(--acc) 16%, transparent), color-mix(in srgb, var(--acc) 7%, transparent) 38%, transparent 74%);
+  animation: bg-drift 26s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes bg-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.02); opacity: .9 }
+  50%      { transform: translate3d(-30px, 26px, 0) scale(1.12); opacity: 1 }
+}
+/* the technical texture, masked near the headline */
+.bg-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--fg) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--fg) 5%, transparent) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(ellipse 76% 62% at 30% 14%, #000 4%, transparent 70%);
+          mask-image: radial-gradient(ellipse 76% 62% at 30% 14%, #000 4%, transparent 70%);
+  animation: bg-scroll 30s linear infinite;
+}
+@keyframes bg-scroll { to { background-position: 46px 46px } }
+/* the hand-off to the section below */
+.bg-fade { background: linear-gradient(180deg, transparent 58%, var(--bg) 100%) }
+
+/* Backdrops (contact page) */
 .pb-scanlines {
   position: absolute;
   inset: 0;
@@ -308,7 +359,7 @@ header.pb-compact {
   padding: 5px;
   border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   font-family: var(--font-mono), monospace;
@@ -339,7 +390,7 @@ header.pb-compact {
 .pb-navlink .pb-dash { color: color-mix(in srgb, var(--fg) 26%, transparent); transition: color .2s ease }
 .pb-navlink:hover { color: var(--fg) }
 .pb-navlink:hover .pb-dash { color: var(--acc) }
-.pb-navlink.pb-navon { color: var(--fg) }
+.pb-navlink.pb-navon { color: var(--acc) }
 .pb-navlink.pb-navon .pb-dash { color: var(--acc) }
 
 .pb-navlinks { display: flex; align-items: center }
@@ -2470,6 +2521,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 @media (max-width: 1100px) {
   .pb-timeline { grid-template-columns: repeat(2, 1fr) !important }
   .pb-timeline .pb-line { display: none !important }
+  .bg-grid { background-size: 40px 40px }
 }
 
 @media (max-width: 1000px) {
@@ -2512,6 +2564,12 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-capsule { display: none !important }
   .ct-capsule { display: none !important }
   .stagewrap { height: 320px } /* taller — content stacks */
+  .bg-grid {
+    background-size: 32px 32px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 50% at 40% 10%, #000 4%, transparent 72%);
+            mask-image: radial-gradient(ellipse 90% 50% at 40% 10%, #000 4%, transparent 72%);
+  }
+  .bg-fade { background: linear-gradient(180deg, transparent 48%, var(--bg) 100%) }
   .stage { padding: 16px 14px 38px }
   .st-cap { left: 14px; right: 14px }
   .iv { gap: 8px }
@@ -2864,6 +2922,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   }
   .pb-flow { transform: scaleX(1) }
   .pb-wave > span { transform: scaleY(.18) !important }
+  .bg-aurora, .bg-grid { animation: none !important }
   .pb-drawer {
     transform: none;
     opacity: 0;
