@@ -1390,19 +1390,29 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-ask-fill { display: block; height: 2px; background: var(--acc); width: 0; transition: width .18s linear }
 .pb-ask-status { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 35%, transparent) }
 
-/* ---------------- Selected work: sticky rail ----------------
-   PORTFOLIO_sticky_rail.md — the kicker/heading/lead/index pin in a
-   316px left column while the cards scroll past on the right. */
+/* ---------------- Selected work: one-at-a-time deck ----------------
+   PORTFOLIO_one_at_a_time.md — eleven cases, one visible at a time,
+   advanced by scroll while the stage pins. The section's own height IS
+   the pin's scroll travel; nothing inside is eleven screens tall. Cyan
+   here is reserved for the client quote blocks. */
 
-.pb-work { padding: 62px 0 66px }
+.pf2 { position: relative; height: calc(11 * 340px + 620px) }
 
-.sr { display: grid; grid-template-columns: 316px 1fr; gap: 54px; align-items: start }
-/* align-items: start is REQUIRED — a stretched grid item leaves sticky
-   no room to travel in and it never engages. */
-
-/* 74px clears the ~51px compact sticky header with breathing room; if
-   the header height changes, this must change with it. */
-.sr-side { position: sticky; top: 74px }
+/* One screen tall, centring its own content — auto height left ~700px
+   of dead space under the section on tall viewports. dvh, not vh: iOS
+   Safari's address-bar collapse changes vh mid-scroll and the pinned
+   block jumps (FIX_stage_full_height.md). */
+.stg-sticky {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding: 60px 0 34px;
+}
+.stg-sticky > * { width: 100% } /* the flex child must still span the column */
+/* center, not start — the active card and the rail share one vertical axis */
+.stg { display: grid; grid-template-columns: 296px 1fr; gap: 48px; align-items: center }
 
 .sr-h { font-size: 37px; line-height: 1.06; letter-spacing: -.036em; font-weight: 600; margin: 0 }
 .sr-lead {
@@ -1412,95 +1422,319 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   color: color-mix(in srgb, var(--fg) 58%, transparent);
 }
 
-.sr-idx { margin-top: 28px; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent) }
-.sr-i {
-  position: relative;
+/* ---------- the rail (desktop) ---------- */
+.stg-idx { margin-top: 20px; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent) }
+.si {
   display: flex;
-  align-items: baseline;
-  gap: 11px;
-  padding: 11px 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 7px 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  position: relative;
   font-family: var(--font-mono), monospace;
-  font-size: 12.5px;
-  color: color-mix(in srgb, var(--fg) 40%, transparent);
-  transition: color .3s ease, padding-left .3s ease;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--fg) 32%, transparent);
+  transition: padding-left .34s cubic-bezier(.32,.72,0,1), color .34s ease;
 }
-.sr-i b {
+.si b {
+  width: 19px;
   flex: none;
-  width: 20px;
   font-weight: 400;
-  font-size: 10.5px;
+  font-size: 9.5px;
   letter-spacing: .1em;
-  color: color-mix(in srgb, var(--fg) 30%, transparent);
-  transition: color .3s ease;
+  color: color-mix(in srgb, var(--fg) 22%, transparent);
+  transition: color .34s ease;
 }
-.sr-i:hover { color: var(--fg-strong) }
-/* active — the card currently in reading position */
-.sr-i.on { color: var(--fg-strong); padding-left: 12px }
-.sr-i.on b { color: var(--acc) }
-.sr-i.on::before {
+.si:hover { color: color-mix(in srgb, var(--fg) 74%, transparent) }
+.si.past { color: color-mix(in srgb, var(--fg) 50%, transparent) }
+.si.past b { color: color-mix(in srgb, var(--acc) 42%, transparent) }
+.si.on { padding-left: 12px; color: var(--fg-strong) }
+.si.on b { color: var(--acc) }
+.si.on::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 12px;
-  bottom: 12px;
+  top: 7px;
+  bottom: 7px;
   width: 2px;
   border-radius: 2px;
   background: var(--acc);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--acc) 60%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--acc) 65%, transparent);
 }
-/* already scrolled past — dimmer than active, brighter than pending */
-.sr-i.past { color: color-mix(in srgb, var(--fg) 62%, transparent) }
-.sr-i.past b { color: color-mix(in srgb, var(--acc) 55%, transparent) }
+.si:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
 
-.sr-prog {
+.stg-prog {
   display: flex;
   align-items: center;
   gap: 11px;
-  margin-top: 18px;
+  margin-top: 15px;
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
-  color: color-mix(in srgb, var(--fg) 42%, transparent);
+  font-size: 10px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
 }
-.sr-bar { flex: 1; height: 2px; border-radius: 2px; background: color-mix(in srgb, var(--fg) 10%, transparent); overflow: hidden }
-.sr-bar > i { display: block; height: 2px; border-radius: 2px; background: var(--acc); transition: width .5s cubic-bezier(.3,.8,.3,1) }
+.stg-bar { flex: 1; height: 2px; border-radius: 2px; background: color-mix(in srgb, var(--fg) 10%, transparent); overflow: hidden }
+.stg-bar > i { display: block; height: 2px; border-radius: 2px; background: var(--acc); transition: width .4s cubic-bezier(.32,.72,0,1) }
 
-/* Index clicks are plain anchors; this clears the sticky header. */
-.pb-cases > [id] { scroll-margin-top: 90px }
+/* ---------- the deck ---------- */
+.deck { position: relative; min-height: 460px } /* fills what the stage gives it */
 
-/* The card column is ~750px inside the rail — give the cards the same
-   single-column internals they already use below 960px viewports, so
-   the stat rows get the full width and stay on one line. */
-@media (min-width: 1101px) {
-  .sr .pb-case,
-  .sr .pb-redcard { grid-template-columns: 1fr; gap: 32px; padding: 28px }
-  .sr .pb-redcard-stats { flex-direction: row; flex-wrap: wrap; gap: 20px 36px }
-  .sr .pb-feature { grid-template-columns: 1fr }
-  /* 460px was tuned for the old narrow side column; in the rail the
-     text has the full card width — keep a readable measure, not a slot. */
-  .sr .pb-feature-body { max-width: 640px }
-  .sr .pb-feature-stats {
-    border-left: 0;
-    border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
-    flex-direction: row;
-  }
-  .sr .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
-  .sr .pb-fstat:last-child { border-right: 0 }
+/* every card is pinned to the deck's middle, so cards of different
+   heights all sit on one axis — and that axis lines up with the rail.
+   translateY(-50%) is the centring baseline; the neighbour offset is a
+   SECOND translateY on top of it. */
+.dk {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  transform: translateY(-50%) translateY(120px) scale(.9);
+  filter: blur(7px);
+  transition: opacity .46s ease, transform .6s cubic-bezier(.32,.72,0,1), filter .44s ease;
+}
+.dk.on { opacity: 1; transform: translateY(-50%); filter: none; pointer-events: auto; z-index: 3 }
+.dk.prev { opacity: .22; transform: translateY(-50%) translateY(-78px) scale(.925); filter: blur(3px); z-index: 1 }
+/* 78px (was 96) keeps the tallest card's next-ghost inside the stage on
+   short laptops */
+.dk.next { opacity: .26; transform: translateY(-50%) translateY(78px) scale(.94); filter: blur(3px); z-index: 1 }
+.dk.far-up { opacity: 0; transform: translateY(-50%) translateY(-150px) scale(.88); filter: blur(7px) }
+.dk.far-down { opacity: 0; transform: translateY(-50%) translateY(170px) scale(.88); filter: blur(7px) }
+/* the parked cards are decoration */
+.dk.prev *, .dk.next * { pointer-events: none }
+/* the active card is lifted clear of the stack */
+.dk.on > * { box-shadow: 0 26px 60px rgba(0,0,0,.55) }
+
+/* Cards must be OPAQUE — a faded neighbour parked behind a translucent
+   active card bleeds its text through. Accents mix over the opaque
+   base, never over transparent. */
+.deck .pb-card, .deck .pb-case { background: #0a0d13 }
+.deck .pb-redcard { background: color-mix(in srgb, var(--acc) 5%, #0a0d13) !important }
+.deck .pb-feature { background: color-mix(in srgb, var(--acc) 4%, #0a0d13) }
+
+/* Deck cards are a single ~950px column at desktop — the same
+   single-column internals the cards use below 960px viewports. */
+.deck .pb-case, .deck .pb-redcard { grid-template-columns: 1fr; gap: 24px; padding: 28px }
+.deck .pb-redcard-stats { flex-direction: row; flex-wrap: wrap; gap: 20px 36px }
+.deck .pb-feature { grid-template-columns: 1fr }
+.deck .pb-feature-body { max-width: 640px }
+.deck .pb-feature-stats {
+  border-left: 0;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  flex-direction: row;
+}
+.deck .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
+.deck .pb-fstat:last-child { border-right: 0 }
+
+/* the standard card for cases 06–11: one column, no stats block */
+.std2 { display: flex; flex-direction: column; gap: 13px }
+.std2-head { display: flex; align-items: center; gap: 12px }
+.std2-tag {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  color: color-mix(in srgb, var(--acc) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acc) 36%, transparent);
+  border-radius: var(--r-pill);
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+.std2-bullets { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px }
+.std2-bullets li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+}
+.std2-bullets li::before { content: "—"; position: absolute; left: 0; color: color-mix(in srgb, var(--acc) 70%, transparent) }
+
+/* the client quote — the one cyan surface in this section */
+.qb {
+  margin: 4px 0 0;
+  padding: 15px 17px 14px;
+  border: 1px solid color-mix(in srgb, var(--acc2) 26%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--acc2) 6%, #0d1017);
+}
+.qb blockquote {
+  margin: 0 0 10px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  letter-spacing: -.008em;
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+  text-wrap: pretty;
+}
+.qb em { font-style: normal; color: var(--acc2) }
+.qb figcaption { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap }
+.qb-name { font-size: 12.5px; font-weight: 600; color: var(--fg-strong) }
+.qb-role { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 45%, transparent) }
+
+/* Short-viewport breakpoint: the stage's content box is 100dvh − 94px —
+   ~606px at 700px tall — and the rail is ~620px. Vertical constraint,
+   so a HEIGHT query. Only the rail's chrome and the ghost offsets give
+   way; the card's own type never scales down — it is the content. */
+@media (max-height: 820px) and (min-width: 1101px) {
+  .stg-sticky { padding: 40px 0 24px }
+  .stg-side .sr-h { font-size: 30px }
+  .stg-side .sr-lead { display: none } /* the least load-bearing line */
+  .stg-idx { margin-top: 14px }
+  .si { padding: 5px 0 }
+  .deck { min-height: 400px }
+  .dk.prev { transform: translateY(-50%) translateY(-62px) scale(.925) }
+  .dk.next { transform: translateY(-50%) translateY(64px) scale(.94) }
 }
 
-/* Below 1100px the rail is gone: single column, no index, no pin. */
+/* the strip + skip are mobile-only */
+.strip, .skip { display: none }
+
+/* ---------- mobile and tablet (≤1100px) ---------- */
 @media (max-width: 1100px) {
-  .sr { grid-template-columns: 1fr; gap: 30px }
-  .sr-side { position: static } /* explicit — a sticky full-width block pins over the cards */
-  .sr-idx, .sr-prog { display: none } /* stacked above the cards they'd duplicate them */
-  .sr-h { font-size: 34px }
-}
-@media (max-width: 720px) {
-  .pb-work { padding: 44px 0 48px }
-  .sr-h { font-size: 27px }
+  /* 200px per card — brisk, not a trap */
+  .pf2 { height: calc(11 * 200px + 640px) }
+  /* The wrapper releases; the stage's grid row must span the section's
+     full height or sticky has no room to travel in. */
+  .stg-sticky { position: static; display: block; padding: 0; height: 100% }
+  .stg { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 0; align-items: start; height: 100% }
+  /* the chip strip's intrinsic width (eleven unshrinkable chips) must
+     not inflate the grid track */
+  .stg-stage { min-width: 0 }
+  /* the heading scrolls away; only the stage pins */
+  .intro { padding: 30px 0 20px }
+  .stg-idx, .stg-prog { display: none }
+  /* Full-height flex column: strip at the top, the deck filling the
+     middle (cards centre on the SCREEN, not a fixed box), and the skip
+     button always at the bottom edge — cards can no longer sit on it. */
+  .stg-stage {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 64px 0 14px; /* clears the translucent header */
+    align-self: start;
+  }
+  .strip { flex: none }
+  .sr-h { font-size: 26px }
   .sr-lead { font-size: 14px }
+
+  /* the rail becomes a horizontal chip strip */
+  .strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 18px 12px;
+    margin: 0 -18px;
+  }
+  .strip::-webkit-scrollbar { display: none }
+  .chip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 11px;
+    border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+    font-family: var(--font-mono), monospace;
+    font-size: 10.5px;
+    color: color-mix(in srgb, var(--fg) 40%, transparent);
+    white-space: nowrap;
+    transition: color .3s ease, border-color .3s ease, background .3s ease;
+  }
+  .chip b {
+    font-weight: 400;
+    font-size: 9px;
+    letter-spacing: .08em;
+    color: color-mix(in srgb, var(--fg) 26%, transparent);
+    transition: color .3s ease;
+  }
+  .chip.past { color: color-mix(in srgb, var(--fg) 52%, transparent) }
+  .chip.past b { color: color-mix(in srgb, var(--acc) 45%, transparent) }
+  .chip.on { color: var(--ink); background: var(--acc); border-color: var(--acc) }
+  .chip.on b { color: color-mix(in srgb, var(--ink) 60%, transparent) }
+  .chip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+
+  /* the deck at phone offsets — neighbours clearly visible, not smudges */
+  .deck { flex: 1; min-height: 0 }
+  .dk {
+    transform: translateY(-50%) translateY(84px) scale(.92);
+    filter: blur(6px);
+    transition: opacity .42s ease, transform .54s cubic-bezier(.32,.72,0,1), filter .4s ease;
+  }
+  .dk.on { opacity: 1; transform: translateY(-50%); filter: none }
+  .dk.prev { opacity: .5; transform: translateY(-50%) translateY(-58px) scale(.945); filter: blur(1.5px) }
+  .dk.next { opacity: .56; transform: translateY(-50%) translateY(70px) scale(.955); filter: blur(1.5px) }
+  .dk.far-up { opacity: 0; transform: translateY(-50%) translateY(-104px) scale(.92); filter: blur(6px) }
+  .dk.far-down { opacity: 0; transform: translateY(-50%) translateY(116px) scale(.92); filter: blur(6px) }
+  .dk.on > * { box-shadow: 0 18px 44px rgba(0,0,0,.6) }
+
+  /* the skip button is what makes pinning acceptable */
+  .skip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+    flex: none;
+    position: relative;
+    z-index: 6; /* above any card spill — its blurred surface reads as a floor */
+    padding: 12px;
+    border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(6px);
+    font: inherit;
+    cursor: pointer;
+    font-family: var(--font-mono), monospace;
+    font-size: 12px;
+    color: color-mix(in srgb, var(--fg) 62%, transparent);
+  }
+  .skip:active { border-color: color-mix(in srgb, var(--acc) 50%, transparent); color: var(--acc) }
+  .skip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+  /* On the last card there is nothing left to skip — fade out but keep
+     the space so the flex column doesn't jump. */
+  .skip { transition: opacity .35s ease }
+  .skip.skip-gone { opacity: 0; visibility: hidden; pointer-events: none }
+  /* The last card settles lower, into the air the skip vacated — the
+     prev ghost fills the top and the section hands off right below,
+     instead of a tiny card floating in an empty screen. */
+  .dk.on.dk-last { transform: translateY(-50%) translateY(64px) }
+
+  /* card trimming — height is the binding constraint while pinned */
+  .deck .pb-card, .deck .pb-redcard, .deck .pb-case { padding: 18px 16px 20px }
+  .deck .pb-feature-side { padding: 18px 16px 20px }
+  .deck h3 { font-size: 18px }
+  .deck .pb-case-blurb, .deck .pb-case-detail, .deck .pb-feature-body { font-size: 13.5px }
+  /* stats two-across, smaller */
+  .deck .pb-case-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px }
+  .deck .pb-case-figure { font-size: 16px }
+  .deck .pb-case-figcap { font-size: 10px }
+  /* CASE_01 shows two stats on mobile */
+  .deck .pb-redcard-stats { gap: 12px 22px }
+  .deck .pb-redcard .pb-redstat:nth-child(3) { display: none }
+  .deck .pb-redstat-figure { font-size: 16px }
+  /* CASE_02 feature stats three-across under the copy */
+  .deck .pb-feature-stats { display: grid; grid-template-columns: repeat(3, 1fr); border-right: 0 }
+  .deck .pb-fstat { padding: 12px 10px; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
+  .deck .pb-fstat:last-child { border-right: 0 }
+  .deck .pb-fstat .pb-figure { font-size: 14px }
+  /* the redcard scan band is 100px at this width (the one sanctioned
+     difference in CASE_01) */
+  .pb-redcard::after { height: 100px; top: -100px }
 }
-.pb-cases { display: flex; flex-direction: column; gap: 14px }
+
 .pb-case {
   border: 1px solid color-mix(in srgb, var(--fg) 11%, transparent);
   border-radius: 14px;
@@ -1669,46 +1903,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-fstat > span:last-child { font-size: 13px; color: color-mix(in srgb, var(--fg) 50%, transparent) }
 .pb-fstat .pb-figure { font-family: var(--font-mono), monospace; line-height: 1; font-size: 34px }
 
-/* ALSO_SHIPPED */
-.pb-also { margin-top: 40px }
-.pb-also-label {
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
-  color: color-mix(in srgb, var(--fg) 38%, transparent);
-  letter-spacing: .1em;
-  margin-bottom: 8px;
-}
-.pb-rows { display: flex; flex-direction: column }
-/* Plain-text rows — no hover affordances, nothing to click away to. */
-.pb-row {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 28px;
-  align-items: baseline;
-  padding: 20px 8px;
-  border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
-  color: var(--fg);
-  border-radius: 8px;
-}
-.pb-row-name { font-family: var(--font-mono), monospace; font-size: 17px }
-.pb-row-desc { font-size: 14px; color: color-mix(in srgb, var(--fg) 50%, transparent) }
-
-/* Testimony beside the proof it backs (the ZeroDown row above it). */
-.pb-inline-quote {
-  margin: 26px 8px 0;
-  padding: 4px 0 4px 22px;
-  border-left: 2px solid color-mix(in srgb, var(--acc) 45%, transparent);
-}
-.pb-inline-quote blockquote {
-  margin: 0 0 14px;
-  font-size: 17px;
-  line-height: 1.65;
-  letter-spacing: -.012em;
-  color: color-mix(in srgb, var(--fg) 80%, transparent);
-  max-width: 760px;
-  text-wrap: pretty;
-}
-
 /* ---------------- Process schedule (PROCESS_schedule.md) ----------------
    Four horizontal bars on a shared axis — the phases overlap and Build
    dominates. Two semantic voices: cyan for 01–02 (before any code
@@ -1717,6 +1911,14 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    proportion, not weeks; never label them. */
 
 .pb-process { padding: 64px 0 20px }
+/* ≤1100 the portfolio stage is a full-screen pin whose bottom third is
+   empty on the short last card (skip hidden, card settled high). Pull
+   the process section up into that vacated air: it peeks beneath the
+   last card during its scroll window, and after the unpin the gap
+   between deck and process is breathing room, not a void. */
+@media (max-width: 1100px) {
+  .pb-process { margin-top: -180px }
+}
 
 .sc-head {
   display: flex;
@@ -2203,35 +2405,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .sc-mile-m .sc-mgrid { grid-template-columns: 1fr }
 }
 
-/* ---------------- Testimonial (static, pre-CTA) ---------------- */
-
-.pb-carsec { padding: 72px 0 8px }
-.pb-quote-kicker { margin-bottom: 12px }
-.pb-quote-h { margin: 0 0 26px }
-.car { position: relative; margin: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 26px }
-.car-mark {
-  position: absolute;
-  right: 4px;
-  top: -54px;
-  font-size: 170px;
-  line-height: 1;
-  color: color-mix(in srgb, var(--acc2) 12%, transparent);
-  pointer-events: none;
-  user-select: none;
-}
-.car-q {
-  margin: 0;
-  font-size: 25px;
-  line-height: 1.5;
-  letter-spacing: -.022em;
-  color: color-mix(in srgb, var(--fg) 88%, transparent);
-  max-width: 860px;
-  text-wrap: pretty;
-}
-.car-cap { display: flex; align-items: center; gap: 13px; margin: 0 }
-.car-name { display: block; font-size: 15px; font-weight: 600; letter-spacing: -.01em; color: var(--fg-strong) }
-.car-role { display: block; font-family: var(--font-mono), monospace; font-size: 11.5px; color: color-mix(in srgb, var(--fg) 45%, transparent) }
-
 /* ---------------- Closing section ---------------- */
 /* Claim → proof band → the full-lime close. The lime block is the one
    light surface on the site: plain sans, literal rgba() inks. */
@@ -2612,16 +2785,14 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 
 @media (max-width: 960px) {
   .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 28px !important; padding-right: 28px !important }
-  .pb-hero, .pb-ai, .pb-case, .pb-redcard { grid-template-columns: 1fr !important; gap: 32px !important }
+  .pb-hero, .pb-ai { grid-template-columns: 1fr !important; gap: 32px !important }
   .pb-ai { padding: 34px 28px !important }
-  .pb-case, .pb-redcard { padding: 28px !important }
   h1, .pb-hero-h { font-size: 46px !important }
   h2 { font-size: 34px !important }
   /* The offer pane title moved from h2 to h3 for hierarchy; keep it on
      the h2 scale it always had. */
   .pb-offer-title { font-size: 34px !important }
   .pb-h-lg { font-size: 38px }
-  .car-q { font-size: 21px }
   .ct-shell { grid-template-columns: 1fr !important }
   .ct-h1 { font-size: 44px !important }
 }
@@ -2676,7 +2847,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-pconn { display: none } /* connectors can't span a wrapped row */
   .pb-navlinks { display: none !important }
   .pb-burger { display: flex }
-  .pb-row { grid-template-columns: 1fr !important; gap: 6px 14px !important }
   .pb-outcomes { grid-template-columns: 1fr; gap: 12px }
   h1, .pb-hero-h { font-size: 34px !important; letter-spacing: -.025em !important }
   h2 { font-size: 27px !important }
@@ -2688,8 +2858,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-ask-static .pb-ask-q { font-size: 16px !important }
   .pb-chip, .ct-chip { font-size: 11.5px !important; padding: 8px 12px !important }
   .ct-chip { padding: 9px 13px !important }
-  .car-q { font-size: 18px }
-  .car-mark { font-size: 110px; top: -32px }
   .ct-h1 { font-size: 33px !important; letter-spacing: -.025em !important }
   .ct-two { grid-template-columns: 1fr !important; gap: 16px !important }
 }
@@ -2801,7 +2969,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .ialt:hover { color: var(--ink); border-color: rgba(5,8,13,.5) }
 }
 @media (max-width: 480px) {
-  .car-count { display: none }
 }
 
 /* ---------------- Touch ---------------- */
@@ -2809,7 +2976,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 @media (pointer: coarse) {
   .pb-chip, .ct-chip, .pb-tab { min-height: 44px }
   .pb-navlink, .ct-capsule a { min-height: 44px; display: inline-flex; align-items: center }
-  .pb-row { min-height: 44px }
   /* 16px inputs prevent iOS zoom-on-focus */
   .ct-field { font-size: 16px }
 }

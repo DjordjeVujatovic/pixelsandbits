@@ -164,58 +164,99 @@ export const ASK_QA: AskItem[] = [
   },
 ];
 
-/* Plain text on purpose: six outbound links here leaked visitors
-   mid-pitch. Where an outbound link IS the proof (cases 04/05), it stays
-   on the case card instead. */
-export const ALSO_SHIPPED: { name: string; desc: string }[] = [
-  {
-    name: "Athena",
-    desc: "Their initial playbook system, plus the marketing site rebrand with the in-house team.",
-  },
-  {
-    name: "Apparel Impact",
-    desc: "Customer-facing impact dashboard and the ingestion pipeline feeding it.",
-  },
-  {
-    name: "Certn",
-    desc: "Internal tooling, dashboards and the customer-facing background check product.",
-  },
-  {
-    name: "Spindl",
-    desc: "Attribution dashboard with real-time tracking of key metrics. Acquired by Coinbase.",
-  },
-  {
-    name: "Delphia",
-    desc: "Homepage designed and built directly with the CEO, around the company's core message.",
-  },
-  {
-    name: "ZeroDown",
-    desc: "Offer tracking, property management and lead search tools. Acquired by Flyhomes.",
-  },
-];
-
-export interface Testimonial {
-  text: string;
+/* Cases 06–11 (PORTFOLIO_one_at_a_time.md — copy from the client).
+   These replaced the ALSO_SHIPPED list; there is no tiering between
+   "case studies" and "also shipped" any more. Quotes are split into
+   pre/em/mid/em2/post so the emphasis markup is assembled in the
+   template — <em> inside an interpolation escapes and renders as
+   literal tag text. Cyan is reserved for these quote blocks. */
+export interface CaseQuote {
+  pre: string;
+  em: string;
+  mid: string;
+  em2: string;
+  post: string;
   name: string;
   role: string;
 }
 
-/* Approved copy, verbatim — de-personalised deliberately: the site
-   speaks as a team. Placed next to the proof they belong to: the
-   ZeroDown quote sits under the ZeroDown row, the second quote sits
-   immediately above the closing CTA. */
-export const TESTIMONIALS: Testimonial[] = [
+export const EXTRA_CASES: {
+  num: string;
+  title: string;
+  tag?: string;
+  link?: { label: string; href: string };
+  blurb: string;
+  bullets?: string[];
+  quote?: CaseQuote;
+}[] = [
   {
-    text: '"The team stepped in as full-stack engineers for our internal tools team, quickly took a product ownership role and made an immediate impact. Their end-to-end ownership of our internal app was exactly what we needed. What impressed me most was their ability to understand complex business requirements and translate them into intuitive user experiences."',
-    name: "Laks Srini",
-    role: "CTO, ZeroDown · acquired by Flyhomes",
+    num: "CASE_06",
+    title: "ZeroDown",
+    tag: "ACQUIRED BY FLYHOMES",
+    link: { label: "zerodown.com →", href: "https://zerodown.com" },
+    blurb:
+      "Product owner of internal tools development, responsible end to end — product management, UX/UI design and engineering.",
+    bullets: [
+      "Custom offer setup and offer management system, streamlining the home purchasing process",
+      "Custom search and filter tools for managing potential leads",
+      "A custom property management system for managing properties at scale",
+    ],
+    quote: {
+      pre: "“The team stepped in as full-stack engineers for our internal tools team, quickly took a ",
+      em: "product ownership",
+      mid: " role and made an immediate impact. What impressed me most was their ability to understand ",
+      em2: "complex business requirements",
+      post: " and translate them into intuitive user experiences.”",
+      name: "Laks Srini",
+      role: "CTO, ZeroDown",
+    },
   },
   {
-    text: '"They were an absolute pleasure to work with. Their work ethic was top-tier, consistently going above and beyond to ensure that every assignment was completed to the highest standard. They are sharp critical thinkers who approach problems thoughtfully, finding creative and effective solutions, rather than just mindlessly completing assigned work."',
-    name: "Dan Xavier",
-    role: "Head of Software · Apparel Impact Institute",
+    num: "CASE_07",
+    title: "Apparel Impact Institute",
+    tag: "NONPROFIT",
+    link: { label: "apparelimpact.org →", href: "https://apparelimpact.org" },
+    blurb:
+      "A client-facing dashboard letting factory operators in China track their CO₂ emissions, plus the ingestion pipeline feeding it.",
+    quote: {
+      pre: "“They were an absolute pleasure to work with. Their work ethic was ",
+      em: "top-tier",
+      mid: ", consistently going above and beyond. They are ",
+      em2: "sharp critical thinkers",
+      post: " who approach problems thoughtfully, finding creative and effective solutions, rather than just mindlessly completing assigned work.”",
+      name: "Dan Xavier",
+      role: "Head of Software, Apparel Impact Institute",
+    },
+  },
+  {
+    num: "CASE_08",
+    title: "Spindl",
+    tag: "ACQUIRED BY COINBASE",
+    link: { label: "spindl.xyz →", href: "https://spindl.xyz" },
+    blurb:
+      "Led the development of Spindl's frontend codebase and pioneered their customer-centric analytics dashboard from the ground up.",
+  },
+  {
+    num: "CASE_09",
+    title: "Athena",
+    link: { label: "athena.com →", href: "https://athena.com" },
+    blurb: "Designed and shipped a playbook system for their executive assistants to use.",
+  },
+  {
+    num: "CASE_10",
+    title: "Certn",
+    link: { label: "certn.co →", href: "https://certn.co" },
+    blurb:
+      "Primarily frontend work on Certn's internal tools and dashboards, as well as the customer-facing background check products.",
+  },
+  {
+    num: "CASE_11",
+    title: "Delphia",
+    link: { label: "delphia.com →", href: "https://delphia.com" },
+    blurb: "Worked directly with the CEO to build a redesigned version of their website landing page.",
   },
 ];
+
 
 /* The process schedule (PROCESS_schedule.md). NO fixed durations
    anywhere — the 8 proportion tracks claim the shape, not the calendar.

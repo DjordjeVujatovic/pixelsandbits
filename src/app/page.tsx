@@ -9,7 +9,6 @@ import Hero from "@/components/home/Hero";
 import OfferingsTabs from "@/components/home/OfferingsTabs";
 import ProcessTimeline from "@/components/home/ProcessTimeline";
 import SelectedWork from "@/components/home/SelectedWork";
-import Testimonial from "@/components/home/Testimonial";
 
 /* The intro sentence derives its count from the data so the two can
    never drift apart again. */
@@ -75,7 +74,6 @@ export default function HomePage(): JSX.Element {
           <AskPanel />
         </Reveal>
 
-        <Testimonial />
         <ClosingCta />
         </main>
         <Footer />

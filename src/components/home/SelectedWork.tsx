@@ -1,7 +1,34 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import Reveal from "@/components/Reveal";
-import { ALSO_SHIPPED, TESTIMONIALS } from "@/lib/content";
-import CaseIndex from "./CaseIndex";
+import { EXTRA_CASES } from "@/lib/content";
+import type { CaseQuote } from "@/lib/content";
 import CaseRedacted from "./CaseRedacted";
+
+/* PORTFOLIO_one_at_a_time.md — eleven cases, one visible at a time,
+   advanced by scroll while the stage is pinned. The section's own
+   height IS the pin's scroll distance. One scroll listener writes one
+   state value (the index) behind a single in-flight rAF guard;
+   everything else is CSS transitions keyed off classes. */
+const CARDS = 11;
+export const PER_CARD_DESKTOP = 340;
+export const PER_CARD_MOBILE = 200;
+
+/* Rail labels; chips shorten two names for width on mobile. */
+const RAIL: { label: string; chip?: string }[] = [
+  { label: "Leading Frontier Lab", chip: "Frontier Lab" },
+  { label: "Decagon AI" },
+  { label: "Scotts Miracle-Gro", chip: "Scotts" },
+  { label: "Coinbase" },
+  { label: "Dapper Labs" },
+  { label: "ZeroDown" },
+  { label: "Apparel Impact Institute" },
+  { label: "Spindl" },
+  { label: "Athena" },
+  { label: "Certn" },
+  { label: "Delphia" },
+];
 
 interface CaseStat {
   figure: string;
@@ -26,8 +53,7 @@ function StatFigure({ stat }: { stat: CaseStat }): JSX.Element {
   );
 }
 
-interface StandardCase {
-  variant: "l" | "r";
+const CASES: {
   num: string;
   title: string;
   blurb: string;
@@ -35,11 +61,8 @@ interface StandardCase {
   link?: { label: string; href: string };
   stats: CaseStat[];
   detail: string;
-}
-
-const CASES: StandardCase[] = [
+}[] = [
   {
-    variant: "l",
     num: "CASE_03",
     title: "Scotts Miracle-Gro — agentic shopping",
     blurb:
@@ -54,7 +77,6 @@ const CASES: StandardCase[] = [
       "Shopping and chat are the same experience here: the agent reads a lawn's health score, makes personalized recommendations against it, and puts the right products in the cart without the customer ever browsing a catalogue.",
   },
   {
-    variant: "r",
     num: "CASE_04",
     title: "Coinbase — Onchain Summer",
     blurb:
@@ -69,7 +91,6 @@ const CASES: StandardCase[] = [
       "We owned the marketplace surface end to end — mint and browse flows, wallet states, and the performance work that kept it responsive at peak — alongside Coinbase's own design and protocol teams.",
   },
   {
-    variant: "l",
     num: "CASE_05",
     title: "Dapper Labs — design system",
     blurb:
@@ -84,129 +105,280 @@ const CASES: StandardCase[] = [
   },
 ];
 
-/* The merged client-portfolio section, laid out as a sticky rail
-   (PORTFOLIO_sticky_rail.md): kicker, heading, lead and the case index
-   pin in a narrow left column while the five cards scroll past on the
-   right. The scale argument lives in the closing track-record band —
-   this section deliberately doesn't repeat it. A span#trust anchors
-   inbound links to the old section id. ALSO_SHIPPED stays full width
-   below the rail. */
-export default function SelectedWork(): JSX.Element {
+/* Cyan is reserved for the client quotes — a reference is a different
+   kind of evidence from the work itself. Emphasis is assembled here,
+   never inside an interpolation. */
+function QuoteBlock({ q }: { q: CaseQuote }): JSX.Element {
   return (
-    <section id="work" className="pb-work">
+    <figure className="qb">
+      <blockquote>
+        {q.pre}
+        <em>{q.em}</em>
+        {q.mid}
+        <em>{q.em2}</em>
+        {q.post}
+      </blockquote>
+      <figcaption>
+        <span className="qb-name">{q.name}</span>
+        <span className="qb-role">{q.role}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+export default function SelectedWork(): JSX.Element {
+  const [index, setIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLElement>(null);
+  const raf = useRef(0);
+
+  const reduced = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const onScroll = () => {
+      if (raf.current) return;
+      raf.current = requestAnimationFrame(() => {
+        raf.current = 0;
+        const sr = section.getBoundingClientRect();
+        const travel = sr.height - window.innerHeight;
+        if (travel <= 0) return;
+        const p = Math.min(1, Math.max(0, -sr.top / travel));
+        const i = Math.min(CARDS - 1, Math.floor(p * CARDS * 0.999));
+        setIndex((prev) => (prev === i ? prev : i));
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf.current) {
+        cancelAnimationFrame(raf.current);
+        // Reset the in-flight guard — StrictMode remounts reuse this ref,
+        // and a stale id here makes every future scroll bail out.
+        raf.current = 0;
+      }
+    };
+  }, []);
+
+  // Parked cards are decoration: hidden from AT and out of the tab order.
+  useEffect(() => {
+    const deck = deckRef.current;
+    if (!deck) return;
+    Array.from(deck.children).forEach((el, k) => {
+      const on = k === index;
+      el.setAttribute("aria-hidden", on ? "false" : "true");
+      (el as HTMLElement & { inert: boolean }).inert = !on;
+    });
+  }, [index]);
+
+  // The active chip auto-centres in the strip as the deck advances.
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip || strip.offsetWidth === 0) return;
+    const el = strip.querySelectorAll<HTMLElement>(".chip")[index];
+    if (!el) return;
+    strip.scrollTo({
+      left: el.offsetLeft - strip.clientWidth / 2 + el.offsetWidth / 2,
+      behavior: reduced() ? "auto" : "smooth",
+    });
+  }, [index]);
+
+  /* Lands mid-slice (the 0.35) rather than on its boundary. Never
+     scrollIntoView — the sticky stage would fight it. */
+  const goTo = useCallback((k: number) => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const sr = section.getBoundingClientRect();
+    const travel = sr.height - window.innerHeight;
+    const top = sr.top + window.scrollY + travel * ((k + 0.35) / CARDS);
+    window.scrollTo({ top, behavior: reduced() ? "auto" : "smooth" });
+  }, []);
+
+  const skip = useCallback(() => {
+    const next = document.getElementById("process");
+    if (!next) return;
+    const top = next.getBoundingClientRect().top + window.scrollY - 48;
+    window.scrollTo({ top, behavior: reduced() ? "auto" : "smooth" });
+  }, []);
+
+  const dkClass = (k: number): string => {
+    // The last card marks itself so mobile can settle it lower into the
+    // space the vanished skip button frees up.
+    if (k === index) return k === CARDS - 1 ? "dk on dk-last" : "dk on";
+    if (k === index - 1) return "dk prev";
+    if (k === index + 1) return "dk next";
+    return k < index ? "dk far-up" : "dk far-down";
+  };
+
+  const railButton = (k: number, chip: boolean): JSX.Element => (
+    <button
+      key={RAIL[k].label}
+      type="button"
+      className={`${chip ? "chip" : "si"}${k === index ? " on" : k < index ? " past" : ""}`}
+      aria-current={k === index ? "true" : undefined}
+      onClick={() => goTo(k)}
+    >
+      <b>{`0${k + 1}`.slice(-2)}</b>
+      {chip ? (RAIL[k].chip ?? RAIL[k].label) : RAIL[k].label}
+    </button>
+  );
+
+  return (
+    <section id="work" className="pf2" ref={sectionRef}>
       <span id="trust" aria-hidden="true" />
-
-      <div className="sr">
-        <div className="sr-side">
-          <Reveal variant="rev">
-            <div className="pb-kicker" style={{ marginBottom: 18 }}>
-              $ cat ./client-portfolio
-            </div>
-            <h2 className="sr-h">The companies we have built inside.</h2>
-            <p className="sr-lead">
-              Crypto exchanges, frontier AI labs, a Fortune 500 retailer,
-              sports platforms with millions of collectors.
-            </p>
-            <CaseIndex />
-          </Reveal>
-        </div>
-
-        <div className="pb-stag pb-cases">
-        <CaseRedacted />
-
-        <Reveal as="article" variant="r" id="c2" className="pb-feature">
-          <div className="pb-feature-side">
-            <span className="pb-case-num">CASE_02</span>
-            <h3 className="pb-h-md pb-feature-h">Decagon AI — forward deployed</h3>
-            <p className="pb-case-blurb" style={{ marginBottom: 14 }}>
-              Embedded as forward deployed engineers, turning an agent platform
-              into something a support org will trust.
-            </p>
-            <p className="pb-feature-body">
-              The gap between a convincing demo and a system a support org will
-              trust is measurement and integration. We built the eval loop,
-              tuned the agent flows against it, and did the unglamorous work of
-              wiring the model into the customer&apos;s existing stack.
-            </p>
-            <span className="pb-case-meta" style={{ marginTop: 0 }}>
-              on-site engagement
-            </span>
-          </div>
-          <div className="pb-feature-stats">
-            <div className="pb-fstat">
-              <span className="pb-figure">embedded</span>
-              <span>on site, as an FDE</span>
-            </div>
-            <div className="pb-fstat">
-              <span className="pb-figure">evals</span>
-              <span>on real transcripts</span>
-            </div>
-            <div className="pb-fstat">
-              <span className="pb-figure">agents</span>
-              <span>in production traffic</span>
-            </div>
-          </div>
-        </Reveal>
-
-        {CASES.map((c, i) => (
-          <Reveal
-            as="article"
-            key={c.num}
-            variant={c.variant}
-            id={`c${i + 3}`}
-            className="pb-card pb-case"
-          >
-            <div className="pb-case-left">
-              <span className="pb-case-num">{c.num}</span>
-              <h3 className="pb-h-sm pb-case-h">{c.title}</h3>
-              <p className="pb-case-blurb">{c.blurb}</p>
-              {c.meta ? <span className="pb-case-meta">{c.meta}</span> : null}
-              {/* Kept: here the outbound link IS the proof. New tab so
-                  the page survives the click. */}
-              {c.link ? (
-                <a
-                  className="pb-case-link"
-                  href={c.link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {c.link.label}
-                </a>
-              ) : null}
-            </div>
-            <div className="pb-case-right">
-              <div className="pb-case-stats">
-                {c.stats.map((s) => (
-                  <StatFigure key={s.caption} stat={s} />
-                ))}
+      <div className="stg-sticky">
+        <div className="stg">
+          <div className="stg-side">
+            <Reveal variant="rev">
+              <div className="intro">
+                <div className="pb-kicker" style={{ marginBottom: 18 }}>
+                  $ cat ./client-portfolio
+                </div>
+                <h2 className="sr-h">The companies we have built inside.</h2>
+                <p className="sr-lead">
+                  Crypto exchanges, frontier AI labs, a Fortune 500 retailer,
+                  sports platforms with millions of collectors.
+                </p>
               </div>
-              <p className="pb-case-detail">{c.detail}</p>
+              <nav className="stg-idx" aria-label="Case studies">
+                {RAIL.map((_, k) => railButton(k, false))}
+              </nav>
+              <div className="stg-prog">
+                <span>{`${`0${index + 1}`.slice(-2)} / ${CARDS}`}</span>
+                <span className="stg-bar" aria-hidden="true">
+                  <i style={{ width: `${((index + 1) / CARDS) * 100}%` }} />
+                </span>
+              </div>
+            </Reveal>
+          </div>
+
+          <div className="stg-stage">
+            <nav className="strip" aria-label="Case studies" ref={stripRef}>
+              {RAIL.map((_, k) => railButton(k, true))}
+            </nav>
+
+            <div className="deck" ref={deckRef}>
+              <div className={dkClass(0)}>
+                <CaseRedacted />
+              </div>
+
+              <div className={dkClass(1)}>
+                <article className="pb-feature">
+                  <div className="pb-feature-side">
+                    <span className="pb-case-num">CASE_02</span>
+                    <h3 className="pb-h-md pb-feature-h">Decagon AI — forward deployed</h3>
+                    <p className="pb-case-blurb" style={{ marginBottom: 14 }}>
+                      Embedded as forward deployed engineers, turning an agent
+                      platform into something a support org will trust.
+                    </p>
+                    <p className="pb-feature-body">
+                      The gap between a convincing demo and a system a support
+                      org will trust is measurement and integration. We built
+                      the eval loop, tuned the agent flows against it, and did
+                      the unglamorous work of wiring the model into the
+                      customer&apos;s existing stack.
+                    </p>
+                    <span className="pb-case-meta" style={{ marginTop: 0 }}>
+                      on-site engagement
+                    </span>
+                  </div>
+                  <div className="pb-feature-stats">
+                    <div className="pb-fstat">
+                      <span className="pb-figure">embedded</span>
+                      <span>on site, as an FDE</span>
+                    </div>
+                    <div className="pb-fstat">
+                      <span className="pb-figure">evals</span>
+                      <span>on real transcripts</span>
+                    </div>
+                    <div className="pb-fstat">
+                      <span className="pb-figure">agents</span>
+                      <span>in production traffic</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              {CASES.map((c, i) => (
+                <div className={dkClass(i + 2)} key={c.num}>
+                  <article className="pb-card pb-case">
+                    <div className="pb-case-left">
+                      <span className="pb-case-num">{c.num}</span>
+                      <h3 className="pb-h-sm pb-case-h">{c.title}</h3>
+                      <p className="pb-case-blurb">{c.blurb}</p>
+                      {c.meta ? <span className="pb-case-meta">{c.meta}</span> : null}
+                      {c.link ? (
+                        <a
+                          className="pb-case-link"
+                          href={c.link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {c.link.label}
+                        </a>
+                      ) : null}
+                    </div>
+                    <div className="pb-case-right">
+                      <div className="pb-case-stats">
+                        {c.stats.map((s) => (
+                          <StatFigure key={s.caption} stat={s} />
+                        ))}
+                      </div>
+                      <p className="pb-case-detail">{c.detail}</p>
+                    </div>
+                  </article>
+                </div>
+              ))}
+
+              {EXTRA_CASES.map((c, i) => (
+                <div className={dkClass(i + 5)} key={c.num}>
+                  <article className="pb-card pb-case std2">
+                    <div className="std2-head">
+                      <span className="pb-case-num">{c.num}</span>
+                      {c.tag ? <span className="std2-tag">{c.tag}</span> : null}
+                    </div>
+                    <h3 className="pb-h-sm pb-case-h">{c.title}</h3>
+                    <p className="pb-case-blurb">{c.blurb}</p>
+                    {c.bullets ? (
+                      <ul className="std2-bullets">
+                        {c.bullets.map((b) => (
+                          <li key={b}>{b}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {c.link ? (
+                      <a
+                        className="pb-case-link"
+                        href={c.link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {c.link.label}
+                      </a>
+                    ) : null}
+                    {c.quote ? <QuoteBlock q={c.quote} /> : null}
+                  </article>
+                </div>
+              ))}
             </div>
-          </Reveal>
-        ))}
+
+            {/* Nothing left to skip on the last card — it fades out but
+                keeps its space so the flex column doesn't jump. */}
+            <button
+              className={`skip${index === CARDS - 1 ? " skip-gone" : ""}`}
+              type="button"
+              tabIndex={index === CARDS - 1 ? -1 : undefined}
+              onClick={skip}
+            >
+              skip to engagement process ↓
+            </button>
+          </div>
         </div>
       </div>
-
-      <Reveal variant="rev" className="pb-also">
-        <div className="pb-also-label">ALSO_SHIPPED</div>
-        <div className="pb-stag pb-rows">
-          {ALSO_SHIPPED.map((r) => (
-            <div className="pb-row" key={r.name}>
-              <span className="pb-row-name">{r.name}</span>
-              <span className="pb-row-desc">{r.desc}</span>
-            </div>
-          ))}
-        </div>
-        {/* The ZeroDown quote sits directly beneath the ZeroDown row —
-            testimony next to the claim it backs. */}
-        <figure className="pb-inline-quote">
-          <blockquote>{TESTIMONIALS[0].text}</blockquote>
-          <figcaption>
-            <span className="car-name">{TESTIMONIALS[0].name}</span>
-            <span className="car-role">{TESTIMONIALS[0].role}</span>
-          </figcaption>
-        </figure>
-      </Reveal>
     </section>
   );
 }

@@ -5,7 +5,12 @@ import { observeReveal, prefersReducedMotion } from "@/lib/motion";
 
 const CH = "01<>/#$%&*!?[]{}=+~";
 const rnd = (): string => CH[(Math.random() * CH.length) | 0];
-const BAND = 140;
+/* The scan band is the ONLY sanctioned responsive difference in this
+   card (PORTFOLIO_one_at_a_time.md): 140px on desktop, 100px where the
+   card is narrower. Everything else — 4200ms, once-only, per-line
+   resolution, glyph set, DOM writes — must not change. */
+const band = (): number =>
+  typeof window !== "undefined" && window.matchMedia("(max-width: 1100px)").matches ? 100 : 140;
 const TRAVEL = 4200;
 
 interface DecItem {
@@ -126,7 +131,7 @@ export default function CaseRedacted(): JSX.Element {
       const el = now - t0;
       if (el > TRAVEL) {
         lines.forEach((ln) => paintLine(ln, 1));
-        card.style.setProperty("--pb-scan", `${card.offsetHeight + BAND}px`);
+        card.style.setProperty("--pb-scan", `${card.offsetHeight + band()}px`);
         done = true;
         raf = 0;
         io?.disconnect();
@@ -134,7 +139,7 @@ export default function CaseRedacted(): JSX.Element {
         return;
       }
       const prog = Math.min(1, el / TRAVEL);
-      const y = prog * (card.offsetHeight + BAND);
+      const y = prog * (card.offsetHeight + band());
       card.style.setProperty("--pb-scan", `${y}px`);
       const cardTop = card.getBoundingClientRect().top;
       lines.forEach((ln) => {
