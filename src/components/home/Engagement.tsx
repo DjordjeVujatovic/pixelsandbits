@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { PIPELINE_STEPS } from "@/lib/content";
 import { runCountUp, useReducedMotion } from "@/lib/motion";
 
-/* Per-scene durations: each scene's animation end time plus a short
-   beat to read, so the panel moves on shortly after a scene finishes
-   instead of holding a flat interval.
+/* Per-scene durations: each scene's animation end time plus a beat of
+   under one second, so the panel moves on almost immediately after a
+   scene finishes.
    ideation ends ~3.9s · design ~1.9s · engineering ~2.5s · deploy ~1.8s */
-const STAGE_MS = [5300, 3200, 3900, 3400];
+const STAGE_MS = [4700, 2650, 3250, 2550];
 const METER = [12, 42, 74, 100];
 
 /* Design scene: one geometry set renders both SVGs, so the wireframe
