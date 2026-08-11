@@ -38,11 +38,11 @@ export default function HomePage(): JSX.Element {
 
         {/* FAQ by function — sits near the end; the testimonial carousel
             and the closing proof band are adjacent below it. */}
-        <Reveal as="section" variant="rev" id="ask" className="pb-ask">
+        <Reveal as="section" variant="rev" id="faq" className="pb-ask">
           <div className="pb-ask-head">
             <div className="pb-kicker">$ ./ask --faq</div>
             <div className="pb-ask-note">
-              Four questions we get asked most, answered.
+              The questions we get asked most, answered.
             </div>
           </div>
           <AskPanel />

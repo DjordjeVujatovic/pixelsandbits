@@ -1411,47 +1411,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   color: color-mix(in srgb, var(--fg) 58%, transparent);
   max-width: 620px;
 }
-.pb-scale {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--acc) 4%, transparent);
-  overflow: hidden;
-}
-/* Lit top edge — cyan resolving into lime. On the container, so it
-   spans the strip once in every column layout. */
-.pb-scale::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent,
-    color-mix(in srgb, var(--acc2) 38%, transparent) 30%,
-    color-mix(in srgb, var(--acc) 30%, transparent) 72%,
-    transparent);
-}
-.pb-scell {
-  padding: 24px 24px 26px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
-}
-.pb-scell:last-child { border-right: 0 }
-.pb-sval {
-  font-family: var(--font-mono), monospace;
-  font-size: 23px;
-  line-height: 1;
-  letter-spacing: -.02em;
-  color: var(--acc);
-  white-space: nowrap;
-}
-.pb-slabel { font-size: 12.5px; line-height: 1.5; color: color-mix(in srgb, var(--fg) 50%, transparent) }
 /* ---------------- Selected work ---------------- */
 
 .pb-work { padding: 44px 0 20px }
@@ -2214,6 +2173,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .k-cell:hover .k-spark { transform: scaleX(1) }
 /* tabular-nums stops the digits jittering while counting up */
 .fig { font-size: 60px; line-height: .95; letter-spacing: -.045em; font-weight: 700; color: var(--acc); font-variant-numeric: tabular-nums }
+/* Text figures (e.g. "Fortune 500") — smaller than the digits so the
+   words fit their cell at every column count; same weight and colour. */
+.fig-txt { font-size: 38px; letter-spacing: -.03em }
 .lab { font-size: 13.5px; line-height: 1.5; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-top: 10px; max-width: 210px }
 .note { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-top: 6px; letter-spacing: .04em }
 .close {
@@ -2549,8 +2511,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   h1, .pb-hero-h { font-size: 46px !important }
   h2 { font-size: 34px !important }
   .pb-h-lg { font-size: 38px }
-  .pb-scale { grid-template-columns: 1fr 1fr }
-  .pb-scell:nth-child(2) { border-right: 0 }
   .car-q { font-size: 21px }
   .ct-shell { grid-template-columns: 1fr !important }
   .ct-h1 { font-size: 44px !important }
@@ -2617,12 +2577,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .car { min-height: 300px }
   .ct-h1 { font-size: 33px !important; letter-spacing: -.025em !important }
   .ct-two { grid-template-columns: 1fr !important; gap: 16px !important }
-}
-
-@media (max-width: 620px) {
-  .pb-scale { grid-template-columns: 1fr }
-  .pb-scell { border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
-  .pb-scell:last-child { border-bottom: 0 }
 }
 
 @media (max-width: 480px) {
@@ -2857,12 +2811,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-hero-btns > a { flex: 1 1 100%; text-align: center }
 }
 
-/* Fix 7 — let stat values wrap only on the narrowest screens; nowrap
-   is correct everywhere else. */
-@media (max-width: 480px) {
-  .pb-sval { white-space: normal }
-}
-
 /* Fix 8 — the "nice try" reveal works on tap where hover doesn't exist. */
 @media (hover: none) {
   .pb-redact:active { background: var(--acc) }
@@ -2877,6 +2825,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .k-cell:nth-child(3) { padding-left: 0 } /* row 2 starts here — keep its left edge on the column */
   .k-cell:nth-child(1), .k-cell:nth-child(2) { border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent) }
   .fig { font-size: 48px }
+  .fig-txt { font-size: 34px }
   .close { padding: 38px 32px 34px }
   .close-h { font-size: 32px }
 }
@@ -2886,6 +2835,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .k-cell { padding: 22px 0 24px; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent) }
   .k-cell:last-child { border-bottom: 0 }
   .fig { font-size: 42px }
+  .fig-txt { font-size: 30px }
   .lab { max-width: none }
   .close { padding: 30px 22px 28px; flex-direction: column; align-items: flex-start }
   .close-h { font-size: 27px }

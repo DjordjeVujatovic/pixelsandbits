@@ -1,5 +1,5 @@
 import Reveal from "@/components/Reveal";
-import { ALSO_SHIPPED, TRUST_CELLS } from "@/lib/content";
+import { ALSO_SHIPPED } from "@/lib/content";
 import CaseRedacted from "./CaseRedacted";
 
 interface CaseStat {
@@ -83,9 +83,11 @@ const CASES: StandardCase[] = [
   },
 ];
 
-/* The merged client-portfolio section: the trust claim and stat strip
-   open it, the five case cards and ALSO_SHIPPED rows are the evidence.
-   A span#trust anchors inbound links to the old section id. */
+/* The merged client-portfolio section: the heading and paragraph open
+   it, the five case cards and ALSO_SHIPPED rows are the evidence. The
+   scale argument itself lives in the closing track-record band — this
+   section deliberately doesn't repeat it. A span#trust anchors inbound
+   links to the old section id. */
 export default function SelectedWork(): JSX.Element {
   return (
     <section id="work" className="pb-work">
@@ -95,35 +97,13 @@ export default function SelectedWork(): JSX.Element {
         <div className="pb-kicker" style={{ marginBottom: 18 }}>
           $ cat ./client-portfolio
         </div>
-        <h2 className="pb-h-lg pb-trust-h">
-          We have shipped inside companies worth more than{" "}
-          <span className="pb-grad">$100B</span> combined.
-        </h2>
+        <h2 className="pb-h-lg pb-trust-h">The companies we have built inside.</h2>
         <p className="pb-trust-p">
-          Crypto exchanges, frontier AI labs, sports platforms with millions
-          of collectors. The constraints at that size are not the ones a demo
-          teaches you, and they are the ones we build for by default.
+          Crypto exchanges, frontier AI labs, a Fortune 500 retailer, sports
+          platforms with millions of collectors. The constraints at that size
+          are not the ones a demo teaches you, and they are the ones we build
+          for by default.
         </p>
-
-        <div className="pb-scale pb-stag">
-          {TRUST_CELLS.map((cell) => (
-            <div className="pb-scell" key={cell.caption}>
-              {cell.count ? (
-                <span
-                  className="pb-sval pb-grad"
-                  data-count={cell.count.target}
-                  data-prefix={cell.count.prefix}
-                  data-suffix={cell.count.suffix}
-                >
-                  {cell.value}
-                </span>
-              ) : (
-                <span className="pb-sval">{cell.value}</span>
-              )}
-              <span className="pb-slabel">{cell.caption}</span>
-            </div>
-          ))}
-        </div>
       </Reveal>
 
       <div style={{ height: 40 }} />

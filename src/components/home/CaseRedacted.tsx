@@ -205,11 +205,10 @@ export default function CaseRedacted(): JSX.Element {
           </span>
         </div>
         <h3 className="pb-h-sm pb-case-h">
-          <span className="pb-redact">
-            <span aria-hidden="true">REDACTED</span>
-          </span>
-          <span className="sr-only">client name withheld under NDA</span> —{" "}
-          <Decipher text={HEADLINE} />
+          <span className="pb-redact" aria-label="client name withheld under NDA">
+            REDACTED
+          </span>{" "}
+          — <Decipher text={HEADLINE} />
         </h3>
         <p className="pb-case-blurb">
           <Decipher text={PARA} />

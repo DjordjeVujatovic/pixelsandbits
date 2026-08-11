@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { id: "services", label: "services" },
   { id: "work", label: "work" },
   { id: "process", label: "process" },
-  { id: "ask", label: "faq" },
+  { id: "faq", label: "faq" },
   { id: "track-record", label: "track-record" },
 ];
 

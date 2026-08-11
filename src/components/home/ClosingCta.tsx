@@ -2,9 +2,9 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 
 /* Closing section: claim → proof band → the full-lime close (the one
-   light surface on the site — plain sans on purpose, not mono).
-   ⚠ The `6` (YC companies) and `4` (unicorns) figures are placeholders
-   pending confirmed counts — do not launch without verifying them. */
+   light surface on the site — plain sans on purpose, not mono). All
+   four band facts are verified — this is the page's single scale
+   argument, so nothing here may duplicate the portfolio section. */
 export default function ClosingCta(): JSX.Element {
   return (
     <Reveal as="section" variant="rev" id="track-record" className="cl">
@@ -37,20 +37,18 @@ export default function ClosingCta(): JSX.Element {
         <div className="k-cell">
           <span className="k-spark" aria-hidden="true" />
           <div className="fig">
-            <span className="pb-grad" data-count="6" data-dur="1200">
-              6
+            <span className="pb-grad" data-count="2" data-dur="1200">
+              2
             </span>
           </div>
-          <div className="lab">Y Combinator companies, seed stage through exit</div>
+          <div className="lab">exits · Spindl to Coinbase, ZeroDown to Flyhomes</div>
         </div>
         <div className="k-cell">
           <span className="k-spark" aria-hidden="true" />
-          <div className="fig">
-            <span className="pb-grad" data-count="4" data-dur="1200">
-              4
-            </span>
+          <div className="fig fig-txt">
+            <span className="pb-grad">Fortune 500</span>
           </div>
-          <div className="lab">unicorns, plus two acquisitions after we shipped</div>
+          <div className="lab">Scotts Miracle-Gro — enterprise stacks and legacy systems</div>
         </div>
         <div className="k-cell">
           <span className="k-spark" aria-hidden="true" />

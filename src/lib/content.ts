@@ -140,21 +140,6 @@ export const ASK_QA: AskItem[] = [
   },
 ];
 
-export const TRUST_CELLS: {
-  value: string;
-  caption: string;
-  count?: { target: number; prefix?: string; suffix?: string };
-}[] = [
-  {
-    value: "$100B+",
-    caption: "combined value of the companies we've shipped inside",
-    count: { target: 100, prefix: "$", suffix: "B+" },
-  },
-  { value: "frontier labs", caption: "Decagon AI and one under NDA — where the model is the product" },
-  { value: "Fortune 500", caption: "Scotts Miracle-Gro — enterprise stacks and legacy systems" },
-  { value: "2 exits", caption: "Spindl to Coinbase, ZeroDown to Flyhomes, after we shipped" },
-];
-
 export const ALSO_SHIPPED: { name: string; desc: string; href: string }[] = [
   {
     name: "Athena",
