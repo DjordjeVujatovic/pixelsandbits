@@ -256,7 +256,7 @@ button {
 .pb-header {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 60;
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -362,41 +362,135 @@ header.pb-compact {
 
 .pb-arrow { transition: transform .25s ease; display: inline-block }
 
+/* ---------------- Mobile nav drawer (<720px) ----------------
+   Full-screen panel sliding from the right. One body.pb-navopen class
+   drives the drawer, the scrim, the page recede and the burger→X. The
+   .32,.72,0,1 curve is shared across all three so they read as one
+   movement — do not change it. */
+
 .pb-burger {
   display: none;
-  flex-direction: column;
-  gap: 4px;
-  background: transparent;
+  position: relative;
+  z-index: 60;
+  width: 40px;
+  height: 40px;
   border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
-  border-radius: 8px;
-  padding: 10px;
+  border-radius: 10px;
+  background: none;
+  padding: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   cursor: pointer;
 }
-.pb-burger span {
+.pb-bar {
   display: block;
   width: 16px;
   height: 1.5px;
   background: var(--fg);
   border-radius: 2px;
-  transition: transform .25s ease, opacity .2s ease;
+  transition: transform .4s cubic-bezier(.32,.72,0,1), opacity .25s ease, width .3s ease, background .3s ease;
 }
-.pb-menu {
-  display: none;
+body.pb-navopen .pb-bar1 { transform: translateY(5.5px) rotate(45deg) }
+body.pb-navopen .pb-bar2 { opacity: 0; width: 0 }
+body.pb-navopen .pb-bar3 { transform: translateY(-5.5px) rotate(-45deg) }
+body.pb-navopen .pb-bar { background: var(--acc) }
+body.pb-navopen .pb-burger { border-color: color-mix(in srgb, var(--acc) 45%, transparent) }
+
+.pb-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: rgba(2,4,8,.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .45s ease;
+}
+body.pb-navopen .pb-scrim { opacity: 1; pointer-events: auto }
+
+.pb-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
   flex-direction: column;
-  border-top: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  background: var(--bg);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform .5s cubic-bezier(.32,.72,0,1), visibility 0s .5s;
+  will-change: transform;
+}
+body.pb-navopen .pb-drawer { transform: translateX(0); visibility: visible; transition: transform .5s cubic-bezier(.32,.72,0,1) }
+.pb-drawer-top { height: 54px; flex: none } /* clears the header */
+.pb-drawer-body { flex: 1; display: flex; flex-direction: column; padding: 20px 22px 0; overflow-y: auto }
+.pb-drawer-foot { padding: 18px 22px 24px; flex: none }
+
+.pb-recede {
+  position: relative;
+  transition: transform .5s cubic-bezier(.32,.72,0,1), filter .4s ease, opacity .4s ease;
+}
+body.pb-navopen .pb-recede {
+  transform: translateX(-14%) scale(.96);
+  filter: blur(2px);
+  opacity: .55;
+}
+
+.pb-dlink {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 15px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
+  opacity: 0;
+  transform: translateX(26px);
+}
+.pb-dn { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc); letter-spacing: .1em; width: 22px; flex: none }
+.pb-dt { font-size: 30px; font-weight: 600; letter-spacing: -.03em; color: var(--fg-strong); line-height: 1.1 }
+.pb-dlink[aria-current="page"] .pb-dt { color: var(--acc) }
+.pb-darr { margin-left: auto; font-family: var(--font-mono), monospace; color: color-mix(in srgb, var(--fg) 26%, transparent) }
+/* Links arrive after the slide is underway rather than travelling with it */
+body.pb-navopen .pb-dlink { animation: pb-dlink-in .55s cubic-bezier(.2,.85,.3,1) forwards }
+body.pb-navopen .pb-dlink:nth-child(1) { animation-delay: .10s }
+body.pb-navopen .pb-dlink:nth-child(2) { animation-delay: .16s }
+body.pb-navopen .pb-dlink:nth-child(3) { animation-delay: .22s }
+body.pb-navopen .pb-dlink:nth-child(4) { animation-delay: .28s }
+@keyframes pb-dlink-in { to { opacity: 1; transform: none } }
+
+.pb-dft { opacity: 0; transform: translateY(12px) }
+body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .4s forwards }
+@keyframes pb-dft-in { to { opacity: 1; transform: none } }
+.pb-dcta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: var(--acc);
+  color: var(--ink);
   font-family: var(--font-mono), monospace;
-  font-size: 14px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .3s ease;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 16px;
+  border-radius: 12px;
 }
-.pb-menu.pb-menu-open { max-height: 280px }
-.pb-menulink {
-  padding: 14px 18px;
-  color: color-mix(in srgb, var(--fg) 65%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
+.pb-dcta:hover { color: var(--ink) }
+.pb-dmeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--fg) 38%, transparent);
 }
-.pb-menulink-contact { color: var(--acc) }
+.pb-ddot { width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--acc); animation: pb-tick 1.8s ease-in-out infinite }
+
+@media (min-width: 721px) {
+  .pb-drawer, .pb-scrim, .pb-burger { display: none }
+}
 
 /* Contact-page capsule (no sliding pill) */
 .ct-capsule {
@@ -420,12 +514,6 @@ header.pb-compact {
   transition: color .2s ease, background .2s ease;
 }
 .ct-capsule a:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); color: var(--fg) }
-.ct-capsule a.ct-navon {
-  color: var(--acc);
-  background: color-mix(in srgb, var(--acc) 16%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 42%, transparent);
-}
-.ct-capsule a.ct-navon:hover { color: var(--acc) }
 .ct-dash { opacity: .45; margin-right: 1px }
 
 /* ---------------- Buttons / cards / rows ---------------- */
@@ -2272,7 +2360,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-feature-stats { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); flex-direction: row }
   .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
   .pb-fstat:last-child { border-right: 0 }
-  .ct-capsule a:not(.ct-navon) { display: none }
 }
 
 @media (max-width: 720px) {
@@ -2280,9 +2367,9 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-shead { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important }
   .pb-shead > p { max-width: none !important }
   .pb-capsule { display: none !important }
+  .ct-capsule { display: none !important }
   .pb-navlinks { display: none !important }
   .pb-burger { display: flex }
-  .pb-menu { display: flex }
   .pb-row { grid-template-columns: 1fr auto !important; gap: 6px 14px !important }
   .pb-row .pb-row-desc { grid-column: 1 / -1 }
   .pb-row:hover { padding-left: 8px !important }
@@ -2594,7 +2681,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 
 @media (pointer: coarse) {
   .pb-chip, .ct-chip, .pb-tab { min-height: 44px }
-  .pb-menulink, .pb-navlink, .ct-capsule a { min-height: 44px; display: inline-flex; align-items: center }
+  .pb-navlink, .ct-capsule a { min-height: 44px; display: inline-flex; align-items: center }
   .pb-row { min-height: 44px }
   /* 16px inputs prevent iOS zoom-on-focus */
   .ct-field { font-size: 16px }
@@ -2622,4 +2709,13 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   }
   .pb-flow { transform: scaleX(1) }
   .pb-wave > span { transform: scaleY(.18) !important }
+  .pb-drawer {
+    transform: none;
+    opacity: 0;
+    transition: opacity .15s ease, visibility 0s .15s !important;
+  }
+  body.pb-navopen .pb-drawer { opacity: 1; transition: opacity .15s ease !important }
+  body.pb-navopen .pb-recede { transform: none; filter: none; opacity: 1 }
+  .pb-dlink, .pb-dft { opacity: 1; transform: none; animation: none !important }
+  .pb-scrim { transition: opacity .15s ease !important }
 }

@@ -14,9 +14,12 @@ import Testimonial from "@/components/home/Testimonial";
 export default function HomePage(): JSX.Element {
   return (
     <div className="pb-page">
-      <Backdrop />
       <HomeHeader />
-      <main id="top" className="pb-main">
+      {/* Everything that recedes behind the mobile drawer lives in this
+          wrapper — the fixed drawer must not have a transformed ancestor. */}
+      <div className="pb-recede">
+        <Backdrop />
+        <main id="top" className="pb-main">
         <Hero />
         <ClientStrip />
 
@@ -41,8 +44,9 @@ export default function HomePage(): JSX.Element {
 
         <Testimonial />
         <ClosingCta />
-      </main>
-      <Footer />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }

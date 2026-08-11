@@ -12,10 +12,11 @@ export const metadata: Metadata = {
 export default function ContactPage(): JSX.Element {
   return (
     <div className="pb-page">
-      <div className="pb-scanlines ct-scanlines" aria-hidden="true" />
-      <div className="pb-glow ct-glow" aria-hidden="true" />
       <ContactHeader />
-      <main className="ct-main">
+      <div className="pb-recede">
+        <div className="pb-scanlines ct-scanlines" aria-hidden="true" />
+        <div className="pb-glow ct-glow" aria-hidden="true" />
+        <main className="ct-main">
         <section className="ct-in ct-intro">
           <div className="pb-avail">
             <span className="pb-avail-dot" aria-hidden="true" />
@@ -107,8 +108,9 @@ export default function ContactPage(): JSX.Element {
             </div>
           </aside>
         </section>
-      </main>
-      <Footer linkBrand />
+        </main>
+        <Footer linkBrand />
+      </div>
     </div>
   );
 }
