@@ -171,10 +171,6 @@ export default function ProcessTimeline(): JSX.Element {
             How an engagement runs
           </h2>
         </div>
-        <p className="sc-lead">
-          Every engagement runs this shape. How long each phase takes depends
-          on what you are building — the proportions do not.
-        </p>
       </div>
 
       {/* Desktop chart (>720px): 9 tracks — the phase column plus 8

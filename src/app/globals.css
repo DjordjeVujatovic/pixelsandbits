@@ -125,6 +125,18 @@ button {
   margin-top: -80px;
   padding-top: 80px;
 }
+/* Desktop: the hero band owns the full viewport — the hero centres in
+   the spare height and the client strip anchors the bottom edge, so the
+   next section never peeks above the fold on tall screens. */
+@media (min-width: 1200px) {
+  .pb-hero-wrap {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 28px;
+  }
+  .pb-hero-wrap > .pb-hero { flex: 1 }
+}
 .pb-hero-wrap > .pb-hero,
 .pb-hero-wrap > .pb-cstrip {
   position: relative;
@@ -595,7 +607,10 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    Scoped to ≥1200px — below that the iPad band overrides the top and
    must keep its tuned 52px bottom. */
 @media (min-width: 1200px) {
-  .pb-hero { padding: 152px 0 84px }
+  /* Tight enough that the SHIPPED INSIDE strip stays above the fold on
+     a 900px-tall viewport now the facts grid made the column taller
+     (owner request 2026-08-11). */
+  .pb-hero { padding: 44px 0 24px }
 }
 @media (min-width: 1420px) {
   .pb-hero { grid-template-columns: 1fr 1.14fr; gap: 64px }
@@ -615,7 +630,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
     padding-top: 24px;
   }
   .pb-hero .pb-hero-h { font-size: 54px }
-  .pb-hero-lead { max-width: 640px }
+  .pb-runsub { max-width: 640px }
   /* The terminal spans the full column (like the client strip below it)
      so the single-column hero doesn't leave a void on the right. */
 }
@@ -641,7 +656,8 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   height: 1px;
   background: linear-gradient(90deg, color-mix(in srgb, var(--fg) 12%, transparent), transparent);
 }
-.pb-ccount { color: var(--acc); letter-spacing: .06em; white-space: nowrap }
+/* The overline carries the cyan data voice (owner request) */
+.pb-clabel { color: color-mix(in srgb, var(--acc2) 85%, transparent); white-space: nowrap }
 .pb-clist {
   display: flex;
   flex-wrap: wrap;
@@ -703,7 +719,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .pb-cread { font-size: 11.5px; margin-top: 14px }
 }
 @media (max-width: 480px) {
-  .pb-ccount { display: none }
   .pb-clist { gap: 8px 14px }
   .pb-citem { font-size: 11.5px }
   .pb-cread { font-size: 11px }
@@ -745,12 +760,66 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   color: transparent;
   animation: pb-shine 5.5s ease-in-out infinite;
 }
-.pb-hero-lead {
+/* HERO_left_column.md — the disciplines run, the argument line and the
+   four-fact grid that replaced the lead paragraph. */
+.pb-run {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+}
+.pb-rw { display: inline-flex; align-items: baseline; gap: 9px; color: var(--fg-strong) }
+.pb-rsep { color: color-mix(in srgb, var(--acc) 55%, transparent) }
+
+.pb-runsub {
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+  max-width: 430px;
+}
+
+.pb-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 22px;
+  margin: 18px 0 18px;
+  padding-top: 17px;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+}
+.pb-fact { display: flex; flex-direction: column; gap: 4px }
+/* 18px / 1.1 exactly — "Fortune 500" must not wrap at the hero's column
+   width, and at 20px+ it does. Facts 2 and 4 carry the cyan data voice. */
+.pb-fv {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
   font-size: 18px;
-  line-height: 1.65;
-  color: color-mix(in srgb, var(--fg) 60%, transparent);
-  max-width: 580px;
-  margin: 0 0 34px;
+  font-weight: 400;
+  color: var(--acc);
+  line-height: 1.1;
+}
+.pb-fv.c { color: var(--acc2) }
+.pb-fk {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.42;
+  color: color-mix(in srgb, var(--fg) 58%, transparent);
+}
+@media (max-width: 720px) {
+  .pb-run { font-size: 11.5px; gap: 7px }
+  .pb-rw { gap: 7px }
+  .pb-runsub { font-size: 13.5px }
+  .pb-facts { gap: 13px 16px }
+  .pb-fv { font-size: 16px }
+  .pb-fk { font-size: 11.5px }
+}
+@media (max-width: 430px) {
+  .pb-facts { grid-template-columns: 1fr } /* two across is too tight for "Fortune 500" */
 }
 .pb-hero-btns {
   display: flex;
@@ -760,15 +829,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   flex-wrap: wrap;
   align-items: center;
 }
-/* Risk reversal at the point of friction, right under the ask. */
-.pb-hero-note {
-  font-size: 15px;
-  line-height: 1.6;
-  color: color-mix(in srgb, var(--fg) 60%, transparent);
-  max-width: 520px;
-  margin: 16px 0 0;
-}
-
 /* ---------------- Terminal ---------------- */
 
 .pb-term { position: relative }
@@ -1086,7 +1146,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 
 /* ---------------- Offerings tabs ---------------- */
 
-.pb-services { padding: 44px 0 60px }
+/* More air between the hero band's client strip and the first section
+   (owner request 2026-08-11). */
+.pb-services { padding: 108px 0 60px }
 .pb-services-head {
   display: flex;
   align-items: flex-end;
@@ -1225,170 +1287,152 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
-.pb-ask-note { font-size: 14px; color: color-mix(in srgb, var(--fg) 45%, transparent) }
 .pb-ask-h { margin: 12px 0 0 }
-/* Static Q&A: every pair is present, visible text — the terminal shell
-   is chrome around it, not a gate in front of it. */
-.pb-ask-static .pb-ask-body { gap: 24px }
-.pb-ask-item { display: flex; flex-direction: column; gap: 14px }
-.pb-ask-item + .pb-ask-item {
-  border-top: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
-  padding-top: 24px;
-}
-.pb-ask-static .pb-ask-q { margin: 0; font-weight: 500; line-height: 1.5; font-size: 15px }
-.pb-ask-static .pb-ask-answer { min-height: 0 }
-.pb-ask-static .pb-ask-words { display: block }
-.pb-ask-shell {
-  border: 1px solid color-mix(in srgb, var(--fg) 13%, transparent);
-  border-radius: 14px;
+/* ---------------- FAQ accordion (FAQ_accordion.md) ----------------
+   One answer open at a time; the expansion is grid-template-rows
+   0fr → 1fr (NEVER max-height — a guess that clips or drags when copy
+   changes length), which needs the exact .fq-ans > .fq-ans-in > content
+   nesting. Cyan carries exactly two things: the row flag and the source
+   link — metadata about the answer, not the answer. */
+
+.fq-pnl {
+  border: 1px solid color-mix(in srgb, var(--acc) 20%, transparent);
+  border-radius: 13px;
   background: var(--surface);
   overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
+  box-shadow: 0 30px 70px rgba(0,0,0,.5);
 }
-.pb-ask-bar {
+
+.fq-bar {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
+  padding: 11px 16px;
   border-bottom: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
-  background: color-mix(in srgb, var(--fg) 2.5%, transparent);
-}
-.pb-ask-name { font-family: var(--font-mono), monospace; font-size: 12px; color: color-mix(in srgb, var(--fg) 42%, transparent) }
-.pb-ask-tokens { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 35%, transparent) }
-.pb-ask-body { padding: 26px 26px 22px; display: flex; flex-direction: column; gap: 16px }
-.pb-ask-chips { display: flex; gap: 10px; flex-wrap: wrap }
-.pb-chip {
-  font-family: var(--font-mono), monospace;
-  font-size: 12.5px;
-  color: color-mix(in srgb, var(--fg) 70%, transparent);
   background: color-mix(in srgb, var(--fg) 3%, transparent);
-  border: 1px solid color-mix(in srgb, var(--fg) 13%, transparent);
-  border-radius: var(--r-pill);
-  padding: 9px 16px;
-  cursor: pointer;
-  transition: all .2s ease;
+  font-family: var(--font-mono), monospace;
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--fg) 45%, transparent);
 }
-.pb-chip:hover { color: var(--bg); background: var(--acc); border-color: var(--acc); transform: translateY(-2px) }
-.pb-chip[aria-pressed="true"] { color: var(--bg); background: var(--acc); border-color: var(--acc); font-weight: 600 }
-.pb-ask-prompt {
+.fq-td { width: 8px; height: 8px; border-radius: 999px; background: color-mix(in srgb, var(--fg) 16%, transparent) }
+.fq-meta { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; color: var(--acc) }
+.fq-dot { width: 5px; height: 5px; border-radius: 999px; background: var(--acc); animation: pb-tick 1.7s ease-in-out infinite }
+
+.fq-body { padding: 10px 18px 16px; font-family: var(--font-mono), monospace }
+
+/* ---------- the row ---------- */
+.fq-r { border-bottom: 1px solid color-mix(in srgb, var(--fg) 6%, transparent) }
+.fq-r:last-of-type { border-bottom: 0 }
+
+.fq-q {
   display: flex;
   align-items: center;
-  gap: 12px;
-  border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
-  border-radius: 10px;
-  padding: 14px 16px;
-  background: color-mix(in srgb, var(--fg) 2%, transparent);
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  font-size: 13.5px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+  transition: color .3s ease, padding-left .3s ease;
 }
-.pb-ask-gt { font-family: var(--font-mono), monospace; font-size: 14px; color: var(--acc) }
-.pb-ask-q {
-  font-family: var(--font-mono), monospace;
-  font-size: 14px;
-  color: color-mix(in srgb, var(--fg) 85%, transparent);
-  flex: 1;
-}
-.pb-ask-qcaret { animation: pb-cursor 1.05s steps(1) infinite; color: var(--acc) }
-.pb-ask-pick { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc); white-space: nowrap }
-.pb-ask-trace {
-  border-left: 1px solid color-mix(in srgb, var(--acc) 35%, transparent);
-  padding-left: 16px;
+.fq-r:hover .fq-q { color: color-mix(in srgb, var(--fg) 82%, transparent); padding-left: 6px }
+.fq-r.on .fq-q { color: var(--fg-strong) }
+.fq-q:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+
+.fq-p { flex: none; color: color-mix(in srgb, var(--acc) 50%, transparent); transition: color .3s ease }
+.fq-r.on .fq-p { color: var(--acc) }
+.fq-qt { flex: 1; min-width: 0 }
+
+/* the flag is metadata, not the question — it sits right-aligned and
+   brightens when opened */
+.fq-flag { flex: none; font-size: 10.5px; color: color-mix(in srgb, var(--acc2) 40%, transparent); transition: color .3s ease }
+.fq-r.on .fq-flag { color: color-mix(in srgb, var(--acc2) 90%, transparent) }
+
+.fq-ms { flex: none; font-size: 10px; color: color-mix(in srgb, var(--fg) 22%, transparent); transition: color .3s ease }
+.fq-r.on .fq-ms { color: color-mix(in srgb, var(--acc) 65%, transparent) }
+
+.fq-car { flex: none; display: inline-block; color: var(--acc); transition: transform .34s cubic-bezier(.32,.72,0,1) }
+.fq-r.on .fq-car { transform: rotate(90deg) } /* > becomes v */
+
+/* ---------- the expansion ---------- */
+.fq-ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .44s cubic-bezier(.32,.72,0,1) }
+.fq-r.on .fq-ans { grid-template-rows: 1fr }
+.fq-ans-in { overflow: hidden }
+
+.fq-out {
+  padding: 0 0 14px 20px;
+  margin-left: 4px;
+  border-left: 1px solid color-mix(in srgb, var(--acc) 22%, transparent);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  min-height: 24px;
+  gap: 11px;
 }
-.pb-trace-line {
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
-  color: color-mix(in srgb, var(--fg) 42%, transparent);
-  animation: pb-token .4s ease both;
-  display: flex;
-  gap: 10px;
-}
-.pb-trace-mark { color: var(--acc) }
-.pb-trace-ms { color: color-mix(in srgb, var(--fg) 25%, transparent) }
-.pb-ask-answer { min-height: 122px; display: flex; gap: 14px; align-items: flex-start }
-.pb-ask-diamond {
-  width: 26px;
-  height: 26px;
-  flex: none;
-  border-radius: 7px;
-  border: 1px solid color-mix(in srgb, var(--acc) 55%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
-  color: var(--acc);
-  margin-top: 2px;
-}
-.pb-ask-words {
+
+/* the text arrives a beat after the box so it never renders mid-resize */
+.fq-atx {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.75;
-  color: color-mix(in srgb, var(--fg) 82%, transparent);
-  max-width: 780px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 6px;
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: color-mix(in srgb, var(--fg) 72%, transparent);
+  max-width: 690px;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity .32s ease .06s, transform .38s cubic-bezier(.2,.9,.3,1) .06s;
 }
-.pb-ask-w { animation: pb-token .38s cubic-bezier(.2,.8,.3,1) both }
-.pb-ask-acaret {
-  display: inline-block;
-  width: 8px;
-  height: 17px;
-  background: var(--acc);
-  align-self: center;
-  animation: pb-cursor 1.05s steps(1) infinite;
-}
-.pb-ask-cites { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-left: 40px }
-.pb-ask-srcs { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 30%, transparent) }
-.pb-ask-cite {
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  border: 1px solid color-mix(in srgb, var(--acc) 30%, transparent);
-  border-radius: var(--r-pill);
-  padding: 5px 12px;
+.fq-r.on .fq-atx { opacity: 1; transform: none }
+.fq-atx b { color: color-mix(in srgb, var(--fg) 92%, transparent); font-weight: 500 }
+
+.fq-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; opacity: 0; transition: opacity .3s ease .2s }
+.fq-r.on .fq-foot { opacity: 1 }
+.fq-ex {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  letter-spacing: .08em;
   color: var(--acc);
-  animation: pb-token .5s ease both;
+  border: 1px solid color-mix(in srgb, var(--acc) 32%, transparent);
+  border-radius: 999px;
+  padding: 3px 9px;
 }
-.pb-ask-foot {
+.fq-src { font-size: 10.5px; color: color-mix(in srgb, var(--fg) 42%, transparent) }
+.fq-src a { color: var(--acc2) }
+
+/* ---------- the live prompt ---------- */
+.fq-prompt {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding-top: 6px;
-  border-top: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
-  margin-top: 2px;
+  gap: 9px;
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  font-size: 13px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
 }
-.pb-wave { display: flex; align-items: flex-end; gap: 3px; height: 16px }
-.pb-wave > span {
-  width: 3px;
-  height: 16px;
-  background: var(--acc);
-  display: block;
-  border-radius: 2px;
-  transform-origin: bottom;
-  transform: scaleY(.18);
-  opacity: .5;
-  transition: opacity .3s ease;
+.fq-blk { flex: none; width: 7px; height: 14px; background: var(--acc); animation: pb-cursor 1.05s steps(1) infinite }
+.fq-cta { margin-left: auto; font-size: 11.5px; color: var(--acc) }
+
+@media (max-width: 860px) {
+  .fq-ms { display: none } /* the timing is the first thing to go */
 }
-.pb-live .pb-wave > span { animation: pb-wave 1s ease-in-out infinite; opacity: 1 }
-.pb-live .pb-wave > span:nth-child(2) { animation-delay: .09s }
-.pb-live .pb-wave > span:nth-child(3) { animation-delay: .18s }
-.pb-live .pb-wave > span:nth-child(4) { animation-delay: .27s }
-.pb-live .pb-wave > span:nth-child(5) { animation-delay: .36s }
-.pb-live .pb-wave > span:nth-child(6) { animation-delay: .45s }
-.pb-live .pb-wave > span:nth-child(7) { animation-delay: .54s }
-.pb-live .pb-wave > span:nth-child(8) { animation-delay: .63s }
-.pb-ask-track {
-  height: 2px;
-  flex: 1;
-  background: color-mix(in srgb, var(--fg) 7%, transparent);
-  display: block;
-  border-radius: var(--r-pill);
-  overflow: hidden;
+@media (max-width: 720px) {
+  .fq-body { padding: 8px 14px 14px }
+  .fq-q { font-size: 12.5px; gap: 8px; align-items: flex-start; flex-wrap: wrap }
+  .fq-qt { flex: 1 1 100%; order: 2 } /* the question takes its own line */
+  .fq-flag { order: 3; margin-left: 20px }
+  .fq-car { order: 1; margin-left: auto }
+  .fq-atx { font-size: 14px }
+  .fq-out { padding-left: 16px }
+  .fq-cta { margin-left: 0; flex: 1 1 100%; margin-top: 8px }
 }
-.pb-ask-fill { display: block; height: 2px; background: var(--acc); width: 0; transition: width .18s linear }
-.pb-ask-status { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 35%, transparent) }
+@media (max-width: 430px) {
+  .fq-flag { display: none } /* five flags in a column is noise here */
+  .fq-foot { gap: 8px }
+}
 
 /* ---------------- Selected work: one-at-a-time deck ----------------
    PORTFOLIO_one_at_a_time.md — eleven cases, one visible at a time,
@@ -1928,13 +1972,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   margin-bottom: 30px;
   flex-wrap: wrap;
 }
-.sc-lead {
-  margin: 0;
-  max-width: 380px;
-  font-size: 14.5px;
-  line-height: 1.65;
-  color: color-mix(in srgb, var(--fg) 55%, transparent);
-}
 
 /* 9 tracks: the phase column plus 8 equal proportion tracks. 190px is
    the width at which "Prototype / design" fits on one line at 12.5px
@@ -2401,7 +2438,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .sc-chart { display: none }
   .sc-mobile { display: block }
   .sc-head { flex-direction: column; align-items: flex-start; gap: 14px }
-  .sc-lead { max-width: none }
   .sc-mile-m .sc-mgrid { grid-template-columns: 1fr }
 }
 
@@ -2855,7 +2891,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
      display scale: keep their own sizes. */
   .pb-offer-title { font-size: 27px !important }
   .mb-t { font-size: 16px !important }
-  .pb-ask-static .pb-ask-q { font-size: 16px !important }
   .pb-chip, .ct-chip { font-size: 11.5px !important; padding: 8px 12px !important }
   .ct-chip { padding: 9px 13px !important }
   .ct-h1 { font-size: 33px !important; letter-spacing: -.025em !important }

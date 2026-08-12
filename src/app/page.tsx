@@ -10,14 +10,6 @@ import OfferingsTabs from "@/components/home/OfferingsTabs";
 import ProcessTimeline from "@/components/home/ProcessTimeline";
 import SelectedWork from "@/components/home/SelectedWork";
 
-/* The intro sentence derives its count from the data so the two can
-   never drift apart again. */
-const COUNT_WORDS = [
-  "zero", "one", "two", "three", "four", "five",
-  "six", "seven", "eight", "nine", "ten",
-];
-const faqCount = COUNT_WORDS[ASK_QA.length] ?? String(ASK_QA.length);
-
 /* FAQPage schema over the same five pairs that render on the page. */
 const faqJsonLd = {
   "@context": "https://schema.org",
@@ -66,9 +58,6 @@ export default function HomePage(): JSX.Element {
             <div>
               <div className="pb-kicker">$ ./ask --faq</div>
               <h2 className="pb-h-md pb-ask-h">Questions we get asked most</h2>
-            </div>
-            <div className="pb-ask-note">
-              {`The ${faqCount} questions we get asked most, answered.`}
             </div>
           </div>
           <AskPanel />

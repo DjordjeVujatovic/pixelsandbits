@@ -74,10 +74,11 @@ export default function ClientStrip(): JSX.Element {
 
   return (
     <div className="pb-cstrip" ref={rootRef}>
+      {/* The $100B+ figure lives in the hero facts grid right above —
+          repeating it here read as a duplicate (owner request). */}
       <div className="pb-cbar2">
-        <span>SHIPPED INSIDE</span>
+        <span className="pb-clabel">PAST CLIENTS</span>
         <span className="pb-cline2" aria-hidden="true" />
-        <span className="pb-ccount">$100B+ combined</span>
       </div>
       <ul className="pb-clist">
         <li className="pb-citem" data-path="coinbase/onchain-summer" data-metric="500k txns">

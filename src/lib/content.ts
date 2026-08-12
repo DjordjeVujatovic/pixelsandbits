@@ -91,76 +91,65 @@ export const OFFERS: Offer[] = [
   },
 ];
 
+/* FAQ accordion rows (FAQ_accordion.md). `a` is the full answer for
+   the FAQPage JSON-LD; aPre/aEm/aPost assemble the same string in the
+   markup so the <b> emphasis never passes through an interpolation.
+   The flag/ms are terminal metadata; the source line is a real link —
+   the old `sources` chips implied a retrieval system that doesn't
+   exist. Row 3 (--cost) opens on load. */
 export interface AskItem {
   q: string;
-  trace: [string, string, string][];
   a: string;
-  cites: [string, string][];
+  aPre: string;
+  aEm?: string;
+  aPost?: string;
+  flag: string;
+  ms: string;
+  src: { label: string; href: string };
 }
 
 export const ASK_QA: AskItem[] = [
   {
     q: "What do you actually do?",
-    trace: [
-      ["→", "reading ./services", "12ms"],
-      ["→", "joining 9 years of engagements", "38ms"],
-      ["✓", "answer grounded in 6 case studies", "91ms"],
-    ],
     a: "We take a product from the first sketch to something running in production — ideation, design and full-stack engineering, done by the same team. Nine years of it, most recently embedded inside AI companies as forward deployed engineers.",
-    cites: [
-      ["./services", "#services"],
-      ["./work", "#work"],
-    ],
+    aPre: "We take a product from the first sketch to something running in production — ideation, design and full-stack engineering, done by the same team. Nine years of it, most recently embedded inside AI companies as forward deployed engineers.",
+    flag: "--scope",
+    ms: "18ms",
+    src: { label: "./services", href: "#services" },
   },
   {
     q: "How do you get an LLM into production?",
-    trace: [
-      ["→", "retrieving fde_playbook.md", "9ms"],
-      ["→", "scoring 2 years of deployments", "44ms"],
-      ["✓", "evals + integration path resolved", "103ms"],
-    ],
     a: "On site with the people who will use it. We map the real workflow, wire evals to production transcripts so quality is a number, then do the unglamorous integration work — auth, data access, legacy systems — until it ships and holds up.",
-    cites: [
-      ["./ai", "#services"],
-      ["./process", "#process"],
-    ],
+    aPre: "On site with the people who will use it. We map the real workflow, wire evals to production transcripts so quality is a number, then do the unglamorous integration work — auth, data access, legacy systems — until it ships and holds up.",
+    flag: "--llm",
+    ms: "24ms",
+    src: { label: "./process", href: "#process" },
   },
   {
     q: "What does an engagement cost?",
-    trace: [
-      ["→", "loading engagement models", "11ms"],
-      ["✓", "no estimate without scope", "52ms"],
-    ],
     a: "Fixed-price sprints or a monthly retainer, quoted after a scoping week once we know what we are actually building. No number before we understand the problem.",
-    cites: [
-      ["./faq", "#process"],
-      ["./process", "#process"],
-    ],
+    aPre: "Fixed-price sprints or a monthly retainer, quoted after a scoping week once we know what we are actually building. ",
+    aEm: "No number before we understand the problem",
+    aPost: ".",
+    flag: "--cost",
+    ms: "21ms",
+    src: { label: "./process", href: "#process" },
   },
   {
     q: "Why hire you over an agency?",
-    trace: [
-      ["→", "diffing agency vs embedded team", "15ms"],
-      ["→", "checking handoff cost", "31ms"],
-      ["✓", "one team, no handoff chain", "88ms"],
-    ],
     a: "You get one team across the whole arc instead of a handoff chain, and an engineer who has sat inside customer orgs shipping AI, not a deck about it. When we leave, your team can extend the work without us.",
-    cites: [
-      ["./work", "#work"],
-      ["./ai", "#services"],
-    ],
+    aPre: "You get one team across the whole arc instead of a handoff chain, and an engineer who has sat inside customer orgs shipping AI, not a deck about it. When we leave, your team can extend the work without us.",
+    flag: "--vs-agency",
+    ms: "19ms",
+    src: { label: "./work", href: "#work" },
   },
   {
     q: "How fast can you start?",
-    trace: [
-      ["→", "checking calendar", "8ms"],
-      ["✓", "next slot resolved", "46ms"],
-    ],
     a: "Usually within two weeks, and a scoping week is the first thing on the calendar. Send us what you are building and we will tell you honestly whether we are the right fit before anyone signs anything.",
-    cites: [
-      ["./contact", "/contact"],
-      ["./process", "#process"],
-    ],
+    aPre: "Usually within two weeks, and a scoping week is the first thing on the calendar. Send us what you are building and we will tell you honestly whether we are the right fit before anyone signs anything.",
+    flag: "--start",
+    ms: "17ms",
+    src: { label: "./contact", href: "/contact" },
   },
 ];
 
