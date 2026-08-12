@@ -261,7 +261,10 @@ export default function Engagement(): JSX.Element {
               </div>
             </div>
             <div className="st-cap">
-              <span>on site with the team · constraints in, scope out</span>
+              <span>
+                <span className="cap-full">on site with the team · constraints in, scope out</span>
+                <span className="cap-short">constraints in, scope out</span>
+              </span>
               <span>
                 <b>week 01</b>
               </span>
@@ -278,7 +281,10 @@ export default function Engagement(): JSX.Element {
               <span className="dz-beam" />
             </div>
             <div className="st-cap">
-              <span>the agent surface, in front of real operators</span>
+              <span>
+                <span className="cap-full">the agent surface, in front of real operators</span>
+                <span className="cap-short">the agent surface</span>
+              </span>
               <span>
                 <b>week 02</b>
               </span>
@@ -348,7 +354,10 @@ export default function Engagement(): JSX.Element {
               </div>
             </div>
             <div className="st-cap">
-              <span>evals, agent flows, and the integration nobody demos</span>
+              <span>
+                <span className="cap-full">evals, agent flows, and the integration nobody demos</span>
+                <span className="cap-short">evals, flows, integration</span>
+              </span>
               <span>
                 <b>week 03–06</b>
               </span>
@@ -413,7 +422,10 @@ export default function Engagement(): JSX.Element {
               </div>
             </div>
             <div className="st-cap">
-              <span>evals wired to live traffic · yours to run</span>
+              <span>
+                <span className="cap-full">evals wired to live traffic · yours to run</span>
+                <span className="cap-short">live traffic · yours to run</span>
+              </span>
               <span>
                 <b>live</b>
               </span>

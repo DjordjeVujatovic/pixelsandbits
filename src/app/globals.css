@@ -811,6 +811,11 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   color: color-mix(in srgb, var(--fg) 58%, transparent);
 }
 @media (max-width: 720px) {
+  /* MOBILE_audit finding 8: the label/description pairs are cramped
+     side-by-side at phone widths — stack them. */
+  .pb-outcome { flex-direction: column; align-items: flex-start; gap: 5px }
+  .pb-outcome-label { font-size: 11.5px; letter-spacing: .08em }
+  .pb-outcome-line { font-size: 14px }
   .pb-run { font-size: 11.5px; gap: 7px }
   .pb-rw { gap: 7px }
   .pb-runsub { font-size: 13.5px }
@@ -927,6 +932,13 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   min-width: 0;
 }
 .st-cap > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+/* MOBILE_audit finding 5: two captions truncated mid-word on phones —
+   short variants swap in ≤720 so nothing relies on the ellipsis. */
+.cap-short { display: none }
+@media (max-width: 720px) {
+  .cap-full { display: none }
+  .cap-short { display: inline }
+}
 .st-cap > span:last-child { flex: none }
 .st-cap b { color: var(--acc); font-weight: 400 }
 
@@ -1677,6 +1689,10 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
     scrollbar-width: none;
     padding: 0 18px 12px;
     margin: 0 -18px;
+    /* MOBILE_audit finding 3: the cut chip reads as a rendering error
+       without a fade */
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent);
+            mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent);
   }
   .strip::-webkit-scrollbar { display: none }
   .chip {
@@ -2858,6 +2874,9 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 
 @media (max-width: 720px) {
   .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 18px !important; padding-right: 18px !important }
+  /* MOBILE_audit finding 6: no side-by-side comparison to keep stable
+     on phones — release the reserved bottom padding */
+  .pb-services { padding-bottom: 40px }
   .pb-capsule { display: none !important }
   .ct-capsule { display: none !important }
   .stagewrap { height: 320px } /* taller — content stacks */
