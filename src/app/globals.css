@@ -1728,18 +1728,27 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .chip.on b { color: color-mix(in srgb, var(--ink) 60%, transparent) }
   .chip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
 
-  /* the deck at phone offsets — neighbours clearly visible, not smudges */
-  .deck { flex: 1; min-height: 0 }
+  /* the deck at phone offsets — neighbours clearly visible, not smudges.
+     Capped: cards centre within the cap, not across the whole screen —
+     uncapped, tall viewports left a ~300px void between the chips and
+     the card (owner report). Leftover space falls BELOW the deck, where
+     the skip button anchors the bottom edge. */
+  .deck { flex: 1; min-height: 0; max-height: 660px }
+  /* Top-anchored, not centred: every card's top sits a constant ~24px
+     under the chips regardless of card or screen height — centring left
+     short cards floating under a void on tall phones (owner report).
+     The baseline translateY(-50%) is gone with it. */
   .dk {
-    transform: translateY(-50%) translateY(84px) scale(.92);
+    top: 24px;
+    transform: translateY(84px) scale(.92);
     filter: blur(6px);
     transition: opacity .42s ease, transform .54s cubic-bezier(.32,.72,0,1), filter .4s ease;
   }
-  .dk.on { opacity: 1; transform: translateY(-50%); filter: none }
-  .dk.prev { opacity: .5; transform: translateY(-50%) translateY(-58px) scale(.945); filter: blur(1.5px) }
-  .dk.next { opacity: .56; transform: translateY(-50%) translateY(70px) scale(.955); filter: blur(1.5px) }
-  .dk.far-up { opacity: 0; transform: translateY(-50%) translateY(-104px) scale(.92); filter: blur(6px) }
-  .dk.far-down { opacity: 0; transform: translateY(-50%) translateY(116px) scale(.92); filter: blur(6px) }
+  .dk.on { opacity: 1; transform: none; filter: none }
+  .dk.prev { opacity: .5; transform: translateY(-26px) scale(.945); filter: blur(1.5px) }
+  .dk.next { opacity: .56; transform: translateY(46px) scale(.955); filter: blur(1.5px) }
+  .dk.far-up { opacity: 0; transform: translateY(-64px) scale(.92); filter: blur(6px) }
+  .dk.far-down { opacity: 0; transform: translateY(96px) scale(.92); filter: blur(6px) }
   .dk.on > * { box-shadow: 0 18px 44px rgba(0,0,0,.6) }
 
   /* the skip button is what makes pinning acceptable */
@@ -1749,7 +1758,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
     justify-content: center;
     gap: 8px;
     width: 100%;
-    margin-top: 12px;
+    margin-top: auto; /* stays at the screen's bottom edge */
     flex: none;
     position: relative;
     z-index: 6; /* above any card spill — its blurred surface reads as a floor */
@@ -1773,7 +1782,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   /* The last card settles lower, into the air the skip vacated — the
      prev ghost fills the top and the section hands off right below,
      instead of a tiny card floating in an empty screen. */
-  .dk.on.dk-last { transform: translateY(-50%) translateY(64px) }
+  .dk.on.dk-last { transform: none }
 
   /* card trimming — height is the binding constraint while pinned */
   .deck .pb-card, .deck .pb-redcard, .deck .pb-case { padding: 18px 16px 20px }
