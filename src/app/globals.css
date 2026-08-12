@@ -1452,9 +1452,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    the pin's scroll travel; nothing inside is eleven screens tall. Cyan
    here is reserved for the client quote blocks. */
 
-.pf2 { position: relative }
-/* the pin's scroll travel exists only where the pin does */
-@media (min-width: 1101px) { .pf2 { height: calc(11 * 340px + 620px) } }
+.pf2 { position: relative; height: calc(11 * 340px + 620px) }
 
 /* One screen tall, centring its own content — auto height left ~700px
    of dead space under the section on tall viewports. dvh, not vh: iOS
@@ -1650,20 +1648,39 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .dk.next { transform: translateY(-50%) translateY(64px) scale(.94) }
 }
 
-/* the strip is mobile-only */
-.strip { display: none }
+/* the strip + skip are mobile-only */
+.strip, .skip { display: none }
 
 /* ---------- mobile and tablet (≤1100px) ---------- */
 @media (max-width: 1100px) {
-  /* MOBILE_audit finding 1: no pin, no artificial height — the section
-     is content-height and the page scrolls normally past it. */
-  .pf2 { height: auto; padding-bottom: 34px }
-  .stg-sticky { position: static; display: block; padding: 0; height: auto }
-  .stg { display: block }
+  /* 460px of scroll per card: an iOS flick travels 400–900px, so one
+     gentle flick advances one card and a hard one two — instead of the
+     2–4 the old 200px slices allowed (owner: same deck, less
+     sensitive). */
+  .pf2 { height: calc(11 * 460px + 640px) }
+  /* The wrapper releases; the stage's grid row must span the section's
+     full height or sticky has no room to travel in. */
+  .stg-sticky { position: static; display: block; padding: 0; height: 100% }
+  .stg { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 0; align-items: start; height: 100% }
+  /* the chip strip's intrinsic width (eleven unshrinkable chips) must
+     not inflate the grid track */
+  .stg-stage { min-width: 0 }
+  /* the heading scrolls away; only the stage pins */
+  .intro { padding: 30px 0 20px }
   .stg-idx, .stg-prog { display: none }
-  .intro { padding: 26px 0 18px }
-  .sr-lead { margin-top: 10px }
-  .stg-stage { position: static; min-width: 0; padding: 0 }
+  /* Full-height flex column: strip at the top, the deck filling the
+     middle (cards centre on the SCREEN, not a fixed box), and the skip
+     button always at the bottom edge — cards can no longer sit on it. */
+  .stg-stage {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 64px 0 14px; /* clears the translucent header */
+    align-self: start;
+  }
+  .strip { flex: none }
   .sr-h { font-size: 26px }
   .sr-lead { font-size: 14px }
 
@@ -1673,8 +1690,8 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
     gap: 6px;
     overflow-x: auto;
     scrollbar-width: none;
-    padding: 0 18px 14px;
-    margin: 16px -18px 0;
+    padding: 0 18px 12px;
+    margin: 0 -18px;
     /* MOBILE_audit finding 3: the cut chip reads as a rendering error
        without a fade */
     -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent);
@@ -1711,48 +1728,54 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .chip.on b { color: color-mix(in srgb, var(--ink) 60%, transparent) }
   .chip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
 
-  /* The horizontal snap rail. scroll-snap-stop: always is the whole
-     fix — the scroller may not pass more than one snap point per
-     gesture. The 100% - 52px basis leaves ~34px of the next card
-     peeking, which is what says "swipe me". */
-  .deck {
-    display: flex;
-    align-items: flex-start; /* each card keeps its own height */
-    gap: 14px;
-    min-height: 0;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 0 18px;
-    margin: 4px -18px 0;
-    scroll-padding-left: 18px;
+  /* the deck at phone offsets — neighbours clearly visible, not smudges */
+  .deck { flex: 1; min-height: 0 }
+  .dk {
+    transform: translateY(-50%) translateY(84px) scale(.92);
+    filter: blur(6px);
+    transition: opacity .42s ease, transform .54s cubic-bezier(.32,.72,0,1), filter .4s ease;
   }
-  .deck::-webkit-scrollbar { display: none }
-  /* every desktop deck state resets — the rail has no ghosts */
-  .dk, .dk.on, .dk.prev, .dk.next, .dk.far-up, .dk.far-down {
-    position: static;
-    top: auto;
-    opacity: 1;
-    transform: none;
-    filter: none;
-    z-index: auto;
-    pointer-events: auto;
-    transition: none;
-    flex: 0 0 calc(100% - 52px);
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
-  }
-  .dk.prev *, .dk.next * { pointer-events: auto }
-  .dk > *, .dk.on > * { box-shadow: none }
-  /* narrow rail cards: tags may wrap under the case number, and the
-     feature stats cells must be allowed to shrink */
-  .std2-head { flex-wrap: wrap }
-  .deck .pb-feature-stats { grid-template-columns: repeat(3, minmax(0, 1fr)) }
-  .deck .pb-fstat { min-width: 0; padding: 12px 8px }
-  .deck .pb-fstat > span:last-child { font-size: 11px }
+  .dk.on { opacity: 1; transform: translateY(-50%); filter: none }
+  .dk.prev { opacity: .5; transform: translateY(-50%) translateY(-58px) scale(.945); filter: blur(1.5px) }
+  .dk.next { opacity: .56; transform: translateY(-50%) translateY(70px) scale(.955); filter: blur(1.5px) }
+  .dk.far-up { opacity: 0; transform: translateY(-50%) translateY(-104px) scale(.92); filter: blur(6px) }
+  .dk.far-down { opacity: 0; transform: translateY(-50%) translateY(116px) scale(.92); filter: blur(6px) }
+  .dk.on > * { box-shadow: 0 18px 44px rgba(0,0,0,.6) }
 
-  /* card trimming */
+  /* the skip button is what makes pinning acceptable */
+  .skip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+    flex: none;
+    position: relative;
+    z-index: 6; /* above any card spill — its blurred surface reads as a floor */
+    padding: 12px;
+    border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(6px);
+    font: inherit;
+    cursor: pointer;
+    font-family: var(--font-mono), monospace;
+    font-size: 12px;
+    color: color-mix(in srgb, var(--fg) 62%, transparent);
+  }
+  .skip:active { border-color: color-mix(in srgb, var(--acc) 50%, transparent); color: var(--acc) }
+  .skip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+  /* On the last card there is nothing left to skip — fade out but keep
+     the space so the flex column doesn't jump. */
+  .skip { transition: opacity .35s ease }
+  .skip.skip-gone { opacity: 0; visibility: hidden; pointer-events: none }
+  /* The last card settles lower, into the air the skip vacated — the
+     prev ghost fills the top and the section hands off right below,
+     instead of a tiny card floating in an empty screen. */
+  .dk.on.dk-last { transform: translateY(-50%) translateY(64px) }
+
+  /* card trimming — height is the binding constraint while pinned */
   .deck .pb-card, .deck .pb-redcard, .deck .pb-case { padding: 18px 16px 20px }
   .deck .pb-feature-side { padding: 18px 16px 20px }
   .deck h3 { font-size: 18px }
@@ -1773,11 +1796,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   /* the redcard scan band is 100px at this width (the one sanctioned
      difference in CASE_01) */
   .pb-redcard::after { height: 100px; top: -100px }
-}
-/* the narrowest cards: the feature figures must shrink a step */
-@media (max-width: 430px) {
-  .deck .pb-fstat .pb-figure { font-size: 11.5px }
-  .deck .pb-fstat { padding: 10px 6px }
 }
 
 .pb-case {
@@ -1956,6 +1974,14 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    proportion, not weeks; never label them. */
 
 .pb-process { padding: 64px 0 20px }
+/* ≤1100 the portfolio stage is a full-screen pin whose bottom third is
+   empty on the short last card (skip hidden, card settled high). Pull
+   the process section up into that vacated air: it peeks beneath the
+   last card during its scroll window, and after the unpin the gap
+   between deck and process is breathing room, not a void. */
+@media (max-width: 1100px) {
+  .pb-process { margin-top: -180px }
+}
 
 .sc-head {
   display: flex;

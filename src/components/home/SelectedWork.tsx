@@ -13,7 +13,7 @@ import CaseRedacted from "./CaseRedacted";
    everything else is CSS transitions keyed off classes. */
 const CARDS = 11;
 export const PER_CARD_DESKTOP = 340;
-export const PER_CARD_MOBILE = 200;
+export const PER_CARD_MOBILE = 460;
 
 /* Rail labels; chips shorten two names for width on mobile. */
 const RAIL: { label: string; chip?: string }[] = [
@@ -128,7 +128,6 @@ function QuoteBlock({ q }: { q: CaseQuote }): JSX.Element {
 
 export default function SelectedWork(): JSX.Element {
   const [index, setIndex] = useState(0);
-  const [carousel, setCarousel] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLElement>(null);
@@ -136,36 +135,6 @@ export default function SelectedWork(): JSX.Element {
 
   const reduced = () =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  // ≤1100 the deck is a horizontal snap carousel (MOBILE_audit finding
-  // 1) — which card is active becomes the browser's decision, read back
-  // through an IntersectionObserver rather than any scroll maths.
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 1100px)");
-    const onMq = () => setCarousel(mq.matches);
-    onMq();
-    mq.addEventListener("change", onMq);
-    return () => mq.removeEventListener("change", onMq);
-  }, []);
-
-  useEffect(() => {
-    if (!carousel) return;
-    const rail = deckRef.current;
-    if (!rail) return;
-    const cards = Array.from(rail.children);
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          const k = cards.indexOf(e.target);
-          if (k >= 0) setIndex((prev) => (prev === k ? prev : k));
-        });
-      },
-      { root: rail, threshold: 0.6 },
-    );
-    cards.forEach((c) => io.observe(c));
-    return () => io.disconnect();
-  }, [carousel]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -195,17 +164,16 @@ export default function SelectedWork(): JSX.Element {
     };
   }, []);
 
-  // Desktop parked cards are decoration: hidden from AT and out of the
-  // tab order. In the carousel every card is real, reachable content.
+  // Parked cards are decoration: hidden from AT and out of the tab order.
   useEffect(() => {
     const deck = deckRef.current;
     if (!deck) return;
     Array.from(deck.children).forEach((el, k) => {
-      const on = carousel || k === index;
+      const on = k === index;
       el.setAttribute("aria-hidden", on ? "false" : "true");
       (el as HTMLElement & { inert: boolean }).inert = !on;
     });
-  }, [index, carousel]);
+  }, [index]);
 
   // The active chip auto-centres in the strip as the deck advances.
   useEffect(() => {
@@ -219,19 +187,9 @@ export default function SelectedWork(): JSX.Element {
     });
   }, [index]);
 
-  /* Desktop lands mid-slice (the 0.35) rather than on a boundary —
-     never scrollIntoView vertically, the sticky stage would fight it.
-     The carousel centres the card horizontally; block: "nearest" stops
-     the page itself from jumping. */
+  /* Lands mid-slice (the 0.35) rather than on its boundary. Never
+     scrollIntoView — the sticky stage would fight it. */
   const goTo = useCallback((k: number) => {
-    if (window.matchMedia("(max-width: 1100px)").matches) {
-      deckRef.current?.children[k]?.scrollIntoView({
-        inline: "center",
-        block: "nearest",
-        behavior: reduced() ? "auto" : "smooth",
-      });
-      return;
-    }
     const section = sectionRef.current;
     if (!section) return;
     const sr = section.getBoundingClientRect();
@@ -240,8 +198,17 @@ export default function SelectedWork(): JSX.Element {
     window.scrollTo({ top, behavior: reduced() ? "auto" : "smooth" });
   }, []);
 
+  const skip = useCallback(() => {
+    const next = document.getElementById("process");
+    if (!next) return;
+    const top = next.getBoundingClientRect().top + window.scrollY - 48;
+    window.scrollTo({ top, behavior: reduced() ? "auto" : "smooth" });
+  }, []);
+
   const dkClass = (k: number): string => {
-    if (k === index) return "dk on";
+    // The last card marks itself so mobile can settle it lower into the
+    // space the vanished skip button frees up.
+    if (k === index) return k === CARDS - 1 ? "dk on dk-last" : "dk on";
     if (k === index - 1) return "dk prev";
     if (k === index + 1) return "dk next";
     return k < index ? "dk far-up" : "dk far-down";
@@ -294,7 +261,7 @@ export default function SelectedWork(): JSX.Element {
               {RAIL.map((_, k) => railButton(k, true))}
             </nav>
 
-            <div className="deck" role="group" aria-label="Case studies" ref={deckRef}>
+            <div className="deck" ref={deckRef}>
               <div className={dkClass(0)}>
                 <CaseRedacted />
               </div>
@@ -399,6 +366,16 @@ export default function SelectedWork(): JSX.Element {
               ))}
             </div>
 
+            {/* Nothing left to skip on the last card — it fades out but
+                keeps its space so the flex column doesn't jump. */}
+            <button
+              className={`skip${index === CARDS - 1 ? " skip-gone" : ""}`}
+              type="button"
+              tabIndex={index === CARDS - 1 ? -1 : undefined}
+              onClick={skip}
+            >
+              skip to engagement process ↓
+            </button>
           </div>
         </div>
       </div>
