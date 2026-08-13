@@ -111,11 +111,11 @@ button {
   padding: 0 48px 90px;
 }
 
-/* ---------------- Hero background: aurora + grid + fade ----------------
+/* ---------------- Hero band ----------------
    Full-bleed inside the column via the margin/padding trick; isolated so
-   the layers can never escape. Pulled up 80px so the aurora glows
-   through the translucent sticky header. Decorative only — content sits
-   above at z-index 1+. */
+   the layers can never escape. Pulled up 80px with NO compensating
+   padding — the split hero itself runs to the viewport top, behind the
+   transparent header (the left cell's 110px top padding clears it). */
 .pb-hero-wrap {
   position: relative;
   isolation: isolate;
@@ -123,7 +123,6 @@ button {
   margin-inline: calc(50% - 50vw);
   padding-inline: calc(50vw - 50%);
   margin-top: -80px;
-  padding-top: 80px;
 }
 /* Desktop: the hero band owns the full viewport — the hero centres in
    the spare height and the client strip anchors the bottom edge, so the
@@ -282,25 +281,50 @@ header.pb-compact {
   background: color-mix(in srgb, var(--bg) 94%, transparent);
   border-color: color-mix(in srgb, var(--fg) 12%, transparent);
 }
+/* Top-of-page state over the split hero (scrollY ≤ 8, toggled in
+   Header.tsx): fully transparent, no blur, no hairline. The scrolled
+   state above (pb-compact, scrollY > 40) is the rgba(5,8,13,.94) bar.
+   body.pb-navopen's solid background outranks this while the drawer is
+   open. */
+.pb-header.pb-navtop {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+/* The centred capsule straddles the seam at every desktop width (five
+   links ≈ 530px; the seam sits at 52.5%), so the handoff's ink-on-lime
+   links would vanish over the dark half. The capsule keeps its own dark
+   pill ground instead — legible over both halves — and only the CTA,
+   which genuinely sits over the lime flood ≥1200px, flips to ink.
+   Below the collapse the whole nav is over dark: light links, lime CTA,
+   as today. */
+@media (min-width: 1200px) {
+  .pb-header.pb-navtop .pb-cta { color: var(--ink) }
+  .pb-header.pb-navtop .pb-cta .pb-brk { color: rgba(5, 8, 13, .5) }
+  .pb-header.pb-navtop .pb-cta:hover,
+  .pb-header.pb-navtop .pb-cta:hover .pb-brk { color: var(--ink) }
+}
 
 .pb-brand {
   font-family: var(--font-mono), monospace;
   font-size: 14px;
   font-weight: 600;
-  color: var(--fg);
+  color: var(--fg-strong);
   display: flex;
   align-items: center;
   gap: 8px;
   white-space: nowrap;
 }
-.pb-brand:hover { color: var(--fg) }
+.pb-brand:hover { color: var(--fg-strong) }
 .pb-brand-dollar { color: var(--acc) }
 .pb-brand-caret { animation: pb-cursor 1.05s steps(1) infinite; color: var(--acc) }
 
 .pb-spacer { flex: 1 }
 
-.pb-nav a { color: color-mix(in srgb, var(--fg) 55%, transparent); transition: color .2s ease }
-.pb-nav a:hover { color: var(--fg) }
+/* No catch-all anchor tint here — every nav anchor (.pb-brand,
+   .pb-navlink, .pb-cta) owns its color, and an element-qualified rule
+   would out-specify the plain class selectors. */
 
 .pb-capsule {
   position: relative;
@@ -315,6 +339,9 @@ header.pb-compact {
   -webkit-backdrop-filter: blur(10px);
   font-family: var(--font-mono), monospace;
   font-size: 13px;
+  /* "--services" etc. must never break across lines */
+  white-space: nowrap;
+  transition: background .3s ease, border-color .3s ease;
 }
 .pb-pill {
   position: absolute;
@@ -335,11 +362,13 @@ header.pb-compact {
   gap: 1px;
   padding: 9px 16px;
   border-radius: var(--r-pill);
-  color: color-mix(in srgb, var(--fg) 52%, transparent);
-  transition: color .2s ease;
+  /* White when not selected; selection and hover accents stay lime */
+  color: var(--fg-strong);
+  /* .3s, not .2s — paced with the header's ground flip */
+  transition: color .3s ease;
 }
-.pb-navlink .pb-dash { color: color-mix(in srgb, var(--fg) 26%, transparent); transition: color .2s ease }
-.pb-navlink:hover { color: var(--fg) }
+.pb-navlink .pb-dash { color: color-mix(in srgb, var(--fg-strong) 45%, transparent); transition: color .3s ease }
+.pb-navlink:hover { color: var(--fg-strong) }
 .pb-navlink:hover .pb-dash { color: var(--acc) }
 .pb-navlink.pb-navon { color: var(--acc) }
 .pb-navlink.pb-navon .pb-dash { color: var(--acc) }
@@ -352,8 +381,11 @@ header.pb-compact {
   font-family: var(--font-mono), monospace;
   font-size: 13px;
   color: var(--acc);
+  /* A step above the 13px capsule links */
+  font-size: 14px;
   padding: 9px 8px;
   white-space: nowrap;
+  transition: color .3s ease;
 }
 /* Hover must not change the CTA's width — the paired spacers recentre
    the capsule around it, so any growth shifts the whole nav. Brackets
@@ -488,17 +520,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   border-radius: 12px;
 }
 .pb-dcta:hover { color: var(--ink) }
-.pb-dmeta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 14px;
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  color: color-mix(in srgb, var(--fg) 38%, transparent);
-}
-.pb-ddot { width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--acc); animation: pb-tick 1.8s ease-in-out infinite }
 
 @media (min-width: 721px) {
   .pb-drawer, .pb-scrim, .pb-burger { display: none }
@@ -522,10 +543,10 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   white-space: nowrap;
   padding: 9px 16px;
   border-radius: var(--r-pill);
-  color: color-mix(in srgb, var(--fg) 55%, transparent);
+  color: var(--fg-strong);
   transition: color .2s ease, background .2s ease;
 }
-.ct-capsule a:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); color: var(--fg) }
+.ct-capsule a:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); color: var(--fg-strong) }
 .ct-dash { opacity: .45; margin-right: 1px }
 
 /* ---------------- Buttons / cards / rows ---------------- */
@@ -593,66 +614,164 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 
 /* ---------------- Hero ---------------- */
 
+/* Split-ground hero: dark left cell / lime flood right cell, seam at
+   ~52.5%, the terminal panel absolutely positioned across it. Full-bleed
+   again inside the already-restored hero-wrap column — the margin trick
+   nests cleanly because both containers are viewport-centred. */
 .pb-hero {
-  padding: 76px 0 52px;
+  position: relative;
+  overflow: hidden;
+  margin-inline: calc(50% - 50vw);
   display: grid;
-  grid-template-columns: 1.08fr .92fr;
-  grid-template-rows: auto auto;
-  grid-template-areas:
-    "copy panel"
-    "ctas panel";
-  gap: 0 56px;
-  align-items: center;
-  /* The flexed hero is taller than its content on desktop; centre the
-     whole two-column cluster in the spare height instead of letting a
-     1fr row dump it all below the buttons (owner request 2026-08-13). */
-  align-content: center;
+  grid-template-columns: 1.05fr .95fr;
+  /* 150px reserved so the client strip lands ABOVE the fold on desktop;
+     the hero-wrap flex then stretches the hero to pin the strip to the
+     viewport bottom edge. */
+  min-height: calc(100dvh - 150px);
 }
-.pb-hero-copy { grid-area: copy; align-self: end }
-.pb-hero-ctas { grid-area: ctas; align-self: start }
-/* Top-aligned with the headline, not centred — the left column is
-   taller and a centred panel reads as sagging (owner request 2026-08-13). */
-.pb-hero-panel { grid-area: panel; align-self: start }
-/* Taller hero on desktop, and more horizontal room for the terminal once
-   the column is wide enough that the headline still holds one line
-   (owner request, 2026-08-10; raised again 2026-08-10). Bottom padding
-   stays modest so the client strip still reads as part of the hero.
-   Scoped to ≥1200px — below that the iPad band overrides the top and
-   must keep its tuned 52px bottom. */
+.pb-hero-left {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  padding: 110px 48px 40px;
+  /* Track the centred content column (--maxw + gutters) so the copy
+     stays flush with the brand above and the client strip below on
+     viewports wider than 1536px. */
+  padding-left: max(48px, calc(50vw - 720px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* Faint lime ambience on the dark side — replaces the old full-width
+   aurora inside the hero band. */
+.pb-hero-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(56% 46% at 25% 15%, rgba(198, 242, 78, .09), transparent 70%);
+  pointer-events: none;
+}
+.pb-hero-left > * { position: relative }
+/* Column max-width + the 48px padding must stay left of the terminal's
+   left edge (seat at 66% minus half of 680px). */
+.pb-hero-left .pb-hero-h,
+.pb-hero-left .pb-run,
+.pb-hero-left .pb-facts { max-width: 620px }
+.pb-hero-left .pb-hero-btns { max-width: 620px; margin-top: 14px }
+/* The clamp tracks the terminal's left edge (66vw − 360px with the
+   1.06 scale on the 680px seat) minus the column-tracking left
+   padding, so copy never slides under the panel at any desktop width.
+   Desktop only — the single-column hero keeps the flat 620px cap. */
 @media (min-width: 1200px) {
-  /* Tight enough that the SHIPPED INSIDE strip stays above the fold on
-     a 900px-tall viewport now the facts grid made the column taller
-     (owner request 2026-08-11). Asymmetric on purpose: with the cluster
-     centred in the flexed hero, the heavier bottom padding biases it
-     upward so the nav gap and the strip gap read as even
-     (owner request 2026-08-13). */
-  .pb-hero { padding: 16px 0 96px }
-}
-@media (min-width: 1420px) {
-  .pb-hero { grid-template-columns: 1fr 1.14fr; gap: 0 64px }
-}
-/* iPad band: every iPad width — 744/820/1024 portrait and 1180
-   landscape — sits above the 960px collapse, leaving a squeezed text
-   column. Collapse through 1199px with a 54px headline step between the
-   62px desktop and 46px mobile ones; at ≥1200px the two-column hero has
-   room for a one-line headline. The 960px/720px rules stay unchanged. */
-@media (max-width: 1199px) {
-  .pb-hero {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    grid-template-areas:
-      "copy"
-      "panel"
-      "ctas";
-    gap: 20px;
-    align-items: start;
-    /* Breathing room under the nav, balanced against the terminal
-       clearing the fold on tall phones. */
-    padding-top: 44px;
+  .pb-hero-left {
+    --hero-pl: max(48px, calc(50vw - 720px));
+    --hero-copy-w: min(620px, calc(66vw - 360px - var(--hero-pl)));
   }
-  .pb-hero .pb-hero-h { font-size: 54px }
-  /* The terminal spans the full column (like the client strip below it)
-     so the single-column hero doesn't leave a void on the right. */
+  .pb-hero-left .pb-hero-h,
+  .pb-hero-left .pb-run,
+  .pb-hero-left .pb-facts,
+  .pb-hero-left .pb-hero-btns { max-width: var(--hero-copy-w) }
+}
+/* Narrow desktop (1200–1399px): the clamped column is under the
+   ~510px the 80px headline needs for "From design to" on one line —
+   "deployment," cannot break and would slide under the panel. Step the
+   copy scale down a notch until the geometry gives the full line room;
+   the smaller wraps also keep the client strip above the fold on
+   900px-tall viewports. */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .pb-hero .pb-hero-h { font-size: 62px; line-height: 1.03 }
+  .pb-hero-left .pb-run { font-size: 12.5px }
+  .pb-hero-left .pb-fv { font-size: 18px }
+  .pb-hero-left .pb-fk { font-size: 12px }
+  /* The narrower clamp wraps the copy taller — give the height back so
+     the client strip holds above the fold at 900px-tall viewports. */
+  .pb-hero-left { padding-top: 96px; padding-bottom: 32px }
+}
+.pb-hero-lime {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(155deg, #d3f776 0%, #c6f24e 34%, #9aea8b 72%, #6fe3b0 100%);
+}
+/* Ghost ampersand, live text cropped by the cell */
+.pb-hero-amp {
+  position: absolute;
+  right: -110px;
+  bottom: -280px;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 700;
+  font-size: 900px;
+  line-height: 1;
+  color: rgba(5, 8, 13, .1);
+  pointer-events: none;
+  user-select: none;
+}
+/* Terminal on the seam. Position and float live on two nested elements
+   on purpose — the seat owns the centering translate, the float owns
+   the keyframes; one element would have the animation overwrite the
+   centering transform. */
+.pb-hero-seat {
+  position: absolute;
+  left: 66%;
+  top: 50%;
+  width: 680px;
+  /* The scale grows the panel proportionately (width AND height —
+     Engagement's internal height is content-fixed, so a plain width
+     bump would only widen it). Keyframe transforms live on the float
+     child, never here. */
+  transform: translate(-50%, -50%) scale(1.06);
+}
+/* The panel is the dominant object on the right half — on very wide
+   viewports it scales up before the lime flood gains whitespace. */
+@media (min-width: 1800px) {
+  .pb-hero-seat { width: 720px }
+}
+.pb-hero-float {
+  position: relative;
+  animation: pb-float 7s ease-in-out infinite;
+}
+@keyframes pb-float {
+  0%, 100% { transform: translateY(0) }
+  50% { transform: translateY(-12px) }
+}
+/* Seam shadow — grounds the panel over both halves; the panel keeps its
+   own .pb-term-halo on top of this. */
+.pb-hero-shadow {
+  position: absolute;
+  inset: -36px -26px;
+  border-radius: 30px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(5, 8, 13, .45), transparent 68%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+.pb-hero-termin { position: relative }
+/* iPad band: every iPad width — 744/820/1024 portrait and 1180
+   landscape — collapses to a single column, source order copy →
+   terminal band. The lime cell disappears; the seat becomes a
+   full-width lime band with the terminal static and centred inside.
+   Headline steps 62 → 54 → 46 (≤720) by breakpoint. */
+@media (max-width: 1199px) {
+  .pb-hero { display: block; min-height: 0 }
+  .pb-hero-left { padding: 110px 48px 44px; justify-content: flex-start }
+  .pb-hero .pb-hero-h { font-size: 60px; line-height: 1.03 }
+  .pb-hero-lime { display: none }
+  .pb-hero-seat {
+    position: static;
+    width: auto;
+    transform: none;
+    padding: 40px 28px;
+    background: linear-gradient(155deg, #d3f776 0%, #c6f24e 40%, #9aea8b 85%, #6fe3b0 100%);
+  }
+  .pb-hero-float { max-width: 620px; margin: 0 auto }
+}
+/* Keep the copy column's gutters in lockstep with .pb-main's responsive
+   gutters so the hero text stays aligned with the client strip below. */
+@media (max-width: 960px) {
+  .pb-hero-left { padding-inline: 28px }
+}
+@media (max-width: 720px) {
+  .pb-hero-left { padding: 96px 18px 36px }
+  .pb-hero .pb-hero-h { font-size: 46px }
+  .pb-hero-seat { padding: 28px 16px }
 }
 
 /* ---------------- Hero client strip ---------------- */
@@ -743,28 +862,10 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .pb-citem { font-size: 11.5px }
   .pb-cread { font-size: 11px }
 }
-.pb-avail {
-  font-family: var(--font-mono), monospace;
-  font-size: 13px;
-  color: var(--acc);
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  flex-wrap: wrap;
-}
-.pb-avail-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: var(--r-pill);
-  background: var(--acc);
-  display: block;
-  animation: pb-tick 1.8s ease-in-out infinite;
-}
-.pb-avail-label { flex: 1 1 auto; min-width: 0 }
 .pb-hero-h {
-  font-size: 62px;
-  line-height: 1.04;
+  /* 80/60/46 by breakpoint (split-hero spec) */
+  font-size: 80px;
+  line-height: 1.02;
   letter-spacing: -.035em;
   font-weight: 600;
   margin: 0;
@@ -791,7 +892,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   padding: 0;
   list-style: none;
   font-family: var(--font-mono), monospace;
-  font-size: 12.5px;
+  font-size: 15px;
 }
 .pb-rw { display: inline-flex; align-items: baseline; gap: 9px; color: var(--fg-strong) }
 .pb-rsep { color: color-mix(in srgb, var(--acc) 55%, transparent) }
@@ -806,12 +907,13 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
 }
 .pb-fact { display: flex; flex-direction: column; gap: 4px }
-/* 18px / 1.1 exactly — "Fortune 500" must not wrap at the hero's column
-   width, and at 20px+ it does. Facts 2 and 4 carry the cyan data voice. */
+/* 24px values / 13.5px keys (split-hero spec — the 620px column gives
+   "Fortune 500" room on one line). Facts 2 and 4 carry the cyan data
+   voice. Phone sizes below stay on the existing collapse scale. */
 .pb-fv {
   margin: 0;
   font-family: var(--font-mono), monospace;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 400;
   color: var(--acc);
   line-height: 1.1;
@@ -819,7 +921,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-fv.c { color: var(--acc2) }
 .pb-fk {
   margin: 0;
-  font-size: 12px;
+  font-size: 13.5px;
   line-height: 1.42;
   color: color-mix(in srgb, var(--fg) 58%, transparent);
 }
@@ -842,7 +944,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   display: flex;
   gap: 12px;
   font-family: var(--font-mono), monospace;
-  font-size: 14px;
+  font-size: 15px;
   flex-wrap: wrap;
   align-items: center;
 }
@@ -2872,7 +2974,9 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 28px !important; padding-right: 28px !important }
   .pb-ai { grid-template-columns: 1fr !important; gap: 32px !important }
   .pb-ai { padding: 34px 28px !important }
-  h1, .pb-hero-h { font-size: 46px !important }
+  /* The hero headline steps 62/54/46 on its own schedule (split-hero
+     spec) — keep it out of the generic clamp. */
+  h1:not(.pb-hero-h) { font-size: 46px !important }
   h2 { font-size: 34px !important }
   /* The offer pane title moved from h2 to h3 for hierarchy; keep it on
      the h2 scale it always had. */
@@ -2936,7 +3040,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-navlinks { display: none !important }
   .pb-burger { display: flex }
   .pb-outcomes { grid-template-columns: 1fr; gap: 12px }
-  h1, .pb-hero-h { font-size: 34px !important; letter-spacing: -.025em !important }
+  h1:not(.pb-hero-h) { font-size: 34px !important; letter-spacing: -.025em !important }
   h2 { font-size: 27px !important }
   h3 { font-size: 24px !important }
   /* Headings that are h3 for hierarchy but deliberately not on the
@@ -3090,6 +3194,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   }
   .pb-wave > span { transform: scaleY(.18) !important }
   .bg-aurora, .bg-grid { animation: none !important }
+  .pb-hero-float { animation: none !important }
   .pb-drawer {
     transform: none;
     opacity: 0;

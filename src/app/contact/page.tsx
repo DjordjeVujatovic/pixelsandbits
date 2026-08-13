@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import { ContactHeader } from "@/components/Header";
 import ContactForm from "@/components/contact/ContactForm";
-import { AVAILABILITY } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "contact",
@@ -19,10 +18,6 @@ export default function ContactPage(): JSX.Element {
         <div className="pb-glow ct-glow" aria-hidden="true" />
         <main className="ct-main">
         <section className="ct-in ct-intro">
-          <div className="pb-avail">
-            <span className="pb-avail-dot" aria-hidden="true" />
-            <span className="pb-avail-label">{AVAILABILITY}</span>
-          </div>
           <div className="pb-kicker ct-intro-kicker">$ cat ./contact</div>
           <h1 className="ct-h1">Tell us what you&apos;re building.</h1>
           <p className="ct-lead">

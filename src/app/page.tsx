@@ -29,13 +29,12 @@ export default function HomePage(): JSX.Element {
           wrapper — the fixed drawer must not have a transformed ancestor. */}
       <div className="pb-recede">
         <main id="top" className="pb-main">
-        {/* Aurora field over a masked grid, confined to the hero band and
-            resolved by the fade. Full-bleed via the margin/padding trick;
-            pulled up behind the translucent sticky header. */}
+        {/* Split-ground hero band, full-bleed via the margin/padding
+            trick and pulled up behind the transparent sticky header. The
+            hero paints its own grounds (dark left / lime right), so the
+            old aurora layers are gone; a faint lime radial inside the
+            left cell replaces them. */}
         <section className="pb-hero-wrap">
-          <span className="bgL bg-aurora" aria-hidden="true" />
-          <span className="bgL bg-grid" aria-hidden="true" />
-          <span className="bgL bg-fade" aria-hidden="true" />
           <Hero />
           <ClientStrip />
         </section>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AVAILABILITY, CTA_LABEL } from "@/lib/content";
+import { CTA_LABEL } from "@/lib/content";
 
 /* Single source of truth for section nav: rendered links, the drawer,
    the contact capsule, the scroll observer and the pill index all derive
@@ -16,15 +16,23 @@ const NAV_ITEMS = [
   { id: "track-record", label: "track-record" },
 ];
 
-function useCompact(): boolean {
-  const [compact, setCompact] = useState(false);
+/* Two thresholds off one listener: `top` (scrollY ≤ 8) drives the
+   transparent-over-hero state, `compact` (scrollY > 40) the padding
+   shrink. */
+function useScrollState(): { compact: boolean; top: boolean } {
+  const [state, setState] = useState({ compact: false, top: true });
   useEffect(() => {
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
-        setCompact((window.scrollY || 0) > 40);
+        const y = window.scrollY || 0;
+        setState((s) => {
+          const compact = y > 40;
+          const top = y <= 8;
+          return s.compact === compact && s.top === top ? s : { compact, top };
+        });
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -34,7 +42,7 @@ function useCompact(): boolean {
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
-  return compact;
+  return state;
 }
 
 function Brand({ href }: { href: string }): JSX.Element {
@@ -219,10 +227,6 @@ function NavDrawer({
           <Link className="pb-dcta" href="/contact" onClick={close}>
             {CTA_LABEL} →
           </Link>
-          <div className="pb-dmeta">
-            <span className="pb-ddot" aria-hidden="true" />
-            {AVAILABILITY}
-          </div>
         </div>
       </nav>
     </>
@@ -235,7 +239,7 @@ interface Pill {
 }
 
 export function HomeHeader(): JSX.Element {
-  const compact = useCompact();
+  const { compact, top } = useScrollState();
   const drawer = useDrawer();
   const [active, setActive] = useState<string>("");
   const [pill, setPill] = useState<Pill | null>(null);
@@ -272,7 +276,21 @@ export function HomeHeader(): JSX.Element {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) setActive(e.target.id);
+          if (e.isIntersecting) {
+            setActive(e.target.id);
+            return;
+          }
+          // The first section exiting downward means we scrolled back
+          // up into the hero: nothing is current, drop the highlight.
+          // Judged from the exit entry's own rect (top near the band's
+          // 50vh bottom edge, vs. far negative when exiting upward) —
+          // live position reads race the enter event at the same line.
+          if (
+            e.target === els[0] &&
+            e.boundingClientRect.top > window.innerHeight * 0.4
+          ) {
+            setActive("");
+          }
         });
       },
       { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
@@ -291,7 +309,9 @@ export function HomeHeader(): JSX.Element {
 
   return (
     <>
-      <header className={`pb-header${compact ? " pb-compact" : ""}`}>
+      <header
+        className={`pb-header${compact ? " pb-compact" : ""}${top ? " pb-navtop" : ""}`}
+      >
         <nav className="pb-nav">
           <Brand href="/" />
           <div className="pb-spacer" />

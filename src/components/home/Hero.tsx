@@ -15,10 +15,15 @@ const FACTS: { v: string; k: string; cyan?: boolean }[] = [
   { v: "Fortune 500", k: "enterprise stacks and legacy systems", cyan: true },
 ];
 
+/* Split-ground hero: dark left cell carries the copy column, the right
+   cell is a lime gradient flood, and the Engagement terminal straddles
+   the seam. The seat/float split is deliberate — the outer div owns the
+   centering translate, the inner div owns the float keyframes; putting
+   both transforms on one element would overwrite the centering. */
 export default function Hero(): JSX.Element {
   return (
     <section className="pb-hero">
-      <div className="pb-in pb-hero-copy">
+      <div className="pb-in pb-hero-left">
         <h1 className="pb-hero-h">
           <span className="pb-hero-l1">From design to deployment,</span>
           <span className="pb-hero-h-accent">we do it all.</span>
@@ -43,14 +48,6 @@ export default function Hero(): JSX.Element {
             </div>
           ))}
         </dl>
-      </div>
-      {/* The panel and the CTAs are separate grid children so the
-          stacked (≤1199px) hero can order the terminal ABOVE the
-          buttons while desktop keeps them in the left column. */}
-      <div className="pb-in pb-hero-panel" style={{ animationDelay: ".15s" }}>
-        <Engagement />
-      </div>
-      <div className="pb-in pb-hero-ctas" style={{ animationDelay: ".08s" }}>
         <div className="pb-hero-btns">
           <Link className="pb-btn pb-btn-primary" href="/contact">
             {CTA_LABEL} <span className="pb-arrow">→</span>
@@ -58,6 +55,17 @@ export default function Hero(): JSX.Element {
           <a className="pb-btn pb-btn-ghost" href="#work">
             see the work <span className="pb-arrow">→</span>
           </a>
+        </div>
+      </div>
+      <div className="pb-hero-lime" aria-hidden="true">
+        <span className="pb-hero-amp">&amp;</span>
+      </div>
+      <div className="pb-hero-seat">
+        <div className="pb-hero-float">
+          <span className="pb-hero-shadow" aria-hidden="true" />
+          <div className="pb-in pb-hero-termin" style={{ animationDelay: ".15s" }}>
+            <Engagement />
+          </div>
         </div>
       </div>
     </section>

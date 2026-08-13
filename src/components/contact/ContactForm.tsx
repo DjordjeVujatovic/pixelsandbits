@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import {
-  AVAILABILITY,
   CONTACT_BUDGETS,
   CONTACT_KINDS,
   CONTACT_LOG,
@@ -320,9 +319,6 @@ export default function ContactForm(): JSX.Element {
                 say so and point you somewhere better.
               </p>
               <div className="ct-recap">
-                {/* Same string as the hero ribbon, so the two can never
-                    contradict each other. */}
-                <span className="ct-tag">{AVAILABILITY}</span>
                 {recap.map((r) => (
                   <span className="ct-tag" key={r}>
                     {r}

@@ -3,11 +3,6 @@
 
 export const PIPELINE_STEPS = ["ideation", "design", "engineering", "deployment"];
 
-/* One rolling availability string, shared by the hero ribbon, the nav
-   drawer, the contact page and the form confirmation — so the four can
-   never contradict each other and nothing says "q3" in November. */
-export const AVAILABILITY = "next engagement starts in ~3 weeks";
-
 /* Every conversion CTA on both pages reads the same. */
 export const CTA_LABEL = "send us the problem";
 
