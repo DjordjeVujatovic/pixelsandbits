@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Reveal from "@/components/Reveal";
 import { EXTRA_CASES } from "@/lib/content";
 import type { CaseQuote } from "@/lib/content";
@@ -12,8 +12,9 @@ import CaseRedacted from "./CaseRedacted";
    state value (the index) behind a single in-flight rAF guard;
    everything else is CSS transitions keyed off classes. */
 const CARDS = 11;
-export const PER_CARD_DESKTOP = 340;
-export const PER_CARD_MOBILE = 460;
+/* design_handoff_client_portfolio: 30px is the design default peek gap
+   (24–46 all read well). */
+const PEEK_GAP = 30;
 
 /* Rail labels; chips shorten two names for width on mobile. */
 const RAIL: { label: string; chip?: string }[] = [
@@ -128,14 +129,81 @@ function QuoteBlock({ q }: { q: CaseQuote }): JSX.Element {
 
 export default function SelectedWork(): JSX.Element {
   const [index, setIndex] = useState(0);
+  const [ys, setYs] = useState<number[] | null>(null);
+  const [stageH, setStageH] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLElement>(null);
   const raf = useRef(0);
+  const indexRef = useRef(index);
+  indexRef.current = index;
+  const ysRef = useRef<number[] | null>(null);
+  ysRef.current = ys;
+  const hsRef = useRef<number[]>([]);
+  const settleRef = useRef(0);
+  const stageHRef = useRef(0);
+  stageHRef.current = stageH;
 
   const reduced = () =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* Measured vertical centering with peeking neighbors
+     (design_handoff_client_portfolio/README.md). The active card
+     centres on its real measured height (clamped to 12px from the top
+     when taller than the stage); neighbours cascade above and below
+     with a 30px gap and peek in through the stage's gradient fades, so
+     the frame is full whatever the card lengths. Re-measures on active
+     change, resize, stage resize and font load; a stage-height change
+     alters the card cap, so it re-measures once more a frame later. */
+  const measure = useCallback(() => {
+    const stage = deckRef.current;
+    if (!stage) return;
+    const H = stage.clientHeight;
+    if (!H) return;
+    const cards = Array.from(stage.children) as HTMLElement[];
+    const hs = cards.map((el) => el.offsetHeight);
+    const a = indexRef.current;
+    hsRef.current = hs;
+    const next = new Array(CARDS).fill(0);
+    next[a] = hs[a] >= H - 24 ? 16 : (H - hs[a]) / 2;
+    /* mobile first card hugs the chip rail instead of floating mid-stage
+       (nothing peeks above card 1 to fill that space) */
+    if (a === 0 && window.matchMedia("(max-width: 899px)").matches) {
+      next[0] = Math.min(next[0], 24);
+    }
+    for (let i = a - 1; i >= 0; i--) next[i] = next[i + 1] - PEEK_GAP - hs[i];
+    for (let i = a + 1; i < CARDS; i++) next[i] = next[i - 1] + hs[i - 1] + PEEK_GAP;
+    const prev = ysRef.current;
+    const hChanged = stageHRef.current !== H;
+    const changed = !prev || next.some((y, i) => Math.abs(y - prev[i]) > 1);
+    if (changed || hChanged) {
+      setYs(next);
+      setStageH(H);
+      if (hChanged) requestAnimationFrame(() => measure());
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    measure();
+  }, [index, measure]);
+
+  useEffect(() => {
+    const stage = deckRef.current;
+    if (!stage) return;
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(stage);
+    const onResize = () => measure();
+    window.addEventListener("resize", onResize);
+    document.fonts?.ready.then(() => measure());
+    const late = window.setTimeout(() => measure(), 500);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", onResize);
+      window.clearTimeout(late);
+    };
+  }, [measure]);
+
+  // scroll → active index off progress through the section's runway
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -144,11 +212,35 @@ export default function SelectedWork(): JSX.Element {
       raf.current = requestAnimationFrame(() => {
         raf.current = 0;
         const sr = section.getBoundingClientRect();
-        const travel = sr.height - window.innerHeight;
+        const travel = section.offsetHeight - window.innerHeight;
         if (travel <= 0) return;
         const p = Math.min(1, Math.max(0, -sr.top / travel));
-        const i = Math.min(CARDS - 1, Math.floor(p * CARDS * 0.999));
+        const i = Math.min(CARDS - 1, Math.floor(p * CARDS));
         setIndex((prev) => (prev === i ? prev : i));
+
+        /* Mobile last card: arrive centred like every card, then settle
+           toward the bottom anchor through the final slice, landing at
+           max(16, H - h - 16) exactly when the pin releases — a tight
+           handoff without the card sitting awkwardly low while you
+           read it. Written through the DOM, never per-frame state. */
+        const deck = deckRef.current;
+        const base = ysRef.current;
+        const hs = hsRef.current;
+        const H = stageHRef.current;
+        if (!deck || !base || !hs.length || !H) return;
+        const mobile = window.matchMedia("(max-width: 899px)").matches;
+        let delta = 0;
+        if (mobile && i === CARDS - 1) {
+          const t = Math.min(1, Math.max(0, p * CARDS - (CARDS - 1)));
+          const bottomY = Math.max(16, H - hs[CARDS - 1] - 16);
+          delta = (bottomY - base[CARDS - 1]) * t;
+        }
+        if (Math.abs(delta - settleRef.current) > 0.5) {
+          settleRef.current = delta;
+          Array.from(deck.children).forEach((el, k) => {
+            (el as HTMLElement).style.transform = `translateY(${Math.round(base[k] + delta)}px)`;
+          });
+        }
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -164,7 +256,8 @@ export default function SelectedWork(): JSX.Element {
     };
   }, []);
 
-  // Parked cards are decoration: hidden from AT and out of the tab order.
+  // Non-active cards are pointer-events: none decoration — keep them
+  // out of the accessibility tree and tab order too.
   useEffect(() => {
     const deck = deckRef.current;
     if (!deck) return;
@@ -175,27 +268,8 @@ export default function SelectedWork(): JSX.Element {
     });
   }, [index]);
 
-  // The mobile ghost stack positions off the ACTIVE card's measured
-  // edges (published as CSS vars) so short and tall cards alike get a
-  // tucked-behind peek instead of deck-edge gaps.
-  useEffect(() => {
-    const deck = deckRef.current;
-    if (!deck) return;
-    const setVars = () => {
-      const act = deck.children[index] as HTMLElement | undefined;
-      const card = act?.firstElementChild as HTMLElement | undefined;
-      if (!card) return;
-      const h = card.offsetHeight;
-      const top = Math.max(0, (deck.clientHeight - h) / 2);
-      deck.style.setProperty("--act-top", `${Math.round(top)}px`);
-      deck.style.setProperty("--act-bottom", `${Math.round(top + h)}px`);
-    };
-    setVars();
-    window.addEventListener("resize", setVars);
-    return () => window.removeEventListener("resize", setVars);
-  }, [index]);
-
-  // The active chip auto-centres in the strip as the deck advances.
+  // The active chip auto-centres in the rail (never scrollIntoView —
+  // it can scroll the page vertically).
   useEffect(() => {
     const strip = stripRef.current;
     if (!strip || strip.offsetWidth === 0) return;
@@ -207,32 +281,41 @@ export default function SelectedWork(): JSX.Element {
     });
   }, [index]);
 
-  /* Lands mid-slice (the 0.35) rather than on its boundary. Never
-     scrollIntoView — the sticky stage would fight it. */
+  // Index row / chip click → jump to the middle of that card's slice.
   const goTo = useCallback((k: number) => {
     const section = sectionRef.current;
     if (!section) return;
-    const sr = section.getBoundingClientRect();
-    const travel = sr.height - window.innerHeight;
-    const top = sr.top + window.scrollY + travel * ((k + 0.35) / CARDS);
-    window.scrollTo({ top, behavior: reduced() ? "auto" : "smooth" });
+    const travel = section.offsetHeight - window.innerHeight;
+    const top = section.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: top + ((k + 0.5) / CARDS) * travel,
+      behavior: reduced() ? "auto" : "smooth",
+    });
   }, []);
 
+  // Skip pill: land just past the section's runway.
   const skip = useCallback(() => {
-    const next = document.getElementById("process");
-    if (!next) return;
-    const top = next.getBoundingClientRect().top + window.scrollY - 48;
-    window.scrollTo({ top, behavior: reduced() ? "auto" : "smooth" });
+    const section = sectionRef.current;
+    if (!section) return;
+    const bottom = section.getBoundingClientRect().bottom + window.scrollY;
+    window.scrollTo({
+      top: bottom - window.innerHeight + 10,
+      behavior: reduced() ? "auto" : "smooth",
+    });
   }, []);
 
   const dkClass = (k: number): string => {
-    // The last card marks itself so mobile can settle it lower into the
-    // space the vanished skip button frees up.
-    if (k === index) return k === CARDS - 1 ? "dk on dk-last" : "dk on";
-    if (k === index - 1) return "dk prev";
-    if (k === index + 1) return "dk next";
-    return k < index ? "dk far-up" : "dk far-down";
+    if (k === index) return "dk on";
+    return Math.abs(k - index) === 1 ? "dk near" : "dk far";
   };
+
+  /* Pre-measure defaults from the prototype: first card near the top,
+     the rest parked far below. */
+  const dkStyle = (k: number): React.CSSProperties => ({
+    transform: `translateY(${Math.round(ys?.[k] ?? (k === 0 ? 60 : 1600))}px)`,
+    maxHeight: stageH ? stageH - 20 : undefined,
+    overflowY: k === index ? "auto" : "hidden",
+  });
 
   const railButton = (k: number, chip: boolean): JSX.Element => (
     <button
@@ -255,9 +338,7 @@ export default function SelectedWork(): JSX.Element {
           <div className="stg-side">
             <Reveal variant="rev">
               <div className="intro">
-                <div className="pb-kicker" style={{ marginBottom: 18 }}>
-                  $ cat ./client-portfolio
-                </div>
+                <div className="pb-kicker">$ cat ./client-portfolio</div>
                 <h2 className="sr-h">The companies we have built inside.</h2>
                 <p className="sr-lead">
                   Crypto exchanges, frontier AI labs, a Fortune 500 retailer,
@@ -282,11 +363,11 @@ export default function SelectedWork(): JSX.Element {
             </nav>
 
             <div className="deck" ref={deckRef}>
-              <div className={dkClass(0)}>
+              <div className={dkClass(0)} style={dkStyle(0)}>
                 <CaseRedacted />
               </div>
 
-              <div className={dkClass(1)}>
+              <div className={dkClass(1)} style={dkStyle(1)}>
                 <article className="pb-feature">
                   <div className="pb-feature-side">
                     <span className="pb-case-num">CASE_02</span>
@@ -324,7 +405,7 @@ export default function SelectedWork(): JSX.Element {
               </div>
 
               {CASES.map((c, i) => (
-                <div className={dkClass(i + 2)} key={c.num}>
+                <div className={dkClass(i + 2)} style={dkStyle(i + 2)} key={c.num}>
                   <article className="pb-card pb-case">
                     <div className="pb-case-left">
                       <span className="pb-case-num">{c.num}</span>
@@ -355,7 +436,7 @@ export default function SelectedWork(): JSX.Element {
               ))}
 
               {EXTRA_CASES.map((c, i) => (
-                <div className={dkClass(i + 5)} key={c.num}>
+                <div className={dkClass(i + 5)} style={dkStyle(i + 5)} key={c.num}>
                   <article className="pb-card pb-case std2">
                     <div className="std2-head">
                       <span className="pb-case-num">{c.num}</span>

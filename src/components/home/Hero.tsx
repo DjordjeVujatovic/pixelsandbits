@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AVAILABILITY, CTA_LABEL } from "@/lib/content";
+import { CTA_LABEL } from "@/lib/content";
 import Engagement from "./Engagement";
 
 /* HERO_left_column.md — the disciplines run, one line of argument and a
@@ -18,11 +18,7 @@ const FACTS: { v: string; k: string; cyan?: boolean }[] = [
 export default function Hero(): JSX.Element {
   return (
     <section className="pb-hero">
-      <div className="pb-in">
-        <div className="pb-avail">
-          <span className="pb-avail-dot" aria-hidden="true" />
-          <span className="pb-avail-label">{AVAILABILITY}</span>
-        </div>
+      <div className="pb-in pb-hero-copy">
         <h1 className="pb-hero-h">
           <span className="pb-hero-l1">Your LLM demo,</span>
           <span className="pb-hero-h-accent">
@@ -41,11 +37,6 @@ export default function Hero(): JSX.Element {
             </li>
           ))}
         </ul>
-        <p className="pb-runsub">
-          One team for the whole arc. No handover between a design studio, a
-          dev shop and an AI consultancy — because that seam is where products
-          die.
-        </p>
         <dl className="pb-facts">
           {FACTS.map((f) => (
             <div className="pb-fact" key={f.v}>
@@ -54,6 +45,14 @@ export default function Hero(): JSX.Element {
             </div>
           ))}
         </dl>
+      </div>
+      {/* The panel and the CTAs are separate grid children so the
+          stacked (≤1199px) hero can order the terminal ABOVE the
+          buttons while desktop keeps them in the left column. */}
+      <div className="pb-in pb-hero-panel" style={{ animationDelay: ".15s" }}>
+        <Engagement />
+      </div>
+      <div className="pb-in pb-hero-ctas" style={{ animationDelay: ".08s" }}>
         <div className="pb-hero-btns">
           <Link className="pb-btn pb-btn-primary" href="/contact">
             {CTA_LABEL} <span className="pb-arrow">→</span>
@@ -62,9 +61,6 @@ export default function Hero(): JSX.Element {
             see the work <span className="pb-arrow">→</span>
           </a>
         </div>
-      </div>
-      <div className="pb-in" style={{ animationDelay: ".15s" }}>
-        <Engagement />
       </div>
     </section>
   );

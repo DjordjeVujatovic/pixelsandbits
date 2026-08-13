@@ -597,9 +597,16 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   padding: 76px 0 52px;
   display: grid;
   grid-template-columns: 1.08fr .92fr;
-  gap: 56px;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "copy panel"
+    "ctas panel";
+  gap: 0 56px;
   align-items: center;
 }
+.pb-hero-copy { grid-area: copy; align-self: end }
+.pb-hero-ctas { grid-area: ctas; align-self: start }
+.pb-hero-panel { grid-area: panel; align-self: center }
 /* Taller hero on desktop, and more horizontal room for the terminal once
    the column is wide enough that the headline still holds one line
    (owner request, 2026-08-10; raised again 2026-08-10). Bottom padding
@@ -613,7 +620,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .pb-hero { padding: 44px 0 24px }
 }
 @media (min-width: 1420px) {
-  .pb-hero { grid-template-columns: 1fr 1.14fr; gap: 64px }
+  .pb-hero { grid-template-columns: 1fr 1.14fr; gap: 0 64px }
 }
 /* iPad band: every iPad width — 744/820/1024 portrait and 1180
    landscape — sits above the 960px collapse, leaving a squeezed text
@@ -623,14 +630,18 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 @media (max-width: 1199px) {
   .pb-hero {
     grid-template-columns: 1fr;
-    gap: 36px;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "copy"
+      "panel"
+      "ctas";
+    gap: 20px;
     align-items: start;
-    /* Tight to the nav on mobile/tablet (owner request, 2026-08-10) —
-       the stacked hero is tall enough without dead air up top. */
-    padding-top: 24px;
+    /* Breathing room under the nav, balanced against the terminal
+       clearing the fold on tall phones. */
+    padding-top: 44px;
   }
   .pb-hero .pb-hero-h { font-size: 54px }
-  .pb-runsub { max-width: 640px }
   /* The terminal spans the full column (like the client strip below it)
      so the single-column hero doesn't leave a void on the right. */
 }
@@ -776,20 +787,13 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-rw { display: inline-flex; align-items: baseline; gap: 9px; color: var(--fg-strong) }
 .pb-rsep { color: color-mix(in srgb, var(--acc) 55%, transparent) }
 
-.pb-runsub {
-  margin: 12px 0 0;
-  font-size: 14px;
-  line-height: 1.55;
-  color: color-mix(in srgb, var(--fg) 55%, transparent);
-  max-width: 430px;
-}
 
 .pb-facts {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px 22px;
-  margin: 18px 0 18px;
-  padding-top: 17px;
+  margin: 14px 0 14px;
+  padding-top: 15px;
   border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
 }
 .pb-fact { display: flex; flex-direction: column; gap: 4px }
@@ -818,7 +822,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .pb-outcome-line { font-size: 14px }
   .pb-run { font-size: 11.5px; gap: 7px }
   .pb-rw { gap: 7px }
-  .pb-runsub { font-size: 13.5px }
   .pb-facts { gap: 13px 16px }
   .pb-fv { font-size: 16px }
   .pb-fk { font-size: 11.5px }
@@ -839,19 +842,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-term { position: relative }
 /* The one control under the engagement panel. Muted until hovered so it
    never competes with the CTA for the accent. */
-.pb-replay-row { display: flex; justify-content: flex-end; margin-top: 10px }
-.pb-replay {
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
-  color: color-mix(in srgb, var(--fg) 55%, transparent);
-  background: none;
-  border: 0;
-  cursor: pointer;
-  padding: 12px 6px;
-  min-height: 44px; /* tap target */
-  transition: color .2s ease;
-}
-.pb-replay:hover { color: var(--acc) }
 .pb-term-halo {
   position: absolute;
   inset: -30px -20px;
@@ -1446,55 +1436,69 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .fq-foot { gap: 8px }
 }
 
-/* ---------------- Selected work: one-at-a-time deck ----------------
-   PORTFOLIO_one_at_a_time.md — eleven cases, one visible at a time,
-   advanced by scroll while the stage pins. The section's own height IS
-   the pin's scroll travel; nothing inside is eleven screens tall. Cyan
-   here is reserved for the client quote blocks. */
+/* ---------------- Selected work: measured deck ----------------
+   design_handoff_client_portfolio — measured vertical centering with
+   peeking neighbors. The section is a scroll runway; a viewport-height
+   sticky pin holds the chrome; the card stage positions every card
+   absolutely and moves it ONLY via translateY computed from real
+   measured heights (in SelectedWork.tsx). Neighbours peek in through
+   56px gradient fades, so the frame is full whatever the card lengths.
+   One mechanic at every breakpoint; 900px switches the chrome (left
+   index column vs chip rail). */
 
-.pf2 { position: relative; height: calc(11 * 340px + 620px) }
+.pf2 { position: relative; height: calc(11 * 80vh + 100vh) } /* the runway */
 
-/* One screen tall, centring its own content — auto height left ~700px
-   of dead space under the section on tall viewports. dvh, not vh: iOS
-   Safari's address-bar collapse changes vh mid-scroll and the pinned
-   block jumps (FIX_stage_full_height.md). */
 .stg-sticky {
   position: sticky;
   top: 0;
-  height: 100dvh;
-  display: flex;
-  /* Top-aligned, not centred: centring made the air above the kicker
-     scale with the viewport (~180px at 900, ~230 at 1000). A fixed
-     88px reads as rhythm on every screen; spare height falls below
-     the content where the section is ending anyway. */
-  align-items: flex-start;
-  padding: 88px 0 24px;
+  height: 100dvh; /* dvh — iOS address-bar collapse must not jump the pin */
+  overflow: hidden;
 }
-.stg-sticky > * { width: 100% } /* the flex child must still span the column */
-/* center, not start — the active card and the rail share one vertical axis.
-   420px fixed left column (WORK_section_spacing.md): the index is a list
-   of fixed-length names and must not rescale with the card; minmax(0,1fr)
-   on the right is required — a bare 1fr lets card content overflow the
-   track. */
-.stg { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 72px; align-items: center }
 
-.sr-h { font-size: 37px; line-height: 1.06; letter-spacing: -.036em; font-weight: 600; margin: 0 }
+/* desktop chrome: left column + stage */
+.stg {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(340px, 430px) 1fr;
+  gap: 5vw;
+  align-items: center;
+}
+
+/* The left column scales with viewport height and must never hard-clip
+   on 700–800px laptops: clamp()ed type and margins, with an
+   internally-scrolling index as the last resort. */
+.stg-side {
+  min-height: 0;
+  max-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.stg-side > .pb-rev { display: flex; flex-direction: column; min-height: 0 }
+.intro .pb-kicker { font-size: clamp(12px, 1.8vh, 14px); margin-bottom: clamp(10px, 2vh, 18px) }
+.sr-h { font-size: clamp(28px, 5vh, 46px); line-height: 1.06; letter-spacing: -.036em; font-weight: 600; margin: 0 }
 .sr-lead {
-  margin: 14px 0 0;
-  font-size: 14.5px;
+  margin: clamp(8px, 2vh, 14px) 0 0;
+  font-size: clamp(14px, 2vh, 16.5px);
   line-height: 1.68;
   color: color-mix(in srgb, var(--fg) 58%, transparent);
 }
 
-/* ---------- the rail (desktop) ---------- */
-.stg-idx { margin-top: 20px; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent) }
+.stg-idx {
+  margin-top: clamp(12px, 2.5vh, 20px);
+  border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
 .si {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
   text-align: left;
-  padding: 7px 0;
+  flex-shrink: 0;
+  padding: clamp(6px, 1.2vh, 12px) 10px;
   border: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
   background: none;
@@ -1518,7 +1522,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .si:hover { color: color-mix(in srgb, var(--fg) 74%, transparent) }
 .si.past { color: color-mix(in srgb, var(--fg) 50%, transparent) }
 .si.past b { color: color-mix(in srgb, var(--acc) 42%, transparent) }
-.si.on { padding-left: 12px; color: var(--fg-strong) }
+.si.on { padding-left: 22px; color: var(--fg-strong) }
 .si.on b { color: var(--acc) }
 .si.on::before {
   content: "";
@@ -1537,54 +1541,74 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   display: flex;
   align-items: center;
   gap: 11px;
-  margin-top: 15px;
+  margin-top: clamp(10px, 2vh, 15px);
   font-family: var(--font-mono), monospace;
   font-size: 10px;
   color: color-mix(in srgb, var(--fg) 40%, transparent);
 }
 .stg-bar { flex: 1; height: 2px; border-radius: 2px; background: color-mix(in srgb, var(--fg) 10%, transparent); overflow: hidden }
-.stg-bar > i { display: block; height: 2px; border-radius: 2px; background: var(--acc); transition: width .4s cubic-bezier(.32,.72,0,1) }
+.stg-bar > i { display: block; height: 2px; border-radius: 2px; background: var(--acc); transition: width .4s ease }
 
-/* ---------- the deck ---------- */
-.deck { position: relative; min-height: 460px } /* fills what the stage gives it */
-
-/* every card is pinned to the deck's middle, so cards of different
-   heights all sit on one axis — and that axis lines up with the rail.
-   translateY(-50%) is the centring baseline; the neighbour offset is a
-   SECOND translateY on top of it. */
-.dk {
+/* ---------- the card stage ---------- */
+.deck {
+  position: relative;
+  overflow: hidden;
+  height: min(76vh, 800px);
+  align-self: center;
+}
+/* the fades the neighbours peek through */
+.deck::before,
+.deck::after {
+  content: "";
   position: absolute;
   left: 0;
   right: 0;
-  top: 50%;
-  opacity: 0;
+  height: 56px;
+  z-index: 5;
   pointer-events: none;
-  transform-origin: 50% 50%;
-  transform: translateY(-50%) translateY(120px) scale(.9);
-  filter: blur(7px);
-  transition: opacity .46s ease, transform .6s cubic-bezier(.32,.72,0,1), filter .44s ease;
 }
-.dk.on { opacity: 1; transform: translateY(-50%); filter: none; pointer-events: auto; z-index: 3 }
-.dk.prev { opacity: .22; transform: translateY(-50%) translateY(-78px) scale(.925); filter: blur(3px); z-index: 1 }
-/* 78px (was 96) keeps the tallest card's next-ghost inside the stage on
-   short laptops */
-.dk.next { opacity: .26; transform: translateY(-50%) translateY(78px) scale(.94); filter: blur(3px); z-index: 1 }
-.dk.far-up { opacity: 0; transform: translateY(-50%) translateY(-150px) scale(.88); filter: blur(7px) }
-.dk.far-down { opacity: 0; transform: translateY(-50%) translateY(170px) scale(.88); filter: blur(7px) }
-/* the parked cards are decoration */
-.dk.prev *, .dk.next * { pointer-events: none }
-/* the active card is lifted clear of the stack */
-.dk.on > * { box-shadow: 0 26px 60px rgba(0,0,0,.55) }
+.deck::before { top: 0; background: linear-gradient(to bottom, var(--bg), transparent) }
+.deck::after { bottom: 0; background: linear-gradient(to top, var(--bg), transparent) }
+
+/* Cards: absolute, moved only via the measured translateY (inline).
+   The active card may scroll internally when taller than the stage. */
+.dk {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: .06;
+  filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 1;
+  scrollbar-width: thin;
+  transition: transform .65s cubic-bezier(.22, .9, .26, 1), opacity .45s ease, filter .45s ease;
+}
+.dk.near { opacity: .3 }
+/* the active card renders ABOVE the fade masks (z5) — otherwise a
+   tall card's top edge gets darkened and reads as cut off */
+.dk.on { opacity: 1; filter: none; pointer-events: auto; z-index: 6 }
+.dk > article { transition: border-color .45s ease }
+.dk.on > article {
+  border-color: color-mix(in srgb, var(--acc) 45%, transparent);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, .55);
+}
+.dk.near > article,
+.dk.far > article { border-color: rgba(255, 255, 255, .08) }
 
 /* Cards must be OPAQUE — a faded neighbour parked behind a translucent
    active card bleeds its text through. Accents mix over the opaque
    base, never over transparent. */
 .deck .pb-card, .deck .pb-case { background: #0a0d13 }
+/* The legacy card hover lifts by -3px and swaps to a TRANSLUCENT tint —
+   inside the stage the lift clips the top edge against the overflow
+   boundary and the tint lets ghosts bleed through. Neither applies in
+   the deck. */
+.deck .pb-card:hover { transform: none; background: #0a0d13 }
 .deck .pb-redcard { background: color-mix(in srgb, var(--acc) 5%, #0a0d13) !important }
 .deck .pb-feature { background: color-mix(in srgb, var(--acc) 4%, #0a0d13) }
 
-/* Deck cards are a single ~950px column at desktop — the same
-   single-column internals the cards use below 960px viewports. */
+/* Deck cards are a single column — the stats rows get the full width. */
 .deck .pb-case, .deck .pb-redcard { grid-template-columns: 1fr; gap: 24px; padding: 28px }
 .deck .pb-redcard-stats { flex-direction: row; flex-wrap: wrap; gap: 20px 36px }
 .deck .pb-feature { grid-template-columns: 1fr }
@@ -1599,7 +1623,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 
 /* the standard card for cases 06–11: one column, no stats block */
 .std2 { display: flex; flex-direction: column; gap: 13px }
-.std2-head { display: flex; align-items: center; gap: 12px }
+.std2-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
 .std2-tag {
   font-family: var(--font-mono), monospace;
   font-size: 9.5px;
@@ -1641,78 +1665,59 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .qb-name { font-size: 12.5px; font-weight: 600; color: var(--fg-strong) }
 .qb-role { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 45%, transparent) }
 
-/* Short-viewport breakpoint: the stage's content box is 100dvh − 94px —
-   ~606px at 700px tall — and the rail is ~620px. Vertical constraint,
-   so a HEIGHT query. Only the rail's chrome and the ghost offsets give
-   way; the card's own type never scales down — it is the content. */
-@media (max-height: 820px) and (min-width: 1101px) {
-  .stg-sticky { padding: 40px 0 24px }
-  .stg-side .sr-h { font-size: 30px }
-  .stg-side .sr-lead { display: none } /* the least load-bearing line */
-  .stg-idx { margin-top: 14px }
-  .si { padding: 5px 0 }
-  .deck { min-height: 460px }
-  .dk.prev { transform: translateY(-50%) translateY(-62px) scale(.925) }
-  .dk.next { transform: translateY(-50%) translateY(64px) scale(.94) }
-}
-
-/* Desktop reading measure (WORK_section_spacing.md): cap the copy,
-   not the column — the stat figures need the full width. */
-/* Only where there's vertical room — the cap wraps paragraphs onto
-   more lines, and short laptops need the shorter card more than the
-   ideal measure. */
-@media (min-width: 1101px) and (min-height: 821px) {
+/* Desktop reading measure — only where there's vertical room; the cap
+   wraps paragraphs onto more lines and short laptops need the shorter
+   card. */
+@media (min-width: 900px) and (min-height: 821px) {
   .deck .pb-case-blurb,
   .deck .pb-case-detail,
   .deck .qb blockquote { max-width: 68ch }
 }
 
+/* the exit handoff: pull the process section into the sticky
+   viewport's spare bottom half so the runway ends near the content */
+@media (min-width: 900px) {
+  .pb-process { margin-top: min(0px, calc(40px - (100dvh - min(76vh, 800px)) / 2)) }
+}
+
 /* the strip + skip are mobile-only */
 .strip, .skip { display: none }
 
-/* ---------- mobile and tablet (≤1100px) ---------- */
-@media (max-width: 1100px) {
-  /* 460px of scroll per card: an iOS flick travels 400–900px, so one
-     gentle flick advances one card and a hard one two — instead of the
-     2–4 the old 200px slices allowed (owner: same deck, less
-     sensitive). */
-  .pf2 { height: calc(11 * 460px + 640px) }
-  /* The wrapper releases; the stage's grid row must span the section's
-     full height or sticky has no room to travel in. */
-  .stg-sticky { position: static; display: block; padding: 0; height: 100% }
-  .stg { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 0; align-items: start; height: 100% }
-  /* the chip strip's intrinsic width (eleven unshrinkable chips) must
-     not inflate the grid track */
-  .stg-stage { min-width: 0 }
-  /* the heading scrolls away; only the stage pins */
-  .intro { padding: 30px 0 20px }
+/* ---------- mobile chrome (<900px): chip rail / stage / skip ---------- */
+@media (max-width: 899px) {
+  /* the heading scrolls away before the pin; the pinned viewport is
+     the rail, the stage and the skip pill */
+  /* the wrapper releases but keeps the full runway height so the
+     stage's sticky has room to travel below the intro */
+  .stg-sticky { position: static; height: 100%; overflow: visible }
+  .stg { display: flex; flex-direction: column; height: 100% }
   .stg-idx, .stg-prog { display: none }
-  /* Full-height flex column: strip at the top, the deck filling the
-     middle (cards centre on the SCREEN, not a fixed box), and the skip
-     button always at the bottom edge — cards can no longer sit on it. */
+  .stg-side { max-height: none; display: block }
+  .stg-side > .pb-rev { display: block }
+  .intro { padding: 26px 0 18px }
+  .sr-h { font-size: 26px }
+  .sr-lead { font-size: 14px; margin-top: 10px }
+
   .stg-stage {
     position: sticky;
     top: 0;
     height: 100dvh;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 14px;
     padding: 64px 0 14px; /* clears the translucent header */
-    align-self: start;
+    min-width: 0;
   }
-  .strip { flex: none }
-  .sr-h { font-size: 26px }
-  .sr-lead { font-size: 14px }
+  .deck { height: auto; min-height: 0; align-self: stretch }
 
-  /* the rail becomes a horizontal chip strip */
+  /* the index becomes a horizontal chip rail */
   .strip {
     display: flex;
     gap: 6px;
     overflow-x: auto;
     scrollbar-width: none;
-    padding: 0 18px 12px;
+    padding: 0 18px;
     margin: 0 -18px;
-    /* MOBILE_audit finding 3: the cut chip reads as a rendering error
-       without a fade */
     -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent);
             mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent);
   }
@@ -1747,43 +1752,13 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .chip.on b { color: color-mix(in srgb, var(--ink) 60%, transparent) }
   .chip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
 
-  /* the deck at phone offsets — neighbours clearly visible, not smudges.
-     Capped: cards centre within the cap, not across the whole screen —
-     uncapped, tall viewports left a ~300px void between the chips and
-     the card (owner report). Leftover space falls BELOW the deck, where
-     the skip button anchors the bottom edge. */
-  .deck { flex: 1; min-height: 0; max-height: 760px }
-  /* the ghosts may not spill past the stage into the next section */
-  .stg-stage { overflow: clip }
-  /* A real stack: the active card centres (the component publishes its
-     measured top/bottom as --act-top/--act-bottom), and the ghosts tuck
-     BEHIND it with only an edge showing — prev peeks ~44px above the
-     active top, next ~44px below its bottom, whatever the card heights.
-     No deck-edge anchoring, no giant gaps (owner request). */
-  .dk {
-    top: 0;
-    transform: translateY(calc(var(--act-bottom, 480px) + 84px)) translateY(-100%) scale(.9);
-    filter: blur(6px);
-    transition: opacity .42s ease, transform .54s cubic-bezier(.32,.72,0,1), filter .4s ease;
-  }
-  .dk.on { opacity: 1; transform: translateY(var(--act-top, 40px)); filter: none }
-  .dk.prev { opacity: .5; transform: translateY(calc(var(--act-top, 40px) - 52px)) scale(.94); filter: blur(1.5px) }
-  .dk.next { opacity: .56; transform: translateY(calc(var(--act-bottom, 480px) + 52px)) translateY(-100%) scale(.95); filter: blur(1.5px) }
-  .dk.far-up { opacity: 0; transform: translateY(calc(var(--act-top, 40px) - 72px)) scale(.9); filter: blur(6px) }
-  .dk.far-down { opacity: 0; transform: translateY(calc(var(--act-bottom, 480px) + 84px)) translateY(-100%) scale(.9); filter: blur(6px) }
-  .dk.on > * { box-shadow: 0 18px 44px rgba(0,0,0,.6) }
-
-  /* the skip button is what makes pinning acceptable */
+  /* the skip pill rides the bottom row */
   .skip {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     width: 100%;
-    margin-top: auto; /* stays at the screen's bottom edge */
-    flex: none;
-    position: relative;
-    z-index: 6; /* above any card spill — its blurred surface reads as a floor */
     padding: 12px;
     border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
     border-radius: 999px;
@@ -1794,34 +1769,40 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
     font-family: var(--font-mono), monospace;
     font-size: 12px;
     color: color-mix(in srgb, var(--fg) 62%, transparent);
+    transition: opacity .35s ease;
   }
   .skip:active { border-color: color-mix(in srgb, var(--acc) 50%, transparent); color: var(--acc) }
   .skip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
-  /* On the last card there is nothing left to skip — fade out but keep
-     the space so the flex column doesn't jump. */
-  .skip { transition: opacity .35s ease }
+  /* nothing left to skip on the last card */
   .skip.skip-gone { opacity: 0; visibility: hidden; pointer-events: none }
 
-  /* card trimming — height is the binding constraint while pinned */
+}
+/* Narrow cards — phones AND the 900–1100 desktop band, where the stage
+   column is just as tight. */
+@media (max-width: 1100px) {
   .deck .pb-card, .deck .pb-redcard, .deck .pb-case { padding: 18px 16px 20px }
   .deck .pb-feature-side { padding: 18px 16px 20px }
   .deck h3 { font-size: 18px }
   .deck .pb-case-blurb, .deck .pb-case-detail, .deck .pb-feature-body { font-size: 13.5px }
-  /* stats two-across, smaller */
   .deck .pb-case-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px }
   .deck .pb-case-figure { font-size: 16px }
   .deck .pb-case-figcap { font-size: 10px }
-  /* CASE_01 shows two stats on mobile */
   .deck .pb-redcard-stats { gap: 12px 22px }
   .deck .pb-redcard .pb-redstat:nth-child(3) { display: none }
   .deck .pb-redstat-figure { font-size: 16px }
-  /* CASE_02 feature stats three-across under the copy */
-  .deck .pb-feature-stats { display: grid; grid-template-columns: repeat(3, 1fr); border-right: 0 }
-  .deck .pb-fstat { padding: 12px 10px; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
+  .deck .pb-feature-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-right: 0 }
+  .deck .pb-fstat { min-width: 0; padding: 12px 8px; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
   .deck .pb-fstat:last-child { border-right: 0 }
+  .deck .pb-fstat > span:last-child { font-size: 11px }
   .deck .pb-fstat .pb-figure { font-size: 14px }
-  /* the redcard scan band is 100px at this width (the one sanctioned
-     difference in CASE_01) */
+}
+@media (max-width: 430px) {
+  .deck .pb-fstat .pb-figure { font-size: 11.5px }
+  .deck .pb-fstat { padding: 10px 6px }
+}
+/* the redcard scan band is 100px where the card is narrow (the one
+   sanctioned difference in CASE_01) */
+@media (max-width: 1100px) {
   .pb-redcard::after { height: 100px; top: -100px }
 }
 
@@ -2006,18 +1987,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    the process section up into that vacated air: it peeks beneath the
    last card during its scroll window, and after the unpin the gap
    between deck and process is breathing room, not a void. */
-@media (max-width: 1100px) {
-  .pb-process { margin-top: -180px }
-}
-/* Desktop version of the same fix: the top-aligned stage leaves its
-   spare height at the bottom, so the section's exit shows a
-   viewport-scaled void before the process heading. Content ends by
-   ~770px (88 pad + tallest card); everything below that is blank, and
-   the process section rises into it. Self-limiting: on short screens
-   the calc goes positive and min() clamps to no pull at all. */
-@media (min-width: 1101px) {
-  .pb-process { margin-top: min(0px, calc(770px - 100dvh)) }
-}
 
 .sc-head {
   display: flex;
@@ -2876,7 +2845,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 
 @media (max-width: 960px) {
   .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 28px !important; padding-right: 28px !important }
-  .pb-hero, .pb-ai { grid-template-columns: 1fr !important; gap: 32px !important }
+  .pb-ai { grid-template-columns: 1fr !important; gap: 32px !important }
   .pb-ai { padding: 34px 28px !important }
   h1, .pb-hero-h { font-size: 46px !important }
   h2 { font-size: 34px !important }
@@ -3038,12 +3007,13 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 }
 @media (max-width: 620px) {
   .k-h { font-size: 27px }
-  .k-band { grid-template-columns: 1fr }
-  .k-cell { padding: 22px 0 24px; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent) }
-  .k-cell:last-child { border-bottom: 0 }
-  .fig { font-size: 42px }
-  .fig-txt { font-size: 30px }
-  .lab { max-width: none }
+  /* 2×2 on phones (owner request) — inherits the ≤960 two-column grid;
+     only the sizing tightens. "Fortune 500" must fit a half column. */
+  .k-cell { padding: 18px 12px 20px }
+  .k-cell:nth-child(3), .k-cell:nth-child(4) { border-bottom: 0 }
+  .fig { font-size: 34px }
+  .fig-txt { font-size: 20px }
+  .lab { max-width: none; font-size: 12px }
   .close { padding: 30px 22px 28px; flex-direction: column; align-items: flex-start }
   .close-h { font-size: 27px }
   .close-act { width: 100%; flex-direction: column; gap: 8px }

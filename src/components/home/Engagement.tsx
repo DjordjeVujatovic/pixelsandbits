@@ -164,11 +164,6 @@ export default function Engagement(): JSX.Element {
     setPlaying(i < END); // landing on the finale rests there
   };
 
-  const replay = () => {
-    setStage(0);
-    setPlaying(true);
-  };
-
   const stepClass = (i: number): string => {
     if (stage === i) return " pb-pnow";
     if (stage > i) return " pb-pon";
@@ -459,15 +454,6 @@ export default function Engagement(): JSX.Element {
           </div>
         </div>
       </div>
-      {/* The one control under the panel. Hidden under reduced motion,
-          where the end state simply holds. */}
-      {!reduced ? (
-        <div className="pb-replay-row">
-          <button className="pb-replay" type="button" onClick={replay}>
-            replay the engagement <span aria-hidden="true">↻</span>
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 }
