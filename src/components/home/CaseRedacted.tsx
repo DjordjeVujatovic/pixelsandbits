@@ -39,7 +39,7 @@ function Decipher({ text, className }: { text: string; className?: string }): JS
   );
 }
 
-const HEADLINE = "reinforcement learning environments";
+const HEADLINE = "rl-environments";
 const PARA =
   "Currently embedded with a leading AI frontier model lab, building reinforcement learning environments. That is genuinely as much as we can say until the project ships. The client is named in the contract, the case study and, eventually, this card.";
 const STATS: [string, string][] = [
@@ -209,11 +209,21 @@ export default function CaseRedacted(): JSX.Element {
             UNDER NDA
           </span>
         </div>
-        <h3 className="pb-h-sm pb-case-h">
-          <span className="pb-redact" aria-label="client name withheld under NDA">
-            REDACTED
-          </span>{" "}
-          — <Decipher text={HEADLINE} />
+        <h3
+          className="pb-case-path"
+          aria-label="client name withheld under NDA — reinforcement learning environments"
+        >
+          {/* The company segment IS the redaction bar; the literal
+              [redacted] only shows if the bar treatment is removed. */}
+          <span className="pb-case-co pb-redact" aria-hidden="true">
+            [redacted]
+          </span>
+          <span className="pb-case-sep" aria-hidden="true">
+            /
+          </span>
+          <span className="pb-case-role" aria-hidden="true">
+            <Decipher text={HEADLINE} />
+          </span>
         </h3>
         <p className="pb-case-blurb">
           <Decipher text={PARA} />

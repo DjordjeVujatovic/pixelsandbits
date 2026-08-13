@@ -20,10 +20,8 @@ export default function Hero(): JSX.Element {
     <section className="pb-hero">
       <div className="pb-in pb-hero-copy">
         <h1 className="pb-hero-h">
-          <span className="pb-hero-l1">Your LLM demo,</span>
-          <span className="pb-hero-h-accent">
-            in production and in front of real operators.
-          </span>
+          <span className="pb-hero-l1">From design to deployment,</span>
+          <span className="pb-hero-h-accent">we do it all.</span>
         </h1>
         <ul className="pb-run">
           {RUN.map((w, i) => (

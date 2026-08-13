@@ -171,7 +171,10 @@ export interface CaseQuote {
 
 export const EXTRA_CASES: {
   num: string;
+  /* Plain phrasing — the heading's aria-label; the visual heading is
+     the mono path. */
   title: string;
+  path: { co: string; role: string };
   tag?: string;
   link?: { label: string; href: string };
   blurb: string;
@@ -183,6 +186,7 @@ export const EXTRA_CASES: {
   {
     num: "CASE_06",
     title: "ZeroDown — internal tools",
+    path: { co: "zerodown", role: "internal-tools" },
     tag: "ACQUIRED BY FLYHOMES",
     link: { label: "zerodown.com →", href: "https://zerodown.com" },
     blurb:
@@ -212,6 +216,7 @@ export const EXTRA_CASES: {
   {
     num: "CASE_07",
     title: "Apparel Impact Institute — climate data platform",
+    path: { co: "apparel-impact-institute", role: "climate-data" },
     tag: "NONPROFIT",
     link: { label: "apparelimpact.org →", href: "https://apparelimpact.org" },
     blurb:
@@ -235,6 +240,7 @@ export const EXTRA_CASES: {
   {
     num: "CASE_08",
     title: "Spindl — web3 attribution dashboard",
+    path: { co: "spindl", role: "web3-attribution" },
     tag: "ACQUIRED BY COINBASE",
     link: { label: "spindl.xyz →", href: "https://spindl.xyz" },
     blurb:
@@ -250,6 +256,8 @@ export const EXTRA_CASES: {
   {
     num: "CASE_09",
     title: "Certn — background check tools",
+    path: { co: "certn", role: "background-checks" },
+    tag: "IDENTITY VERIFICATION",
     link: { label: "certn.co →", href: "https://certn.co" },
     blurb:
       "Internal tools and dashboards for Certn, an identity verification and background checks company out of Victoria BC.",
@@ -264,6 +272,8 @@ export const EXTRA_CASES: {
   {
     num: "CASE_10",
     title: "Ditto — social list app",
+    path: { co: "ditto", role: "social-list-app" },
+    tag: "CONSUMER SOCIAL",
     link: { label: "onditto.com/list →", href: "https://onditto.com/list" },
     blurb:
       "Full-stack product engineering on Ditto's React Native social app: lists, comments and the social graph.",

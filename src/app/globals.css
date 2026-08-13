@@ -597,16 +597,22 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   padding: 76px 0 52px;
   display: grid;
   grid-template-columns: 1.08fr .92fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto;
   grid-template-areas:
     "copy panel"
     "ctas panel";
   gap: 0 56px;
   align-items: center;
+  /* The flexed hero is taller than its content on desktop; centre the
+     whole two-column cluster in the spare height instead of letting a
+     1fr row dump it all below the buttons (owner request 2026-08-13). */
+  align-content: center;
 }
 .pb-hero-copy { grid-area: copy; align-self: end }
 .pb-hero-ctas { grid-area: ctas; align-self: start }
-.pb-hero-panel { grid-area: panel; align-self: center }
+/* Top-aligned with the headline, not centred — the left column is
+   taller and a centred panel reads as sagging (owner request 2026-08-13). */
+.pb-hero-panel { grid-area: panel; align-self: start }
 /* Taller hero on desktop, and more horizontal room for the terminal once
    the column is wide enough that the headline still holds one line
    (owner request, 2026-08-10; raised again 2026-08-10). Bottom padding
@@ -616,8 +622,11 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 @media (min-width: 1200px) {
   /* Tight enough that the SHIPPED INSIDE strip stays above the fold on
      a 900px-tall viewport now the facts grid made the column taller
-     (owner request 2026-08-11). */
-  .pb-hero { padding: 44px 0 24px }
+     (owner request 2026-08-11). Asymmetric on purpose: with the cluster
+     centred in the flexed hero, the heavier bottom padding biases it
+     upward so the nav gap and the strip gap read as even
+     (owner request 2026-08-13). */
+  .pb-hero { padding: 16px 0 96px }
 }
 @media (min-width: 1420px) {
   .pb-hero { grid-template-columns: 1fr 1.14fr; gap: 0 64px }
@@ -1624,12 +1633,14 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 /* the standard card for cases 06–11: one column, no stats block */
 .std2 { display: flex; flex-direction: column; gap: 13px }
 .std2-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
+/* All case pills (NDA included) ride the second accent; lime stays
+   reserved for the stat figures. */
 .std2-tag {
   font-family: var(--font-mono), monospace;
   font-size: 9.5px;
   letter-spacing: .1em;
-  color: color-mix(in srgb, var(--acc) 90%, transparent);
-  border: 1px solid color-mix(in srgb, var(--acc) 36%, transparent);
+  color: color-mix(in srgb, var(--acc2) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acc2) 36%, transparent);
   border-radius: var(--r-pill);
   padding: 3px 9px;
   white-space: nowrap;
@@ -1644,7 +1655,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 .std2-bullets li::before { content: "—"; position: absolute; left: 0; color: color-mix(in srgb, var(--acc) 70%, transparent) }
 
-/* the client quote — the one cyan surface in this section */
+/* the client quote */
 .qb {
   margin: 4px 0 0;
   padding: 15px 17px 14px;
@@ -1826,6 +1837,20 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-case-figure { font-size: 28px }
 .pb-case-figcap { font-size: 12px; color: color-mix(in srgb, var(--fg) 45%, transparent); margin-top: 4px }
 .pb-case-detail { margin: 0; font-size: 15px; line-height: 1.7; color: color-mix(in srgb, var(--fg) 72%, transparent) }
+/* Case headings as path notation: company as directory, role as file.
+   Mono 500 on purpose — do not swap back to the sans face. Each segment
+   is one span, so wraps land at the separator, never mid-segment. */
+.pb-case-path {
+  display: flex; align-items: baseline; gap: 2px; flex-wrap: wrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 30px; letter-spacing: -.02em; font-weight: 500;
+  line-height: 1.15; margin: 0;
+}
+.pb-case-co { color: var(--fg-strong) }
+.pb-case-sep { color: color-mix(in srgb, var(--fg) 28%, transparent) }
+.pb-case-role { color: var(--acc) }
+@media (max-width: 960px) { .pb-case-path { font-size: 24px } }
+@media (max-width: 480px) { .pb-case-path { font-size: 20px } }
 .pb-figure { color: var(--acc) }
 
 /* Redacted card (CASE_01) */
@@ -1880,8 +1905,8 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   font-family: var(--font-mono), monospace;
   font-size: 10.5px;
   letter-spacing: .12em;
-  color: var(--acc);
-  border: 1px solid color-mix(in srgb, var(--acc) 40%, transparent);
+  color: var(--acc2);
+  border: 1px solid color-mix(in srgb, var(--acc2) 40%, transparent);
   border-radius: var(--r-pill);
   padding: 4px 10px;
   white-space: nowrap;
@@ -1890,7 +1915,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   width: 5px;
   height: 5px;
   border-radius: var(--r-pill);
-  background: var(--acc);
+  background: var(--acc2);
   display: block;
   animation: pb-tick 1.8s ease-in-out infinite;
 }

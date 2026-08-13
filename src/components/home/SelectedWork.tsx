@@ -55,7 +55,11 @@ function StatFigure({ stat }: { stat: CaseStat }): JSX.Element {
 
 const CASES: {
   num: string;
+  /* Plain phrasing — the heading's aria-label; the visual heading is
+     the mono path below. */
   title: string;
+  path: { co: string; role: string };
+  tag: string;
   blurb: string;
   meta?: string;
   link?: { label: string; href: string };
@@ -65,6 +69,8 @@ const CASES: {
   {
     num: "CASE_03",
     title: "Scotts Miracle-Gro — agentic lawn care app",
+    path: { co: "scotts-miracle-gro", role: "agentic-shopping" },
+    tag: "FORTUNE 500",
     blurb:
       "An agentic-first consumer app, built on Sierra, that helps Scotts Miracle-Gro customers take care of their lawns.",
     meta: "agentic app · iOS + Android",
@@ -79,6 +85,8 @@ const CASES: {
   {
     num: "CASE_04",
     title: "Coinbase — Onchain Summer frontend",
+    path: { co: "coinbase", role: "onchain-summer" },
+    tag: "CRYPTO EXCHANGE",
     blurb:
       "Frontend for Onchain Summer 2023, the multi-week festival that launched Base, Coinbase's Ethereum L2, with daily NFT drops from Coca-Cola, Atari and OpenSea.",
     link: { label: "coinbase.com →", href: "https://www.coinbase.com/" },
@@ -93,6 +101,8 @@ const CASES: {
   {
     num: "CASE_05",
     title: "Dapper Labs — design system",
+    path: { co: "dapper-labs", role: "design-system" },
+    tag: "SPORTS NFT PLATFORMS",
     blurb:
       "One design system across Dapper's sports products: NBA Top Shot, NFL All Day and their successors.",
     link: { label: "dapperlabs.com →", href: "https://www.dapperlabs.com/" },
@@ -369,8 +379,24 @@ export default function SelectedWork(): JSX.Element {
               <div className={dkClass(1)} style={dkStyle(1)}>
                 <article className="pb-feature">
                   <div className="pb-feature-side">
-                    <span className="pb-case-num">CASE_02</span>
-                    <h3 className="pb-h-md pb-feature-h">Decagon AI — forward deployed engineering</h3>
+                    <div className="std2-head">
+                      <span className="pb-case-num">CASE_02</span>
+                      <span className="std2-tag">AI AGENT PLATFORM</span>
+                    </div>
+                    <h3
+                      className="pb-case-path pb-feature-h"
+                      aria-label="Decagon AI — forward deployed engineering"
+                    >
+                      <span className="pb-case-co" aria-hidden="true">
+                        decagon-ai
+                      </span>
+                      <span className="pb-case-sep" aria-hidden="true">
+                        /
+                      </span>
+                      <span className="pb-case-role" aria-hidden="true">
+                        forward-deployed
+                      </span>
+                    </h3>
                     <p className="pb-case-blurb" style={{ marginBottom: 14 }}>
                       Forward deployed engineers at Decagon, embedded with
                       enterprise clients including Wealthsimple.
@@ -407,8 +433,21 @@ export default function SelectedWork(): JSX.Element {
                 <div className={dkClass(i + 2)} style={dkStyle(i + 2)} key={c.num}>
                   <article className="pb-card pb-case">
                     <div className="pb-case-left">
-                      <span className="pb-case-num">{c.num}</span>
-                      <h3 className="pb-h-sm pb-case-h">{c.title}</h3>
+                      <div className="std2-head">
+                        <span className="pb-case-num">{c.num}</span>
+                        <span className="std2-tag">{c.tag}</span>
+                      </div>
+                      <h3 className="pb-case-path" aria-label={c.title}>
+                        <span className="pb-case-co" aria-hidden="true">
+                          {c.path.co}
+                        </span>
+                        <span className="pb-case-sep" aria-hidden="true">
+                          /
+                        </span>
+                        <span className="pb-case-role" aria-hidden="true">
+                          {c.path.role}
+                        </span>
+                      </h3>
                       <p className="pb-case-blurb">{c.blurb}</p>
                       {c.meta ? <span className="pb-case-meta">{c.meta}</span> : null}
                       {c.link ? (
@@ -441,7 +480,17 @@ export default function SelectedWork(): JSX.Element {
                       <span className="pb-case-num">{c.num}</span>
                       {c.tag ? <span className="std2-tag">{c.tag}</span> : null}
                     </div>
-                    <h3 className="pb-h-sm pb-case-h">{c.title}</h3>
+                    <h3 className="pb-case-path" aria-label={c.title}>
+                      <span className="pb-case-co" aria-hidden="true">
+                        {c.path.co}
+                      </span>
+                      <span className="pb-case-sep" aria-hidden="true">
+                        /
+                      </span>
+                      <span className="pb-case-role" aria-hidden="true">
+                        {c.path.role}
+                      </span>
+                    </h3>
                     <p className="pb-case-blurb">{c.blurb}</p>
                     {c.link ? (
                       <a
