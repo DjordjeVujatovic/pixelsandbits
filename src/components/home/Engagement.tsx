@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { PIPELINE_STEPS } from "@/lib/content";
 import { runCountUp, useReducedMotion } from "@/lib/motion";
 
-/* Per-scene durations: each scene's animation end time plus a beat of
-   under one second, so the panel moves on almost immediately after a
-   scene finishes.
-   ideation ends ~3.9s · design ~1.9s · engineering ~2.5s · deploy ~1.8s */
-const STAGE_MS = [4700, 2650, 3250, 2550];
+/* Uniform 2.5s clock per scene (owner request 2026-08-13). The two
+   longer scene timelines are compressed in globals.css to finish
+   inside the window: ideation ends ~2.3s · design ~1.9s ·
+   engineering ~2.1s · deploy ~1.8s. */
+const STAGE_MS = [2500, 2500, 2500, 2500];
 const METER = [12, 42, 74, 100];
 
 /* Design scene: one geometry set renders both SVGs, so the wireframe
