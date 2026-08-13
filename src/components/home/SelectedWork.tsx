@@ -175,6 +175,26 @@ export default function SelectedWork(): JSX.Element {
     });
   }, [index]);
 
+  // The mobile ghost stack positions off the ACTIVE card's measured
+  // edges (published as CSS vars) so short and tall cards alike get a
+  // tucked-behind peek instead of deck-edge gaps.
+  useEffect(() => {
+    const deck = deckRef.current;
+    if (!deck) return;
+    const setVars = () => {
+      const act = deck.children[index] as HTMLElement | undefined;
+      const card = act?.firstElementChild as HTMLElement | undefined;
+      if (!card) return;
+      const h = card.offsetHeight;
+      const top = Math.max(0, (deck.clientHeight - h) / 2);
+      deck.style.setProperty("--act-top", `${Math.round(top)}px`);
+      deck.style.setProperty("--act-bottom", `${Math.round(top + h)}px`);
+    };
+    setVars();
+    window.addEventListener("resize", setVars);
+    return () => window.removeEventListener("resize", setVars);
+  }, [index]);
+
   // The active chip auto-centres in the strip as the deck advances.
   useEffect(() => {
     const strip = stripRef.current;

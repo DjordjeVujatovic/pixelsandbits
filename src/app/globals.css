@@ -1463,12 +1463,20 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   top: 0;
   height: 100dvh;
   display: flex;
-  align-items: center;
-  padding: 60px 0 34px;
+  /* Top-aligned, not centred: centring made the air above the kicker
+     scale with the viewport (~180px at 900, ~230 at 1000). A fixed
+     88px reads as rhythm on every screen; spare height falls below
+     the content where the section is ending anyway. */
+  align-items: flex-start;
+  padding: 88px 0 24px;
 }
 .stg-sticky > * { width: 100% } /* the flex child must still span the column */
-/* center, not start — the active card and the rail share one vertical axis */
-.stg { display: grid; grid-template-columns: 296px 1fr; gap: 48px; align-items: center }
+/* center, not start — the active card and the rail share one vertical axis.
+   420px fixed left column (WORK_section_spacing.md): the index is a list
+   of fixed-length names and must not rescale with the card; minmax(0,1fr)
+   on the right is required — a bare 1fr lets card content overflow the
+   track. */
+.stg { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 72px; align-items: center }
 
 .sr-h { font-size: 37px; line-height: 1.06; letter-spacing: -.036em; font-weight: 600; margin: 0 }
 .sr-lead {
@@ -1643,9 +1651,20 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .stg-side .sr-lead { display: none } /* the least load-bearing line */
   .stg-idx { margin-top: 14px }
   .si { padding: 5px 0 }
-  .deck { min-height: 400px }
+  .deck { min-height: 460px }
   .dk.prev { transform: translateY(-50%) translateY(-62px) scale(.925) }
   .dk.next { transform: translateY(-50%) translateY(64px) scale(.94) }
+}
+
+/* Desktop reading measure (WORK_section_spacing.md): cap the copy,
+   not the column — the stat figures need the full width. */
+/* Only where there's vertical room — the cap wraps paragraphs onto
+   more lines, and short laptops need the shorter card more than the
+   ideal measure. */
+@media (min-width: 1101px) and (min-height: 821px) {
+  .deck .pb-case-blurb,
+  .deck .pb-case-detail,
+  .deck .qb blockquote { max-width: 68ch }
 }
 
 /* the strip + skip are mobile-only */
@@ -1733,22 +1752,25 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
      uncapped, tall viewports left a ~300px void between the chips and
      the card (owner report). Leftover space falls BELOW the deck, where
      the skip button anchors the bottom edge. */
-  .deck { flex: 1; min-height: 0; max-height: 660px }
-  /* Top-anchored, not centred: every card's top sits a constant ~24px
-     under the chips regardless of card or screen height — centring left
-     short cards floating under a void on tall phones (owner report).
-     The baseline translateY(-50%) is gone with it. */
+  .deck { flex: 1; min-height: 0; max-height: 760px }
+  /* the ghosts may not spill past the stage into the next section */
+  .stg-stage { overflow: clip }
+  /* A real stack: the active card centres (the component publishes its
+     measured top/bottom as --act-top/--act-bottom), and the ghosts tuck
+     BEHIND it with only an edge showing — prev peeks ~44px above the
+     active top, next ~44px below its bottom, whatever the card heights.
+     No deck-edge anchoring, no giant gaps (owner request). */
   .dk {
-    top: 24px;
-    transform: translateY(84px) scale(.92);
+    top: 0;
+    transform: translateY(calc(var(--act-bottom, 480px) + 84px)) translateY(-100%) scale(.9);
     filter: blur(6px);
     transition: opacity .42s ease, transform .54s cubic-bezier(.32,.72,0,1), filter .4s ease;
   }
-  .dk.on { opacity: 1; transform: none; filter: none }
-  .dk.prev { opacity: .5; transform: translateY(-26px) scale(.945); filter: blur(1.5px) }
-  .dk.next { opacity: .56; transform: translateY(46px) scale(.955); filter: blur(1.5px) }
-  .dk.far-up { opacity: 0; transform: translateY(-64px) scale(.92); filter: blur(6px) }
-  .dk.far-down { opacity: 0; transform: translateY(96px) scale(.92); filter: blur(6px) }
+  .dk.on { opacity: 1; transform: translateY(var(--act-top, 40px)); filter: none }
+  .dk.prev { opacity: .5; transform: translateY(calc(var(--act-top, 40px) - 52px)) scale(.94); filter: blur(1.5px) }
+  .dk.next { opacity: .56; transform: translateY(calc(var(--act-bottom, 480px) + 52px)) translateY(-100%) scale(.95); filter: blur(1.5px) }
+  .dk.far-up { opacity: 0; transform: translateY(calc(var(--act-top, 40px) - 72px)) scale(.9); filter: blur(6px) }
+  .dk.far-down { opacity: 0; transform: translateY(calc(var(--act-bottom, 480px) + 84px)) translateY(-100%) scale(.9); filter: blur(6px) }
   .dk.on > * { box-shadow: 0 18px 44px rgba(0,0,0,.6) }
 
   /* the skip button is what makes pinning acceptable */
@@ -1779,10 +1801,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
      the space so the flex column doesn't jump. */
   .skip { transition: opacity .35s ease }
   .skip.skip-gone { opacity: 0; visibility: hidden; pointer-events: none }
-  /* The last card settles lower, into the air the skip vacated — the
-     prev ghost fills the top and the section hands off right below,
-     instead of a tiny card floating in an empty screen. */
-  .dk.on.dk-last { transform: none }
 
   /* card trimming — height is the binding constraint while pinned */
   .deck .pb-card, .deck .pb-redcard, .deck .pb-case { padding: 18px 16px 20px }
@@ -1990,6 +2008,15 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    between deck and process is breathing room, not a void. */
 @media (max-width: 1100px) {
   .pb-process { margin-top: -180px }
+}
+/* Desktop version of the same fix: the top-aligned stage leaves its
+   spare height at the bottom, so the section's exit shows a
+   viewport-scaled void before the process heading. Content ends by
+   ~770px (88 pad + tallest card); everything below that is blank, and
+   the process section rises into it. Self-limiting: on short screens
+   the calc goes positive and min() clamps to no pull at all. */
+@media (min-width: 1101px) {
+  .pb-process { margin-top: min(0px, calc(770px - 100dvh)) }
 }
 
 .sc-head {
