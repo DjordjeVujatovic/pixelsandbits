@@ -18,10 +18,9 @@ export default function ClosingCta(): JSX.Element {
           hero client strip — never in a heading slot. This heading leads
           with an outcome we produced. */}
       <h2 className="k-h">
-        Agents in production at a <em className="pb-grad">Fortune 500</em>, a
-        frontier lab, and a crypto exchange —{" "}
-        <em className="pb-grad">120k conversations</em> handled, 68% without a
-        human.
+        Agents in production at a <em className="pb-grad">Fortune 500</em> and a
+        frontier lab, and a Coinbase campaign that peaked at{" "}
+        <em className="pb-grad">1.4M transactions</em> in a single day.
       </h2>
       <p className="k-sub">
         Nine years of it, mostly as the engineers embedded in someone

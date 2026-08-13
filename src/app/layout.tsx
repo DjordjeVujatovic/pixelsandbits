@@ -34,11 +34,11 @@ export const metadata: Metadata = {
     template: "%s — pixels&bits",
   },
   description:
-    "Your LLM demo, in production and in front of real operators. Nine years across the full stack. The last two embedded inside AI companies as forward deployed engineers, turning LLM demos into things people use on Monday morning.",
+    "Forward deployed engineers taking LLM products from demo to production. Work for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
   openGraph: {
     title: "pixels&bits — product engineering & ai deployment",
     description:
-      "Your LLM demo, in production and in front of real operators. Product engineering & AI deployment.",
+      "Product engineering and AI deployment. Forward deployed engineers taking LLM products from demo to production for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
     url: "/",
     siteName: "pixels&bits",
     type: "website",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "pixels&bits — product engineering & ai deployment",
     description:
-      "Your LLM demo, in production and in front of real operators. Product engineering & AI deployment.",
+      "Product engineering and AI deployment. Forward deployed engineers taking LLM products from demo to production for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
   },
 };
 
@@ -59,10 +59,11 @@ const orgJsonLd = {
   name: "pixels&bits",
   url: siteUrl,
   description:
-    "Product engineering & AI deployment. Nine years across the full stack, the last two embedded inside AI companies as forward deployed engineers.",
+    "Product engineering and AI deployment. Forward deployed engineers taking LLM products from demo to production for companies including Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
   knowsAbout: [
     "forward deployed engineering",
     "AI deployment",
+    "LLM production",
     "product design",
     "full-stack engineering",
   ],

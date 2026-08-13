@@ -81,7 +81,7 @@ export const OFFERS: Offer[] = [
     tab: "product engineering",
     kicker: "PRODUCT ENGINEERING",
     title: "Ship the whole thing, then keep it shippable.",
-    body: "Full-stack delivery from data model to interface. Nine years of it, on products that took real traffic — 500k transactions across a single Coinbase campaign — and on internal tools nobody outside the company ever sees.",
+    body: "Full-stack delivery from data model to interface. Nine years of it, on products that took real traffic — 1.4M transactions in a single day at the peak of a Coinbase campaign — and on internal tools nobody outside the company ever sees.",
     points: [
       ["01", "One team, front to back", "React and Next.js on the front, real services and data behind it. No handoff seam to lose things in."],
       ["02", "Deploy from week one", "A working environment before there is a product, so progress is visible and integration risk lands early."],
@@ -153,7 +153,7 @@ export const ASK_QA: AskItem[] = [
   },
 ];
 
-/* Cases 06–11 (PORTFOLIO_one_at_a_time.md — copy from the client).
+/* Cases 06–10 (PORTFOLIO_one_at_a_time.md — copy from the client).
    These replaced the ALSO_SHIPPED list; there is no tiering between
    "case studies" and "also shipped" any more. Quotes are split into
    pre/em/mid/em2/post so the emphasis markup is assembled in the
@@ -176,19 +176,28 @@ export const EXTRA_CASES: {
   link?: { label: string; href: string };
   blurb: string;
   bullets?: string[];
+  stats?: { figure: string; caption: string; lime?: boolean }[];
+  detail?: string;
   quote?: CaseQuote;
 }[] = [
   {
     num: "CASE_06",
-    title: "ZeroDown",
+    title: "ZeroDown — internal tools",
     tag: "ACQUIRED BY FLYHOMES",
     link: { label: "zerodown.com →", href: "https://zerodown.com" },
     blurb:
-      "Product owner of internal tools development, responsible end to end — product management, UX/UI design and engineering.",
+      "Product owner of internal tools: product management, UX/UI design and frontend engineering across four shipped tools.",
+    detail: "React, GraphQL, Apollo and Ant Design across all four.",
     bullets: [
-      "Custom offer setup and offer management system, streamlining the home purchasing process",
-      "Custom search and filter tools for managing potential leads",
-      "A custom property management system for managing properties at scale",
+      "IC memo tool automating Investment Committee memos per offer, an order of magnitude productivity gain for the PM",
+      "Offer process tool that moved status updates from phone calls into the web app, covering every state of an offer",
+      "Lead search dashboard with 10 to 15 backend filters (Python, GraphQL, SQLAlchemy) for sales and marketing",
+      "Property management dashboard for 50+ company-owned properties, monthly payments and repair scheduling",
+    ],
+    stats: [
+      { figure: "4 tools", caption: "shipped, owned end to end" },
+      { figure: "10×", caption: "productivity gains on memos and lead search", lime: true },
+      { figure: "50+", caption: "properties managed in one dashboard" },
     ],
     quote: {
       pre: "“The team stepped in as full-stack engineers for our internal tools team, quickly took a ",
@@ -202,11 +211,17 @@ export const EXTRA_CASES: {
   },
   {
     num: "CASE_07",
-    title: "Apparel Impact Institute",
+    title: "Apparel Impact Institute — climate data platform",
     tag: "NONPROFIT",
     link: { label: "apparelimpact.org →", href: "https://apparelimpact.org" },
     blurb:
-      "A client-facing dashboard letting factory operators in China track their CO₂ emissions, plus the ingestion pipeline feeding it.",
+      "A full-stack dashboard apparel brands use to gauge environmental impact by tracking carbon emissions from their factories.",
+    stats: [
+      { figure: "Nike, Lululemon, New Balance", caption: "brands using the platform" },
+      { figure: "exact CO₂e", caption: "totals reconcile to the decimal against Excel", lime: true },
+    ],
+    detail:
+      "The hard part was ingestion: workbooks drifted from the template, so we built a deterministic Node.js/GraphQL engine that transposes heterogeneous multi-tab Excel files into a relational schema with no loss of numeric precision. Every failure became a failing unit test until a 50-file corpus ingested cleanly.",
     quote: {
       pre: "“They were an absolute pleasure to work with. Their work ethic was ",
       em: "top-tier",
@@ -219,30 +234,45 @@ export const EXTRA_CASES: {
   },
   {
     num: "CASE_08",
-    title: "Spindl",
+    title: "Spindl — web3 attribution dashboard",
     tag: "ACQUIRED BY COINBASE",
     link: { label: "spindl.xyz →", href: "https://spindl.xyz" },
     blurb:
-      "Led the development of Spindl's frontend codebase and pioneered their customer-centric analytics dashboard from the ground up.",
+      "The frontend dashboard for Spindl's web3 attribution product, built greenfield from an empty repo.",
+    stats: [
+      { figure: "0 → 1", caption: "greenfield, from an empty repo" },
+      { figure: "Turborepo", caption: "TypeScript and Next.js monorepo" },
+      { figure: "CEO + CTO", caption: "worked with directly", lime: true },
+    ],
+    detail:
+      "We owned the technical decisions: NextAuth credentials auth, Recharts for charting, React Hook Form. Designs were limited, so UX calls happened during the build.",
   },
   {
     num: "CASE_09",
-    title: "Athena",
-    link: { label: "athena.com →", href: "https://athena.com" },
-    blurb: "Designed and shipped a playbook system for their executive assistants to use.",
+    title: "Certn — background check tools",
+    link: { label: "certn.co →", href: "https://certn.co" },
+    blurb:
+      "Internal tools and dashboards for Certn, an identity verification and background checks company out of Victoria BC.",
+    stats: [
+      { figure: "US checks", caption: "criminal background checks team" },
+      { figure: "CS team", caption: "internal tools and dashboards" },
+      { figure: "React", caption: "Redux, AntD, styled-components", lime: true },
+    ],
+    detail:
+      "We were on the US criminal background checks team, building the dashboards their Customer Success team runs on day to day. JavaScript, React, Redux, Ant Design, styled-components.",
   },
   {
     num: "CASE_10",
-    title: "Certn",
-    link: { label: "certn.co →", href: "https://certn.co" },
+    title: "Ditto — social list app",
+    link: { label: "onditto.com/list →", href: "https://onditto.com/list" },
     blurb:
-      "Primarily frontend work on Certn's internal tools and dashboards, as well as the customer-facing background check products.",
-  },
-  {
-    num: "CASE_11",
-    title: "Delphia",
-    link: { label: "delphia.com →", href: "https://delphia.com" },
-    blurb: "Worked directly with the CEO to build a redesigned version of their website landing page.",
+      "Full-stack product engineering on Ditto's React Native social app: lists, comments and the social graph.",
+    stats: [
+      { figure: "70%", caption: "increase in comment engagement", lime: true },
+      { figure: "50%", caption: "increased conversion through the new onboarding flow" },
+    ],
+    detail:
+      "We built the threaded commenting system end to end with optimistic updates and soft deletion, a privacy-first contact sync where names never leave the device, and push notification navigation that restores your exact place instead of stranding you in the wrong tab. GraphQL, Node.js, MongoDB.",
   },
 ];
 

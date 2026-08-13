@@ -81,7 +81,7 @@ export default function ClientStrip(): JSX.Element {
         <span className="pb-cline2" aria-hidden="true" />
       </div>
       <ul className="pb-clist">
-        <li className="pb-citem" data-path="coinbase/onchain-summer" data-metric="500k txns">
+        <li className="pb-citem" data-path="coinbase/onchain-summer" data-metric="700k+ mints">
           <span className="pb-cdot" aria-hidden="true" />
           Coinbase
         </li>

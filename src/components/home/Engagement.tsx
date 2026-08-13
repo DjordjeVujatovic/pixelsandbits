@@ -397,16 +397,16 @@ export default function Engagement(): JSX.Element {
               </div>
               <div className="dp-stats">
                 <div className="dp-stat">
-                  <div className="dp-v" data-count="120" data-suffix="k" data-dur="1200">
-                    120k
+                  <div className="dp-v" data-count="4" data-suffix="k" data-dur="1200">
+                    4k
                   </div>
-                  <div className="dp-k">conversations handled</div>
+                  <div className="dp-k">transcripts in the eval set</div>
                 </div>
                 <div className="dp-stat">
-                  <div className="dp-v" data-count="68" data-suffix="%" data-dur="1200">
-                    68%
+                  <div className="dp-v" data-count="100" data-suffix="%" data-dur="1200">
+                    100%
                   </div>
-                  <div className="dp-k">resolved without a human</div>
+                  <div className="dp-k">rollout, three regions</div>
                 </div>
                 <div className="dp-stat">
                   <div className="dp-v" data-count="94" data-suffix="%" data-dur="1200">

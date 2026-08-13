@@ -6,12 +6,12 @@ import { EXTRA_CASES } from "@/lib/content";
 import type { CaseQuote } from "@/lib/content";
 import CaseRedacted from "./CaseRedacted";
 
-/* PORTFOLIO_one_at_a_time.md — eleven cases, one visible at a time,
+/* PORTFOLIO_one_at_a_time.md — ten cases, one visible at a time,
    advanced by scroll while the stage is pinned. The section's own
    height IS the pin's scroll distance. One scroll listener writes one
    state value (the index) behind a single in-flight rAF guard;
    everything else is CSS transitions keyed off classes. */
-const CARDS = 11;
+const CARDS = 10;
 /* design_handoff_client_portfolio: 30px is the design default peek gap
    (24–46 all read well). */
 const PEEK_GAP = 30;
@@ -26,9 +26,8 @@ const RAIL: { label: string; chip?: string }[] = [
   { label: "ZeroDown" },
   { label: "Apparel Impact Institute" },
   { label: "Spindl" },
-  { label: "Athena" },
   { label: "Certn" },
-  { label: "Delphia" },
+  { label: "Ditto" },
 ];
 
 interface CaseStat {
@@ -65,44 +64,44 @@ const CASES: {
 }[] = [
   {
     num: "CASE_03",
-    title: "Scotts Miracle-Gro — agentic shopping",
+    title: "Scotts Miracle-Gro — agentic lawn care app",
     blurb:
-      "A fully agentic mobile app, built on Sierra, that helps homeowners take better care of their lawn.",
-    meta: "agentic commerce · mobile",
+      "An agentic-first consumer app, built on Sierra, that helps Scotts Miracle-Gro customers take care of their lawns.",
+    meta: "agentic app · iOS + Android",
     stats: [
       { figure: "Sierra", caption: "agent platform" },
       { figure: "lawn score", caption: "health, per yard", lime: true },
-      { figure: "chat → cart", caption: "one surface" },
+      { figure: "React Native", caption: "iOS and Android" },
     ],
     detail:
-      "Shopping and chat are the same experience here: the agent reads a lawn's health score, makes personalized recommendations against it, and puts the right products in the cart without the customer ever browsing a catalogue.",
+      "Onboarding is a lawn assessment quiz. The app turns that data into a care plan and a lawn health score, then recommends habit changes and the right products to raise it. A Salesforce-powered store recommends products against the same lawn data.",
   },
   {
     num: "CASE_04",
-    title: "Coinbase — Onchain Summer",
+    title: "Coinbase — Onchain Summer frontend",
     blurb:
-      "The NFT marketplace front end for Coinbase's Onchain Summer campaign, built to survive a traffic spike measured in hundreds of thousands of wallets.",
+      "Frontend for Onchain Summer 2023, the multi-week festival that launched Base, Coinbase's Ethereum L2, with daily NFT drops from Coca-Cola, Atari and OpenSea.",
     link: { label: "coinbase.com →", href: "https://www.coinbase.com/" },
     stats: [
-      { figure: "500k", caption: "transactions", count: { target: 500, suffix: "k" } },
-      { figure: "400k", caption: "unique wallets", count: { target: 400, suffix: "k" } },
-      { figure: "200 ETH", caption: "volume", lime: true, count: { target: 200, suffix: " ETH" } },
+      { figure: "700K+", caption: "NFTs minted", count: { target: 700, suffix: "K+" } },
+      { figure: "268K+", caption: "unique wallets", count: { target: 268, suffix: "K+" } },
+      { figure: "$242M", caption: "bridged to Base in two weeks", lime: true },
     ],
     detail:
-      "We owned the marketplace surface end to end — mint and browse flows, wallet states, and the performance work that kept it responsive at peak — alongside Coinbase's own design and protocol teams.",
+      "Delivered as part of the Lazer Technologies team. We built wallet onboarding that took under 60 seconds for non-crypto users, and a custom ETH to Base bridge on the Optimism SDK. At peak: 145K+ users and 1.4M transactions in a single day. React, Next.js, TypeScript, Thirdweb.",
   },
   {
     num: "CASE_05",
     title: "Dapper Labs — design system",
     blurb:
-      "One system spanning the sports product line — NBA Top Shot, NFL All Day and what followed.",
+      "One design system across Dapper's sports products: NBA Top Shot, NFL All Day and their successors.",
     link: { label: "dapperlabs.com →", href: "https://www.dapperlabs.com/" },
     stats: [
-      { figure: "multi-brand", caption: "one system, several properties" },
-      { figure: "tokens → components", caption: "design and code", lime: true },
+      { figure: "Shared Design System", caption: "Chakra UI, rethemed through component APIs" },
+      { figure: "NBA, NFL, UFC", caption: "one shared library between all sports products", lime: true },
     ],
     detail:
-      "Two brands with different personalities had to share components without looking like the same app. We worked with their design team on the token layer and shipped the component library the product teams built on.",
+      "We joined as consultants on the NFL All Day frontend, then moved to the studio team that owned the shared design system. The work: applying the design team's specs to existing Chakra UI components, so brands with different personalities share one library without looking like the same app.",
   },
 ];
 
@@ -371,17 +370,17 @@ export default function SelectedWork(): JSX.Element {
                 <article className="pb-feature">
                   <div className="pb-feature-side">
                     <span className="pb-case-num">CASE_02</span>
-                    <h3 className="pb-h-md pb-feature-h">Decagon AI — forward deployed</h3>
+                    <h3 className="pb-h-md pb-feature-h">Decagon AI — forward deployed engineering</h3>
                     <p className="pb-case-blurb" style={{ marginBottom: 14 }}>
-                      Embedded as forward deployed engineers, turning an agent
-                      platform into something a support org will trust.
+                      Forward deployed engineers at Decagon, embedded with
+                      enterprise clients including Wealthsimple.
                     </p>
                     <p className="pb-feature-body">
-                      The gap between a convincing demo and a system a support
-                      org will trust is measurement and integration. We built
-                      the eval loop, tuned the agent flows against it, and did
-                      the unglamorous work of wiring the model into the
-                      customer&apos;s existing stack.
+                      We improved the playbooks Decagon runs for those clients,
+                      added testing and evals for their chat systems, and
+                      helped improve and scale their manipulation detection.
+                      The work that turns an agent platform into something a
+                      support org will trust.
                     </p>
                     <span className="pb-case-meta" style={{ marginTop: 0 }}>
                       on-site engagement
@@ -389,16 +388,16 @@ export default function SelectedWork(): JSX.Element {
                   </div>
                   <div className="pb-feature-stats">
                     <div className="pb-fstat">
-                      <span className="pb-figure">embedded</span>
-                      <span>on site, as an FDE</span>
+                      <span className="pb-figure">playbooks</span>
+                      <span>improved for enterprise clients</span>
                     </div>
                     <div className="pb-fstat">
                       <span className="pb-figure">evals</span>
-                      <span>on real transcripts</span>
+                      <span>added for their chat systems</span>
                     </div>
                     <div className="pb-fstat">
-                      <span className="pb-figure">agents</span>
-                      <span>in production traffic</span>
+                      <span className="pb-figure">manipulation</span>
+                      <span>detection, improved and scaled</span>
                     </div>
                   </div>
                 </article>
@@ -444,13 +443,6 @@ export default function SelectedWork(): JSX.Element {
                     </div>
                     <h3 className="pb-h-sm pb-case-h">{c.title}</h3>
                     <p className="pb-case-blurb">{c.blurb}</p>
-                    {c.bullets ? (
-                      <ul className="std2-bullets">
-                        {c.bullets.map((b) => (
-                          <li key={b}>{b}</li>
-                        ))}
-                      </ul>
-                    ) : null}
                     {c.link ? (
                       <a
                         className="pb-case-link"
@@ -461,6 +453,21 @@ export default function SelectedWork(): JSX.Element {
                         {c.link.label}
                       </a>
                     ) : null}
+                    {c.stats ? (
+                      <div className="pb-case-stats">
+                        {c.stats.map((s) => (
+                          <StatFigure key={s.caption} stat={s} />
+                        ))}
+                      </div>
+                    ) : null}
+                    {c.bullets ? (
+                      <ul className="std2-bullets">
+                        {c.bullets.map((b) => (
+                          <li key={b}>{b}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {c.detail ? <p className="pb-case-detail">{c.detail}</p> : null}
                     {c.quote ? <QuoteBlock q={c.quote} /> : null}
                   </article>
                 </div>

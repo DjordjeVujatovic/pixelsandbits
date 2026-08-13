@@ -1446,7 +1446,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    One mechanic at every breakpoint; 900px switches the chrome (left
    index column vs chip rail). */
 
-.pf2 { position: relative; height: calc(11 * 80vh + 100vh) } /* the runway */
+.pf2 { position: relative; height: calc(10 * 80vh + 100vh) } /* the runway */
 
 .stg-sticky {
   position: sticky;
