@@ -1,18 +1,15 @@
 import Link from "next/link";
-import { CTA_LABEL } from "@/lib/content";
+import { CTA_LABEL, PIPELINE_STEPS } from "@/lib/content";
 import Engagement from "./Engagement";
 
-/* HERO_left_column.md — the disciplines run, one line of argument and a
-   four-fact grid replace the old lead paragraph. Copy verbatim; facts
-   1/3 lime, 2/4 cyan (a second data voice, not decoration); no
-   animation. The arrows live INSIDE each list item so they wrap
-   attached to their word and stay out of the accessible name. */
-const RUN = ["scoping", "design", "engineering", "AI deployment"];
+/* The four hero facts — scale evidence without repeating one point
+   three ways. Facts 1/3 lime, 2/4 cyan (a second data voice, not
+   decoration). */
 const FACTS: { v: string; k: string; cyan?: boolean }[] = [
-  { v: "$100B+", k: "combined valuation of the companies we have shipped inside" },
-  { v: "2", k: "Major AI labs — one named, one under NDA", cyan: true },
-  { v: "5", k: "multi-billion dollar companies" },
-  { v: "Fortune 500", k: "enterprise stacks and legacy systems", cyan: true },
+  { v: "Fortune 500", k: "enterprise stacks and legacy systems" },
+  { v: "1.4M", k: "transactions in a single day, peak, on a frontend we built", cyan: true },
+  { v: "10×", k: "productivity gain on ZeroDown's investment memos" },
+  { v: "1", k: "frontier AI lab, under NDA", cyan: true },
 ];
 
 /* Split-ground hero: dark left cell carries the copy column, the right
@@ -25,14 +22,26 @@ export default function Hero(): JSX.Element {
     <section className="pb-hero">
       <div className="pb-in pb-hero-left">
         <h1 className="pb-hero-h">
-          <span className="pb-hero-l1">From design to deployment,</span>
-          <span className="pb-hero-h-accent">we do it all.</span>
+          <span className="pb-hero-l1">End-to-end product engineering</span>
+          <span className="pb-hero-h-accent">for teams shipping AI.</span>
         </h1>
+        <p className="pb-hero-sub">
+          Research, design, build and deployment by one team — the forward
+          deployed engineers who take an LLM product from demo to production.
+        </p>
+        <p className="pb-hero-note">
+          AI is the domain. End-to-end is how we work in it. AI products fail
+          at the seams — between what research found, what design assumed, and
+          what deployment actually hit — so one team across all of it is the
+          thing that makes them ship.
+        </p>
+        {/* The spine, verbatim wherever the offering is enumerated. */}
+        <div className="pb-run-cap">one engagement, four phases</div>
         <ul className="pb-run">
-          {RUN.map((w, i) => (
+          {PIPELINE_STEPS.map((w, i) => (
             <li className="pb-rw" key={w}>
               {w}
-              {i < RUN.length - 1 ? (
+              {i < PIPELINE_STEPS.length - 1 ? (
                 <span className="pb-rsep" aria-hidden="true">
                   →
                 </span>

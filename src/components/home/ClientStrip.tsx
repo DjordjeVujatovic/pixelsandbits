@@ -74,8 +74,8 @@ export default function ClientStrip(): JSX.Element {
 
   return (
     <div className="pb-cstrip" ref={rootRef}>
-      {/* The $100B+ figure lives in the hero facts grid right above —
-          repeating it here read as a duplicate (owner request). */}
+      {/* Names only — the scale figures live in the hero facts grid
+          right above (owner request). */}
       <div className="pb-cbar2">
         <span className="pb-clabel">PAST CLIENTS</span>
         <span className="pb-cline2" aria-hidden="true" />
@@ -95,7 +95,7 @@ export default function ClientStrip(): JSX.Element {
         </li>
         <li className="pb-citem" data-path="[redacted]/rl-envs" data-metric="under NDA">
           <span className="pb-cdot" aria-hidden="true" />
-          Leading Frontier Lab
+          Frontier AI lab
         </li>
         <li className="pb-citem" data-path="dapper/design-system" data-metric="multi-brand system">
           <span className="pb-cdot" aria-hidden="true" />

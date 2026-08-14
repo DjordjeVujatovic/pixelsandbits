@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import { CTA_LABEL, OFFERS, SERVICE_OUTCOMES } from "@/lib/content";
+import { OFFERS, SERVICE_OUTCOMES } from "@/lib/content";
 
 /* Tab switcher. The incrementing key on the panes remounts them on every
    switch, restarting the blur-in stagger even when the same tab is
@@ -58,9 +57,6 @@ export default function OfferingsTabs(): JSX.Element {
           <div className="pb-pi pb-offer-kicker">{offer.kicker}</div>
           <h3 className="pb-pi pb-h-md pb-offer-title">{offer.title}</h3>
           <p className="pb-pi pb-offer-body">{offer.body}</p>
-          <Link className="pb-btn pb-pi pb-offer-cta" href="/contact">
-            {CTA_LABEL}
-          </Link>
         </div>
         <div className="pb-pane pb-offer-points" key={`b-${seq}`}>
           {offer.points.map(([n, title, body]) => (

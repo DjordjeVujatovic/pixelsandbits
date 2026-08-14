@@ -41,7 +41,7 @@ function Decipher({ text, className }: { text: string; className?: string }): JS
 
 const HEADLINE = "rl-environments";
 const PARA =
-  "Currently embedded with a leading AI frontier model lab, building reinforcement learning environments. That is genuinely as much as we can say until the project ships. The client is named in the contract, the case study and, eventually, this card.";
+  "Currently embedded with a frontier AI lab, building reinforcement learning environments. We can name them when it ships.";
 const STATS: [string, string][] = [
   ["RL envs", "training environments, not demos"],
   ["frontier", "one of a handful of labs at this level"],

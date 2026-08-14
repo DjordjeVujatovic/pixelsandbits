@@ -25,29 +25,32 @@ const plexMono = IBM_Plex_Mono({
   fallback: ["monospace"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.pixelsandbits.com";
+/* Pinned to the canonical production domain — an env override here made
+   og:image / twitter:image resolve to the deploy-preview host while
+   og:url claimed the canonical one, and social scrapers cached that. */
+const siteUrl = "https://www.pixelsandbits.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "pixels&bits — product engineering & ai deployment",
+    default: "pixels&bits — end-to-end product engineering for teams shipping AI",
     template: "%s — pixels&bits",
   },
   description:
     "Forward deployed engineers taking LLM products from demo to production. Work for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
   openGraph: {
-    title: "pixels&bits — product engineering & ai deployment",
+    title: "pixels&bits — end-to-end product engineering for teams shipping AI",
     description:
-      "Product engineering and AI deployment. Forward deployed engineers taking LLM products from demo to production for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
+      "End-to-end product engineering for teams shipping AI. Forward deployed engineers taking LLM products from demo to production for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
     url: "/",
     siteName: "pixels&bits",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "pixels&bits — product engineering & ai deployment",
+    title: "pixels&bits — end-to-end product engineering for teams shipping AI",
     description:
-      "Product engineering and AI deployment. Forward deployed engineers taking LLM products from demo to production for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
+      "End-to-end product engineering for teams shipping AI. Forward deployed engineers taking LLM products from demo to production for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
   },
 };
 
@@ -59,7 +62,7 @@ const orgJsonLd = {
   name: "pixels&bits",
   url: siteUrl,
   description:
-    "Product engineering and AI deployment. Forward deployed engineers taking LLM products from demo to production for companies including Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
+    "End-to-end product engineering for teams shipping AI. Forward deployed engineers taking LLM products from demo to production for companies including Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
   knowsAbout: [
     "forward deployed engineering",
     "AI deployment",

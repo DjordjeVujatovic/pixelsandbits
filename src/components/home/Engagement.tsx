@@ -178,7 +178,7 @@ export default function Engagement(): JSX.Element {
           <span className="pb-dot" />
           <span className="pb-dot" />
           <span className="pb-dot" />
-          <span className="pb-term-name">pixelsandbits — engagement</span>
+          <span className="pb-term-name">pixels&amp;bits — engagement</span>
           <span className="pb-spacer" />
           <span className="pb-live-dot" />
           <span className="pb-term-status">{stage === END ? "shipped" : "live"}</span>
@@ -189,7 +189,8 @@ export default function Engagement(): JSX.Element {
           <div className={`stage${stage === 0 ? " on" : ""}`}>
             <div className="iv">
               <div className="iv-head">
-                <span>ON SITE · SUPPORT FLOOR</span>
+                {/* composite operators, not quoted individuals */}
+                <span>ON SITE · SUPPORT FLOOR · COMPOSITE</span>
                 <span className="iv-rule" />
                 <span className="iv-rec">
                   <i />
@@ -256,10 +257,7 @@ export default function Engagement(): JSX.Element {
               </div>
             </div>
             <div className="st-cap">
-              <span>
-                <span className="cap-full">on site with the team · constraints in, scope out</span>
-                <span className="cap-short">constraints in, scope out</span>
-              </span>
+              <span className="st-copy" data-full="on site with the team · constraints in, scope out" data-short="constraints in, scope out" />
               <span>
                 <b>week 01</b>
               </span>
@@ -276,10 +274,7 @@ export default function Engagement(): JSX.Element {
               <span className="dz-beam" />
             </div>
             <div className="st-cap">
-              <span>
-                <span className="cap-full">the agent surface, in front of real operators</span>
-                <span className="cap-short">the agent surface</span>
-              </span>
+              <span className="st-copy" data-full="the agent surface, in front of real operators" data-short="the agent surface" />
               <span>
                 <b>week 02</b>
               </span>
@@ -349,10 +344,7 @@ export default function Engagement(): JSX.Element {
               </div>
             </div>
             <div className="st-cap">
-              <span>
-                <span className="cap-full">evals, agent flows, and the integration nobody demos</span>
-                <span className="cap-short">evals, flows, integration</span>
-              </span>
+              <span className="st-copy" data-full="evals, agent flows, and the integration nobody demos" data-short="evals, flows, integration" />
               <span>
                 <b>week 03–06</b>
               </span>
@@ -417,10 +409,7 @@ export default function Engagement(): JSX.Element {
               </div>
             </div>
             <div className="st-cap">
-              <span>
-                <span className="cap-full">evals wired to live traffic · yours to run</span>
-                <span className="cap-short">live traffic · yours to run</span>
-              </span>
+              <span className="st-copy" data-full="evals wired to live traffic · yours to run" data-short="live traffic · yours to run" />
               <span>
                 <b>live</b>
               </span>
@@ -450,7 +439,9 @@ export default function Engagement(): JSX.Element {
           </div>
           <div className="pb-term-footrow">
             <span>{stage === END ? "shipped & handed over" : "engagement in progress"}</span>
-            <span className="pb-pct">{METER[stage]}%</span>
+            {/* The figures in the scenes are illustrative, not client
+                metrics — say so where the % used to sit. */}
+            <span>how an engagement runs, illustrated</span>
           </div>
         </div>
       </div>

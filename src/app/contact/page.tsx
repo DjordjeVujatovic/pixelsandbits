@@ -78,17 +78,17 @@ export default function ContactPage(): JSX.Element {
 
             <div className="ct-proof">
               <span className="ct-proof-blob" aria-hidden="true" />
-              <div className="ct-proof-label">WHO WE HAVE SHIPPED FOR</div>
+              <div className="ct-proof-label">WHO WE&apos;VE SHIPPED FOR</div>
               <div className="ct-proof-fig">$100B+</div>
               <p className="ct-proof-sub">
-                combined value of the companies we have worked with.
+                combined value of the companies we&apos;ve worked with.
               </p>
               <div className="ct-proof-chips">
                 <span className="ct-pchip">Coinbase</span>
                 <span className="ct-pchip">Decagon AI</span>
                 <span className="ct-pchip">Scotts Miracle-Gro</span>
                 <span className="ct-pchip">Dapper Labs</span>
-                <span className="ct-pchip nda">leading frontier lab · NDA</span>
+                <span className="ct-pchip nda">Frontier AI lab · NDA</span>
               </div>
             </div>
 

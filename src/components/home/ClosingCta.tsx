@@ -14,31 +14,19 @@ export default function ClosingCta(): JSX.Element {
         <span className="k-rule" aria-hidden="true" />
       </div>
 
-      {/* The $100B+ scale figure lives in the stat band below and the
-          hero client strip — never in a heading slot. This heading leads
-          with an outcome we produced. */}
+      {/* The heading leads with outcomes we produced, never a raw scale
+          figure. */}
       <h2 className="k-h">
         Agents in production at a <em className="pb-grad">Fortune 500</em> and a
-        frontier lab, and a Coinbase campaign that peaked at{" "}
+        frontier AI lab, and a Coinbase campaign that peaked at{" "}
         <em className="pb-grad">1.4M transactions</em> in a single day.
       </h2>
       <p className="k-sub">
-        Nine years of it, mostly as the engineers embedded in someone
-        else&apos;s team.
+        Nine years of product engineering. The last two forward deployed
+        inside AI companies.
       </p>
 
       <div className="k-band">
-        <div className="k-cell">
-          <span className="k-spark" aria-hidden="true" />
-          <div className="fig">
-            <span className="pb-grad" data-count="100" data-prefix="$" data-suffix="B+" data-dur="1200">
-              $100B+
-            </span>
-          </div>
-          <div className="lab">
-            combined valuation of the companies we have shipped inside
-          </div>
-        </div>
         <div className="k-cell">
           <span className="k-spark" aria-hidden="true" />
           <div className="fig">
@@ -46,7 +34,7 @@ export default function ClosingCta(): JSX.Element {
               2
             </span>
           </div>
-          <div className="lab">exits · Spindl to Coinbase, ZeroDown to Flyhomes</div>
+          <div className="lab">clients acquired — Spindl by Coinbase, ZeroDown by Flyhomes</div>
         </div>
         <div className="k-cell">
           <span className="k-spark" aria-hidden="true" />
@@ -58,12 +46,11 @@ export default function ClosingCta(): JSX.Element {
         <div className="k-cell">
           <span className="k-spark" aria-hidden="true" />
           <div className="fig">
-            <span className="pb-grad" data-count="2" data-dur="1200">
-              2
+            <span className="pb-grad" data-count="1" data-dur="1200">
+              1
             </span>
           </div>
-          <div className="lab">frontier AI labs</div>
-          <div className="note">ONE NAMED · ONE UNDER NDA</div>
+          <div className="lab">frontier AI lab, under NDA</div>
         </div>
       </div>
 

@@ -655,6 +655,8 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 /* Column max-width + the 48px padding must stay left of the terminal's
    left edge (seat at 66% minus half of 680px). */
 .pb-hero-left .pb-hero-h,
+.pb-hero-left .pb-hero-sub,
+.pb-hero-left .pb-hero-note,
 .pb-hero-left .pb-run,
 .pb-hero-left .pb-facts { max-width: 620px }
 .pb-hero-left .pb-hero-btns { max-width: 620px; margin-top: 14px }
@@ -668,6 +670,8 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
     --hero-copy-w: min(620px, calc(66vw - 360px - var(--hero-pl)));
   }
   .pb-hero-left .pb-hero-h,
+  .pb-hero-left .pb-hero-sub,
+  .pb-hero-left .pb-hero-note,
   .pb-hero-left .pb-run,
   .pb-hero-left .pb-facts,
   .pb-hero-left .pb-hero-btns { max-width: var(--hero-copy-w) }
@@ -679,7 +683,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    the smaller wraps also keep the client strip above the fold on
    900px-tall viewports. */
 @media (min-width: 1200px) and (max-width: 1399px) {
-  .pb-hero .pb-hero-h { font-size: 62px; line-height: 1.03 }
+  .pb-hero .pb-hero-h { font-size: 46px; line-height: 1.06 }
   .pb-hero-left .pb-run { font-size: 12.5px }
   .pb-hero-left .pb-fv { font-size: 18px }
   .pb-hero-left .pb-fk { font-size: 12px }
@@ -752,7 +756,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 @media (max-width: 1199px) {
   .pb-hero { display: block; min-height: 0 }
   .pb-hero-left { padding: 110px 48px 44px; justify-content: flex-start }
-  .pb-hero .pb-hero-h { font-size: 60px; line-height: 1.03 }
+  .pb-hero .pb-hero-h { font-size: 52px; line-height: 1.06 }
   .pb-hero-lime { display: none }
   .pb-hero-seat {
     position: static;
@@ -770,7 +774,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 @media (max-width: 720px) {
   .pb-hero-left { padding: 96px 18px 36px }
-  .pb-hero .pb-hero-h { font-size: 46px }
+  .pb-hero .pb-hero-h { font-size: 40px }
   .pb-hero-seat { padding: 28px 16px }
 }
 
@@ -863,9 +867,11 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .pb-cread { font-size: 11px }
 }
 .pb-hero-h {
-  /* 80/60/46 by breakpoint (split-hero spec) */
-  font-size: 80px;
-  line-height: 1.02;
+  /* 52/46/40 by breakpoint — the canonical headline is 2.3× the old
+     six-word one, so the 80px scale can no longer set in the clamped
+     column; 52px matches the existing .pb-h-lg display size. */
+  font-size: 52px;
+  line-height: 1.06;
   letter-spacing: -.035em;
   font-weight: 600;
   margin: 0;
@@ -881,14 +887,34 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   color: transparent;
   animation: pb-shine 5.5s ease-in-out infinite;
 }
-/* HERO_left_column.md — the disciplines run, the argument line and the
-   four-fact grid that replaced the lead paragraph. */
+/* The subhead and connecting sentence (canonical positioning copy) sit
+   between the headline and the spine. Body voice, two weights down. */
+.pb-hero-sub {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--fg) 76%, transparent);
+}
+.pb-hero-note {
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+}
+/* The spine — one labelled sequence, smaller than the headline. */
+.pb-run-cap {
+  margin-top: 20px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: color-mix(in srgb, var(--fg) 45%, transparent);
+}
 .pb-run {
   display: flex;
   align-items: center;
   gap: 9px;
   flex-wrap: wrap;
-  margin: 2px 0 0;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
   font-family: var(--font-mono), monospace;
@@ -1034,11 +1060,12 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 .st-cap > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
 /* MOBILE_audit finding 5: two captions truncated mid-word on phones —
-   short variants swap in ≤720 so nothing relies on the ellipsis. */
-.cap-short { display: none }
+   the short variant swaps in ≤720 so nothing relies on the ellipsis.
+   One DOM node: both variants live in data attributes and CSS picks
+   (the whole stage is aria-hidden, so the text is decorative). */
+.st-copy::before { content: attr(data-full) }
 @media (max-width: 720px) {
-  .cap-full { display: none }
-  .cap-short { display: inline }
+  .st-copy::before { content: attr(data-short) }
 }
 .st-cap > span:last-child { flex: none }
 .st-cap b { color: var(--acc); font-weight: 400 }
@@ -1197,6 +1224,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-pstep {
   font-family: var(--font-mono), monospace;
   font-size: 10.5px;
+  /* the spine words are capitalized in data; chips keep the terminal
+     lowercase voice */
+  text-transform: lowercase;
   color: color-mix(in srgb, var(--fg) 38%, transparent);
   border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   border-radius: var(--r-pill);
@@ -1795,8 +1825,8 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .pb-process { margin-top: min(0px, calc(40px - (100dvh - min(76vh, 800px)) / 2)) }
 }
 
-/* the strip + skip are mobile-only */
-.strip, .skip { display: none }
+/* the strip is mobile-only (rendered only there, too) */
+.strip { display: none }
 
 /* ---------- mobile chrome (<900px): chip rail / stage / skip ---------- */
 @media (max-width: 899px) {
@@ -1866,31 +1896,6 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .chip.on { color: var(--ink); background: var(--acc); border-color: var(--acc) }
   .chip.on b { color: color-mix(in srgb, var(--ink) 60%, transparent) }
   .chip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
-
-  /* the skip pill rides the bottom row */
-  .skip {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 12px;
-    border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: blur(6px);
-    font: inherit;
-    cursor: pointer;
-    font-family: var(--font-mono), monospace;
-    font-size: 12px;
-    color: color-mix(in srgb, var(--fg) 62%, transparent);
-    transition: opacity .35s ease;
-  }
-  .skip:active { border-color: color-mix(in srgb, var(--acc) 50%, transparent); color: var(--acc) }
-  .skip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
-  /* nothing left to skip on the last card */
-  .skip.skip-gone { opacity: 0; visibility: hidden; pointer-events: none }
-
 }
 /* Narrow cards — phones AND the 900–1100 desktop band, where the stage
    column is just as tight. */
@@ -2614,7 +2619,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .k-sub { font-size: 16.5px; line-height: 1.6; color: color-mix(in srgb, var(--fg) 55%, transparent); max-width: 520px; margin: 0 0 40px }
 .k-band {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* three cells since the $100B+ tile moved out (it duplicated the
+     hero's scale argument verbatim) */
+  grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   margin-bottom: 44px;
@@ -2780,6 +2787,9 @@ a.pb-footer-brand:hover { color: var(--fg) }
 .ct-field::placeholder { color: color-mix(in srgb, var(--fg) 28%, transparent) }
 .ct-field:hover { border-color: color-mix(in srgb, var(--fg) 24%, transparent) }
 .ct-field:focus { outline: none; border-color: var(--acc); background: color-mix(in srgb, var(--fg) 3.5%, transparent) }
+/* pointer focus keeps the quiet lime border; keyboard focus gets the
+   full site-palette ring the border alone doesn't provide */
+.ct-field:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
 textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 .ct-field.ct-bad { border-color: #ff5c5c }
 .ct-err { font-family: var(--font-mono), monospace; font-size: 11.5px; color: #ff8080; margin-top: 7px; display: block }
@@ -3129,7 +3139,8 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .k-h { font-size: 34px }
   .k-band { grid-template-columns: 1fr 1fr }
   .k-cell:nth-child(2) { border-right: 0 }
-  .k-cell:nth-child(3) { padding-left: 0 } /* row 2 starts here — keep its left edge on the column */
+  /* row 2 is the lone third cell — full width, left edge on the column */
+  .k-cell:nth-child(3) { padding-left: 0; grid-column: 1 / -1 }
   .k-cell:nth-child(1), .k-cell:nth-child(2) { border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent) }
   .fig { font-size: 48px }
   .fig-txt { font-size: 34px }

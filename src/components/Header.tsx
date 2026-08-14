@@ -9,9 +9,9 @@ import { CTA_LABEL } from "@/lib/content";
    the contact capsule, the scroll observer and the pill index all derive
    from this list, in document order. */
 const NAV_ITEMS = [
-  { id: "services", label: "services" },
   { id: "work", label: "work" },
   { id: "process", label: "process" },
+  { id: "services", label: "services" },
   { id: "faq", label: "faq" },
   { id: "track-record", label: "track-record" },
 ];

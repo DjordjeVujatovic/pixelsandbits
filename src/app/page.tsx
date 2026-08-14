@@ -39,12 +39,16 @@ export default function HomePage(): JSX.Element {
           <ClientStrip />
         </section>
 
+        {/* D3 order: work → process → services (forward deployed). The
+            client strip already sits above the fold inside the hero
+            band, and the engagement animation stays on the hero seam —
+            it is the approved split-hero centerpiece. */}
+        <SelectedWork />
+        <ProcessTimeline />
+
         <Reveal as="section" variant="s" id="services" className="pb-services">
           <OfferingsTabs />
         </Reveal>
-
-        <SelectedWork />
-        <ProcessTimeline />
 
         {/* FAQ by function — sits near the end; the testimonial carousel
             and the closing proof band are adjacent below it. */}

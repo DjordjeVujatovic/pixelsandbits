@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SCHEDULE } from "@/lib/content";
 import { observeReveal, prefersReducedMotion } from "@/lib/motion";
 
@@ -82,6 +82,28 @@ function Deliverables({ className }: { className?: string }): JSX.Element {
 export default function ProcessTimeline(): JSX.Element {
   const rootRef = useRef<HTMLElement>(null);
   const timers = useRef<number[]>([]);
+  const ranRef = useRef(false);
+  /* The deliverables list renders ONCE, inside whichever layout is
+     active — not twice with a CSS toggle, which screen readers would
+     announce twice. */
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 720px)");
+    const apply = () => setMobile(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  // Crossing the breakpoint remounts the list AFTER the reveal has run —
+  // hand the fresh nodes their end-state classes so nothing stays hidden.
+  useEffect(() => {
+    if (!ranRef.current) return;
+    rootRef.current
+      ?.querySelectorAll(".sc-mile, .sc-m")
+      .forEach((n) => n.classList.add("on"));
+  }, [mobile]);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -131,6 +153,7 @@ export default function ProcessTimeline(): JSX.Element {
     };
 
     const finish = () => {
+      ranRef.current = true;
       el.querySelectorAll(".sc-lane").forEach((l) => l.classList.add("on", "done"));
       el.querySelectorAll(".sc-mile, .sc-m, .mb-p").forEach((n) => n.classList.add("on"));
     };
@@ -140,11 +163,10 @@ export default function ProcessTimeline(): JSX.Element {
       return unreveal;
     }
 
-    let ran = false;
     const io = new IntersectionObserver(
       (entries) => {
-        if (!entries[0].isIntersecting || ran) return;
-        ran = true;
+        if (!entries[0].isIntersecting || ranRef.current) return;
+        ranRef.current = true;
         io.disconnect();
         runChart();
         runMobile();
@@ -229,7 +251,7 @@ export default function ProcessTimeline(): JSX.Element {
           })}
         </ol>
 
-        <Deliverables />
+        {!mobile ? <Deliverables /> : null}
       </div>
 
       {/* Mobile (≤720px): the 8-track grid cannot survive 390px, but the
@@ -272,7 +294,7 @@ export default function ProcessTimeline(): JSX.Element {
             <p className="mb-b">{p.body}</p>
           </div>
         ))}
-        <Deliverables className="sc-mile-m" />
+        {mobile ? <Deliverables className="sc-mile-m" /> : null}
       </div>
     </section>
   );

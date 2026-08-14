@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "pixels&bits — product engineering & ai deployment";
+export const alt = "pixels&bits — end-to-end product engineering for teams shipping AI";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -36,7 +36,7 @@ export default function OgImage(): ImageResponse {
           <div style={{ width: 22, height: 66, background: "#c6f24e", marginLeft: 16 }} />
         </div>
         <div style={{ display: "flex", fontSize: 30, color: "#8fa3b8", marginTop: 30 }}>
-          product engineering & ai deployment
+          end-to-end product engineering for teams shipping AI
         </div>
       </div>
     ),

@@ -1,28 +1,32 @@
 /* Approved copy, verbatim from the design handoff and the conversion
    review's rewritten-copy appendix. Do not reword. */
 
-export const PIPELINE_STEPS = ["ideation", "design", "engineering", "deployment"];
+/* The spine — the one enumeration of the offering, verbatim wherever
+   the phases appear (hero, services, process, FAQ, engagement chips).
+   "AI deployment" is not a phase; AI is carried by the headline. */
+export const PIPELINE_STEPS = ["Scoping", "Design", "Build", "Handover"];
 
 /* Every conversion CTA on both pages reads the same. */
 export const CTA_LABEL = "send us the problem";
 
-/* The four service outcomes, readable without touching the tabs. */
+/* The four service outcomes, readable without touching the tabs —
+   labelled by the spine, in spine order. */
 export const SERVICE_OUTCOMES: { label: string; line: string }[] = [
   {
-    label: "Forward deployed",
-    line: "We sit with your team until the thing is live in their hands.",
-  },
-  {
-    label: "Zero to scoped",
+    label: "Scoping",
     line: 'A week on site turns "we should use AI here" into a measurable brief.',
   },
   {
-    label: "Product design",
+    label: "Design",
     line: "Interfaces for agent products, tested on operators before code.",
   },
   {
-    label: "Full-stack build",
+    label: "Build",
     line: "React/Next, services, CI and evals, deployed from week one.",
+  },
+  {
+    label: "Handover",
+    line: "We sit with your team until the thing is live in their hands.",
   },
 ];
 
@@ -34,34 +38,24 @@ export interface Offer {
   points: [string, string, string][];
 }
 
-/* Tab order matches the handoff tab bar; pane content keyed per tab. */
+/* Tab order and labels follow the spine; each pane keeps its own
+   descriptive copy. The forward-deployed pane carries the Handover
+   phase — leaving the team faster is the finish line of the work. */
 export const OFFERS: Offer[] = [
   {
-    tab: "forward deployed",
-    kicker: "FORWARD DEPLOYED ENGINEERING",
-    title: "Most teams can build with an LLM. Few can land one inside a real business.",
-    body: "Two years as forward deployed engineers — at Decagon AI and Scotts Miracle-Gro — sitting with the customer, learning the workflow, and turning a demo into something their staff actually uses.",
-    points: [
-      ["01", "On site, not over email", "We watch the work happen and design against what people really do, not the process on the slide."],
-      ["02", "Evals before opinions", "Prompts, retrieval and agent flows measured against real transcripts, so quality is a number the team can argue with."],
-      ["03", "Integration is the hard part", "Auth, data access, legacy systems, rollout. We ship through the plumbing rather than around it."],
-      ["04", "We leave the team faster", "Documentation, handover, and a working pattern in-house engineers can extend without us."],
-    ],
-  },
-  {
-    tab: "product ideation",
-    kicker: "PRODUCT IDEATION",
+    tab: "scoping",
+    kicker: "SCOPING",
     title: "The cheapest decision is what not to build.",
     body: "Most engagements start with a scoping week. We map the workflow, talk to the people inside it, and come back with the smallest thing worth building — plus an honest read on what to cut.",
     points: [
       ["01", "A scoping week, not a discovery phase", "Five days on site, ending in a written scope and a number. Not a two-month audit."],
       ["02", "Talk to the people doing the work", "The workflow on the slide and the workflow in the building are different documents. We design against the second."],
       ["03", "Success defined in numbers", "Before anything gets built we agree what would make this worth having, in terms you can measure later."],
-      ["04", "We will tell you not to build it", "If the problem is process rather than software, that is the finding — and it is cheaper than a prototype."],
+      ["04", "We'll tell you not to build it", "If the problem is process rather than software, that is the finding — and it is cheaper than a prototype."],
     ],
   },
   {
-    tab: "product design",
+    tab: "design",
     kicker: "PRODUCT DESIGN",
     title: "Design that survives contact with the engineering team.",
     body: "We design as the people who will build it. Flows, interfaces and systems drawn against real constraints — data you actually have, latency you actually pay, deadlines you actually hold.",
@@ -73,15 +67,27 @@ export const OFFERS: Offer[] = [
     ],
   },
   {
-    tab: "product engineering",
+    tab: "build",
     kicker: "PRODUCT ENGINEERING",
     title: "Ship the whole thing, then keep it shippable.",
-    body: "Full-stack delivery from data model to interface. Nine years of it, on products that took real traffic — 1.4M transactions in a single day at the peak of a Coinbase campaign — and on internal tools nobody outside the company ever sees.",
+    body: "Full-stack delivery from data model to interface, on products that took real traffic — 1.4M transactions in a single day at the peak of a Coinbase campaign — and on internal tools nobody outside the company ever sees.",
     points: [
       ["01", "One team, front to back", "React and Next.js on the front, real services and data behind it. No handoff seam to lose things in."],
       ["02", "Deploy from week one", "A working environment before there is a product, so progress is visible and integration risk lands early."],
       ["03", "Performance is a feature", "Measured, budgeted and defended — the reason the campaign work held up at peak."],
       ["04", "Documented as we go", "Tests, CI and written decisions, so the codebase outlives the engagement."],
+    ],
+  },
+  {
+    tab: "handover",
+    kicker: "FORWARD DEPLOYED ENGINEERING",
+    title: "Most teams can build with an LLM. Few can land one inside a real business.",
+    body: "Two years as forward deployed engineers — at Decagon AI and Scotts Miracle-Gro — sitting with the customer, learning the workflow, and turning a demo into something their staff actually uses.",
+    points: [
+      ["01", "On site, not over email", "We watch the work happen and design against what people really do, not the process on the slide."],
+      ["02", "Evals before opinions", "Prompts, retrieval and agent flows measured against real transcripts, so quality is a number the team can argue with."],
+      ["03", "Integration is the hard part", "Auth, data access, legacy systems, rollout. We ship through the plumbing rather than around it."],
+      ["04", "The team is faster after we leave", "Documentation, handover, and a working pattern in-house engineers can extend without us."],
     ],
   },
 ];
@@ -106,8 +112,8 @@ export interface AskItem {
 export const ASK_QA: AskItem[] = [
   {
     q: "What do you actually do?",
-    a: "We take a product from the first sketch to something running in production — ideation, design and full-stack engineering, done by the same team. Nine years of it, most recently embedded inside AI companies as forward deployed engineers.",
-    aPre: "We take a product from the first sketch to something running in production — ideation, design and full-stack engineering, done by the same team. Nine years of it, most recently embedded inside AI companies as forward deployed engineers.",
+    a: "We take a product from the first sketch to something running in production — scoping, design, build and handover, done by the same team.",
+    aPre: "We take a product from the first sketch to something running in production — scoping, design, build and handover, done by the same team.",
     flag: "--scope",
     ms: "18ms",
     src: { label: "./services", href: "#services" },
@@ -122,8 +128,8 @@ export const ASK_QA: AskItem[] = [
   },
   {
     q: "What does an engagement cost?",
-    a: "Fixed-price sprints or a monthly retainer, quoted after a scoping week once we know what we are actually building. No number before we understand the problem.",
-    aPre: "Fixed-price sprints or a monthly retainer, quoted after a scoping week once we know what we are actually building. ",
+    a: "Fixed-price sprints or a monthly retainer, quoted after a scoping week once we know what we're actually building. No number before we understand the problem.",
+    aPre: "Fixed-price sprints or a monthly retainer, quoted after a scoping week once we know what we're actually building. ",
     aEm: "No number before we understand the problem",
     aPost: ".",
     flag: "--cost",
@@ -132,16 +138,16 @@ export const ASK_QA: AskItem[] = [
   },
   {
     q: "Why hire you over an agency?",
-    a: "You get one team across the whole arc instead of a handoff chain, and an engineer who has sat inside customer orgs shipping AI, not a deck about it. When we leave, your team can extend the work without us.",
-    aPre: "You get one team across the whole arc instead of a handoff chain, and an engineer who has sat inside customer orgs shipping AI, not a deck about it. When we leave, your team can extend the work without us.",
+    a: "You get one team across the whole arc instead of a handoff chain, and engineers who have sat inside customer orgs shipping AI, not a deck about it. When we leave, your team can extend the work without us.",
+    aPre: "You get one team across the whole arc instead of a handoff chain, and engineers who have sat inside customer orgs shipping AI, not a deck about it. When we leave, your team can extend the work without us.",
     flag: "--vs-agency",
     ms: "19ms",
     src: { label: "./work", href: "#work" },
   },
   {
     q: "How fast can you start?",
-    a: "Usually within two weeks, and a scoping week is the first thing on the calendar. Send us what you are building and we will tell you honestly whether we are the right fit before anyone signs anything.",
-    aPre: "Usually within two weeks, and a scoping week is the first thing on the calendar. Send us what you are building and we will tell you honestly whether we are the right fit before anyone signs anything.",
+    a: "Usually within two weeks, and a scoping week is the first thing on the calendar. Send us what you're building and we'll tell you honestly whether we're the right fit before anyone signs anything.",
+    aPre: "Usually within two weeks, and a scoping week is the first thing on the calendar. Send us what you're building and we'll tell you honestly whether we're the right fit before anyone signs anything.",
     flag: "--start",
     ms: "17ms",
     src: { label: "./contact", href: "/contact" },
@@ -312,7 +318,7 @@ export const SCHEDULE: {
   },
   {
     num: "02",
-    name: "Prototype / design",
+    name: "Design",
     steps: ["wireframe", "hi-fi", "prototype"],
     span: 2,
     col: [3, 5],

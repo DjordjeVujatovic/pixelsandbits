@@ -12,7 +12,7 @@ export default function Footer({ linkBrand = false }: { linkBrand?: boolean }): 
         ) : (
           <span className="pb-footer-brand">pixels&bits</span>
         )}
-        <span>product engineering &amp; ai deployment</span>
+        <span>end-to-end product engineering for teams shipping AI</span>
         <span className="pb-spacer" />
         <Link href="/contact">{CTA_LABEL} →</Link>
       </div>

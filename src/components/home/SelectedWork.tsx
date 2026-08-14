@@ -18,7 +18,7 @@ const PEEK_GAP = 30;
 
 /* Rail labels; chips shorten two names for width on mobile. */
 const RAIL: { label: string; chip?: string }[] = [
-  { label: "Leading Frontier Lab", chip: "Frontier Lab" },
+  { label: "Frontier AI lab" },
   { label: "Decagon AI" },
   { label: "Scotts Miracle-Gro", chip: "Scotts" },
   { label: "Coinbase" },
@@ -88,7 +88,7 @@ const CASES: {
     path: { co: "coinbase", role: "onchain-summer" },
     tag: "CRYPTO EXCHANGE",
     blurb:
-      "Frontend for Onchain Summer 2023, the multi-week festival that launched Base, Coinbase's Ethereum L2, with daily NFT drops from Coca-Cola, Atari and OpenSea.",
+      "Delivered as part of the Lazer Technologies team. Frontend for Onchain Summer 2023, the multi-week festival that launched Base, Coinbase's Ethereum L2, with daily NFT drops from Coca-Cola, Atari and OpenSea.",
     link: { label: "coinbase.com →", href: "https://www.coinbase.com/" },
     stats: [
       { figure: "700K+", caption: "NFTs minted", count: { target: 700, suffix: "K+" } },
@@ -96,7 +96,7 @@ const CASES: {
       { figure: "$242M", caption: "bridged to Base in two weeks", lime: true },
     ],
     detail:
-      "Delivered as part of the Lazer Technologies team. We built wallet onboarding that took under 60 seconds for non-crypto users, and a custom ETH to Base bridge on the Optimism SDK. At peak: 145K+ users and 1.4M transactions in a single day. React, Next.js, TypeScript, Thirdweb.",
+      "We built wallet onboarding that took under 60 seconds for non-crypto users, and a custom ETH to Base bridge on the Optimism SDK. At peak: 145K+ users and 1.4M transactions in a single day. React, Next.js, TypeScript, Thirdweb.",
   },
   {
     num: "CASE_05",
@@ -140,6 +140,10 @@ export default function SelectedWork(): JSX.Element {
   const [index, setIndex] = useState(0);
   const [ys, setYs] = useState<number[] | null>(null);
   const [stageH, setStageH] = useState(0);
+  /* The ten-client index renders ONCE — the desktop side list or the
+     mobile chip rail, never both hidden-by-CSS (screen readers would
+     announce the list twice). */
+  const [mobileNav, setMobileNav] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLElement>(null);
@@ -155,6 +159,14 @@ export default function SelectedWork(): JSX.Element {
 
   const reduced = () =>
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 899px)");
+    const apply = () => setMobileNav(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   /* Measured vertical centering with peeking neighbors
      (design_handoff_client_portfolio/README.md). The active card
@@ -288,7 +300,7 @@ export default function SelectedWork(): JSX.Element {
       left: el.offsetLeft - strip.clientWidth / 2 + el.offsetWidth / 2,
       behavior: reduced() ? "auto" : "smooth",
     });
-  }, [index]);
+  }, [index, mobileNav]);
 
   // Index row / chip click → jump to the middle of that card's slice.
   const goTo = useCallback((k: number) => {
@@ -298,17 +310,6 @@ export default function SelectedWork(): JSX.Element {
     const top = section.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({
       top: top + ((k + 0.5) / CARDS) * travel,
-      behavior: reduced() ? "auto" : "smooth",
-    });
-  }, []);
-
-  // Skip pill: land just past the section's runway.
-  const skip = useCallback(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const bottom = section.getBoundingClientRect().bottom + window.scrollY;
-    window.scrollTo({
-      top: bottom - window.innerHeight + 10,
       behavior: reduced() ? "auto" : "smooth",
     });
   }, []);
@@ -348,15 +349,17 @@ export default function SelectedWork(): JSX.Element {
             <Reveal variant="rev">
               <div className="intro">
                 <div className="pb-kicker">$ cat ./client-portfolio</div>
-                <h2 className="sr-h">The companies we have built inside.</h2>
+                <h2 className="sr-h">Companies we&apos;ve built inside</h2>
                 <p className="sr-lead">
-                  Crypto exchanges, frontier AI labs, a Fortune 500 retailer,
+                  Crypto exchanges, a frontier AI lab, a Fortune 500 retailer,
                   sports platforms with millions of collectors.
                 </p>
               </div>
-              <nav className="stg-idx" aria-label="Case studies">
-                {RAIL.map((_, k) => railButton(k, false))}
-              </nav>
+              {!mobileNav ? (
+                <nav className="stg-idx" aria-label="Case studies">
+                  {RAIL.map((_, k) => railButton(k, false))}
+                </nav>
+              ) : null}
               <div className="stg-prog">
                 <span>{`${`0${index + 1}`.slice(-2)} / ${CARDS}`}</span>
                 <span className="stg-bar" aria-hidden="true">
@@ -367,9 +370,11 @@ export default function SelectedWork(): JSX.Element {
           </div>
 
           <div className="stg-stage">
-            <nav className="strip" aria-label="Case studies" ref={stripRef}>
-              {RAIL.map((_, k) => railButton(k, true))}
-            </nav>
+            {mobileNav ? (
+              <nav className="strip" aria-label="Case studies" ref={stripRef}>
+                {RAIL.map((_, k) => railButton(k, true))}
+              </nav>
+            ) : null}
 
             <div className="deck" ref={deckRef}>
               <div className={dkClass(0)} style={dkStyle(0)}>
@@ -523,16 +528,6 @@ export default function SelectedWork(): JSX.Element {
               ))}
             </div>
 
-            {/* Nothing left to skip on the last card — it fades out but
-                keeps its space so the flex column doesn't jump. */}
-            <button
-              className={`skip${index === CARDS - 1 ? " skip-gone" : ""}`}
-              type="button"
-              tabIndex={index === CARDS - 1 ? -1 : undefined}
-              onClick={skip}
-            >
-              skip to engagement process ↓
-            </button>
           </div>
         </div>
       </div>
