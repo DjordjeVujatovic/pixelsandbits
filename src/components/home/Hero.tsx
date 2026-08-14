@@ -2,14 +2,13 @@ import Link from "next/link";
 import { CTA_LABEL, PIPELINE_STEPS } from "@/lib/content";
 import Engagement from "./Engagement";
 
-/* The four hero facts — scale evidence without repeating one point
-   three ways. Facts 1/3 lime, 2/4 cyan (a second data voice, not
-   decoration). */
+/* The four hero facts (owner-selected set, 2026-08-13). Facts 1/3
+   lime, 2/4 cyan (a second data voice, not decoration). */
 const FACTS: { v: string; k: string; cyan?: boolean }[] = [
-  { v: "Fortune 500", k: "enterprise stacks and legacy systems" },
-  { v: "1.4M", k: "transactions in a single day, peak, on a frontend we built", cyan: true },
-  { v: "10×", k: "productivity gain on ZeroDown's investment memos" },
-  { v: "1", k: "frontier AI lab, under NDA", cyan: true },
+  { v: "$100B+", k: "combined valuation of the companies we have worked with" },
+  { v: "2", k: "Major AI labs", cyan: true },
+  { v: "5", k: "multi-billion dollar companies" },
+  { v: "Fortune 500", k: "enterprise stacks and legacy systems", cyan: true },
 ];
 
 /* Split-ground hero: dark left cell carries the copy column, the right
