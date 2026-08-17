@@ -1,0 +1,3181 @@
+/* ============================================================
+   Pixels & Bits — global stylesheet
+   Values transcribed from the design handoff (tokens.css and
+   the reference pages). Component classes keep the handoff's
+   pb-/ct- naming so the build can be diffed against the spec.
+   ============================================================ */
+
+:root {
+  /* Core palette — final resolved theme, exact values */
+  --bg: #05080d;
+  --surface: #0a1018;
+  --fg: #dbe6f2;
+  --fg-strong: #ffffff;
+  --acc: #c6f24e;
+  --acc2: #5ee0e0;
+  --ink: #05080d; /* text on lime */
+
+  /* Layout — the handoff specified a 1120px column; widened to 1440px
+     (owner decision, 2026-08-10). Gutters unchanged. */
+  --maxw: 1440px;
+  --gutter: 48px;
+
+  /* Radii */
+  --r-pill: 999px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: clip;
+}
+
+/* overflow-x: clip (not hidden) — clips the 1000px hero glow and
+   full-bleed bands without creating a scroll container, so the
+   sticky header keeps sticking to the viewport. */
+.pb-page {
+  position: relative;
+  overflow-x: clip;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+a {
+  color: var(--acc);
+  text-decoration: none;
+}
+a:hover {
+  color: color-mix(in srgb, var(--acc) 70%, var(--fg-strong));
+}
+::selection {
+  background: color-mix(in srgb, var(--acc) 30%, transparent);
+}
+:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 3px;
+}
+
+button {
+  font: inherit;
+}
+
+.pb-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------- Page shell ---------------- */
+
+/* Column containers are content-box: the --maxw column plus 48px gutters
+   outside it. Both pages share this treatment (the prototype's contact
+   page was 96px narrower by accident; normalized deliberately). */
+.pb-main,
+.ct-main,
+.pb-header nav,
+.pb-footer > div {
+  box-sizing: content-box;
+}
+.pb-main {
+  position: relative;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 48px;
+}
+.ct-main {
+  position: relative;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 48px 90px;
+}
+
+/* ---------------- Hero band ----------------
+   Full-bleed inside the column via the margin/padding trick; isolated so
+   the layers can never escape. Pulled up 80px with NO compensating
+   padding — the split hero itself runs to the viewport top, behind the
+   transparent header (the left cell's 110px top padding clears it). */
+.pb-hero-wrap {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
+  margin-top: -80px;
+}
+/* Desktop: the hero band owns the full viewport — the hero centres in
+   the spare height and the client strip anchors the bottom edge, so the
+   next section never peeks above the fold on tall screens. */
+@media (min-width: 1200px) {
+  .pb-hero-wrap {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 28px;
+  }
+  .pb-hero-wrap > .pb-hero { flex: 1 }
+}
+.pb-hero-wrap > .pb-hero,
+.pb-hero-wrap > .pb-cstrip {
+  position: relative;
+  z-index: 1;
+}
+.bgL { position: absolute; inset: 0; pointer-events: none; z-index: 0 }
+/* the light — corner-concentrated: one wash, not three blobs.
+   Pre-blurred via soft multi-stop falloffs instead of filter: blur(46px)
+   — the live blur measurably dropped frames (the spec's sanctioned
+   fallback), so the gradients carry the softness and the drift is
+   slightly slower. */
+.bg-aurora {
+  background:
+    radial-gradient(52% 62% at 12% 0%, color-mix(in srgb, var(--acc) 24%, transparent), color-mix(in srgb, var(--acc) 10%, transparent) 38%, transparent 72%),
+    radial-gradient(48% 58% at 62% 10%, color-mix(in srgb, var(--acc2) 19%, transparent), color-mix(in srgb, var(--acc2) 8%, transparent) 40%, transparent 74%),
+    radial-gradient(44% 54% at 96% 34%, color-mix(in srgb, var(--acc) 16%, transparent), color-mix(in srgb, var(--acc) 7%, transparent) 38%, transparent 74%);
+  animation: bg-drift 26s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes bg-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.02); opacity: .9 }
+  50%      { transform: translate3d(-30px, 26px, 0) scale(1.12); opacity: 1 }
+}
+/* the technical texture, masked near the headline */
+.bg-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--fg) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--fg) 5%, transparent) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(ellipse 76% 62% at 30% 14%, #000 4%, transparent 70%);
+          mask-image: radial-gradient(ellipse 76% 62% at 30% 14%, #000 4%, transparent 70%);
+  animation: bg-scroll 30s linear infinite;
+}
+@keyframes bg-scroll { to { background-position: 46px 46px } }
+/* the hand-off to the section below */
+.bg-fade { background: linear-gradient(180deg, transparent 58%, var(--bg) 100%) }
+
+/* Backdrops (contact page) */
+.pb-scanlines {
+  position: absolute;
+  inset: 0;
+  height: 1400px;
+  background: repeating-linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--fg) 2.2%, transparent) 0 1px,
+    transparent 1px 4px
+  );
+  pointer-events: none;
+}
+.ct-scanlines {
+  height: 900px;
+}
+.pb-glow {
+  position: absolute;
+  top: -260px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  height: 560px;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--acc) 12%, transparent),
+    transparent 66%
+  );
+  animation: pb-glow 7s ease-in-out infinite;
+  pointer-events: none;
+}
+.ct-glow {
+  top: -240px;
+  height: 520px;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--acc) 13%, transparent),
+    transparent 66%
+  );
+}
+
+/* ---------------- Keyframes ---------------- */
+
+@keyframes pb-cursor { 0%, 45% { opacity: 1 } 50%, 100% { opacity: 0 } }
+@keyframes pb-glow { 0%, 100% { opacity: .5 } 50% { opacity: 1 } }
+@keyframes pb-in { from { opacity: 0; transform: translateY(22px) } to { opacity: 1; transform: none } }
+@keyframes pb-tick { 0%, 100% { opacity: .35 } 50% { opacity: 1 } }
+@keyframes pb-shine { 0% { background-position: -180% 0 } 55%, 100% { background-position: 180% 0 } }
+@keyframes pb-pop { from { opacity: 0; transform: translateY(14px) scale(.985) } to { opacity: 1; transform: none } }
+@keyframes pb-halo { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
+@keyframes pb-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--acc) 55%, transparent) } 70%, 100% { box-shadow: 0 0 0 8px transparent } }
+@keyframes pb-redpulse { 0%, 100% { opacity: .5 } 50% { opacity: .85 } }
+@keyframes pb-pane-in { from { opacity: 0; transform: translateY(14px); filter: blur(5px) } to { opacity: 1; transform: none; filter: none } }
+@keyframes pb-token { from { opacity: 0; filter: blur(5px); transform: translateY(3px) } to { opacity: 1; filter: none; transform: none } }
+@keyframes pb-wave { 0%, 100% { transform: scaleY(.18) } 50% { transform: scaleY(1) } }
+@keyframes ct-in { from { opacity: 0; transform: translateY(22px) } to { opacity: 1; transform: none } }
+@keyframes ct-token { from { opacity: 0; filter: blur(5px); transform: translateY(3px) } to { opacity: 1; filter: none; transform: none } }
+
+/* ---------------- Reveal-on-scroll system ---------------- */
+
+.pb-in { animation: pb-in .8s cubic-bezier(.2,.75,.3,1) both }
+.pb-rev { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.2,.75,.3,1), transform .7s cubic-bezier(.2,.75,.3,1) }
+.pb-rev.pb-on { opacity: 1; transform: none }
+.pb-rev-l, .pb-rev-r, .pb-rev-s { transition: opacity .75s cubic-bezier(.2,.75,.3,1), transform .75s cubic-bezier(.2,.75,.3,1) }
+.pb-rev-l { opacity: 0; transform: translateX(-46px) }
+.pb-rev-r { opacity: 0; transform: translateX(46px) }
+.pb-rev-s { opacity: 0; transform: scale(.965) translateY(20px) }
+.pb-rev-l.pb-on, .pb-rev-r.pb-on, .pb-rev-s.pb-on { opacity: 1; transform: none }
+
+.pb-rev.pb-on .pb-stag > *,
+.pb-rev-l.pb-on .pb-stag > *,
+.pb-rev-r.pb-on .pb-stag > *,
+.pb-rev-s.pb-on .pb-stag > * { animation: pb-pop .6s cubic-bezier(.2,.75,.3,1) both }
+.pb-stag > *:nth-child(2) { animation-delay: .09s }
+.pb-stag > *:nth-child(3) { animation-delay: .18s }
+.pb-stag > *:nth-child(4) { animation-delay: .27s }
+.pb-stag > *:nth-child(5) { animation-delay: .36s }
+.pb-stag > *:nth-child(6) { animation-delay: .45s }
+
+/* ---------------- Header ---------------- */
+
+.pb-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+  transition: background .3s ease, border-color .3s ease;
+}
+.pb-header nav {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 15px 48px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: padding .25s ease;
+}
+.ct-header nav {
+  padding: 16px 48px;
+  gap: 32px;
+}
+header.pb-compact nav { padding-top: 9px !important; padding-bottom: 9px !important }
+header.pb-compact {
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  border-color: color-mix(in srgb, var(--fg) 12%, transparent);
+}
+/* Top-of-page state over the split hero (scrollY ≤ 8, toggled in
+   Header.tsx): fully transparent, no blur, no hairline. The scrolled
+   state above (pb-compact, scrollY > 40) is the rgba(5,8,13,.94) bar.
+   body.pb-navopen's solid background outranks this while the drawer is
+   open. */
+.pb-header.pb-navtop {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+/* The centred capsule straddles the seam at every desktop width (five
+   links ≈ 530px; the seam sits at 52.5%), so the handoff's ink-on-lime
+   links would vanish over the dark half. The capsule keeps its own dark
+   pill ground instead — legible over both halves — and only the CTA,
+   which genuinely sits over the lime flood ≥1200px, flips to ink.
+   Below the collapse the whole nav is over dark: light links, lime CTA,
+   as today. */
+@media (min-width: 1200px) {
+  .pb-header.pb-navtop .pb-cta { color: var(--ink) }
+  .pb-header.pb-navtop .pb-cta .pb-brk { color: rgba(5, 8, 13, .5) }
+  .pb-header.pb-navtop .pb-cta:hover,
+  .pb-header.pb-navtop .pb-cta:hover .pb-brk { color: var(--ink) }
+}
+
+.pb-brand {
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-strong);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.pb-brand:hover { color: var(--fg-strong) }
+.pb-brand-dollar { color: var(--acc) }
+.pb-brand-caret { animation: pb-cursor 1.05s steps(1) infinite; color: var(--acc) }
+
+.pb-spacer { flex: 1 }
+
+/* No catch-all anchor tint here — every nav anchor (.pb-brand,
+   .pb-navlink, .pb-cta) owns its color, and an element-qualified rule
+   would out-specify the plain class selectors. */
+
+.pb-capsule {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  /* "--services" etc. must never break across lines */
+  white-space: nowrap;
+  transition: background .3s ease, border-color .3s ease;
+}
+.pb-pill {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--acc) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acc) 42%, transparent);
+  transition: left .38s cubic-bezier(.3,.9,.3,1), width .38s cubic-bezier(.3,.9,.3,1), opacity .25s ease;
+  pointer-events: none;
+}
+.pb-navlink {
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 9px 16px;
+  border-radius: var(--r-pill);
+  /* White when not selected; selection and hover accents stay lime */
+  color: var(--fg-strong);
+  /* .3s, not .2s — paced with the header's ground flip */
+  transition: color .3s ease;
+}
+.pb-navlink .pb-dash { color: color-mix(in srgb, var(--fg-strong) 45%, transparent); transition: color .3s ease }
+.pb-navlink:hover { color: var(--fg-strong) }
+.pb-navlink:hover .pb-dash { color: var(--acc) }
+.pb-navlink.pb-navon { color: var(--acc) }
+.pb-navlink.pb-navon .pb-dash { color: var(--acc) }
+
+.pb-navlinks { display: flex; align-items: center }
+.pb-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  color: var(--acc);
+  /* A step above the 13px capsule links */
+  font-size: 14px;
+  padding: 9px 8px;
+  white-space: nowrap;
+  transition: color .3s ease;
+}
+/* Hover must not change the CTA's width — the paired spacers recentre
+   the capsule around it, so any growth shifts the whole nav. Brackets
+   brighten and the arrow slides; the gap stays put. */
+.pb-brk { color: color-mix(in srgb, var(--acc) 45%, transparent); transition: color .22s ease }
+.pb-cta:hover { color: var(--acc) }
+.pb-cta:hover .pb-brk { color: var(--acc) }
+.pb-cta:hover .pb-arrow { transform: translateX(3px) }
+
+.pb-arrow { transition: transform .25s ease; display: inline-block }
+
+/* ---------------- Mobile nav drawer (<720px) ----------------
+   Full-screen panel sliding from the right. One body.pb-navopen class
+   drives the drawer, the scrim, the page recede and the burger→X. The
+   .32,.72,0,1 curve is shared across all three so they read as one
+   movement — do not change it. */
+
+.pb-burger {
+  display: none;
+  position: relative;
+  z-index: 60;
+  width: 40px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+  border-radius: 10px;
+  background: none;
+  padding: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.pb-bar {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--fg);
+  border-radius: 2px;
+  transition: transform .4s cubic-bezier(.32,.72,0,1), opacity .25s ease, width .3s ease, background .3s ease;
+}
+body.pb-navopen .pb-bar1 { transform: translateY(5.5px) rotate(45deg) }
+body.pb-navopen .pb-bar2 { opacity: 0; width: 0 }
+body.pb-navopen .pb-bar3 { transform: translateY(-5.5px) rotate(-45deg) }
+body.pb-navopen .pb-bar { background: var(--acc) }
+body.pb-navopen .pb-burger { border-color: color-mix(in srgb, var(--acc) 45%, transparent) }
+/* While the drawer is open the header sits over the solid drawer, so
+   its backdrop blur only burns frames re-blurring the moving page. */
+body.pb-navopen .pb-header {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--bg);
+}
+
+.pb-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: rgba(2,4,8,.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .45s ease;
+  will-change: opacity;
+}
+body.pb-navopen .pb-scrim { opacity: 1; pointer-events: auto }
+
+.pb-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform .5s cubic-bezier(.32,.72,0,1), visibility 0s .5s;
+  will-change: transform;
+}
+body.pb-navopen .pb-drawer { transform: translateX(0); visibility: visible; transition: transform .5s cubic-bezier(.32,.72,0,1) }
+.pb-drawer-top { height: 54px; flex: none } /* clears the header */
+.pb-drawer-body { flex: 1; display: flex; flex-direction: column; padding: 20px 22px 0; overflow-y: auto }
+.pb-drawer-foot { padding: 18px 22px 24px; flex: none }
+
+.pb-recede {
+  position: relative;
+  transition: transform .5s cubic-bezier(.32,.72,0,1), opacity .4s ease;
+}
+body.pb-navopen .pb-recede {
+  transform: translateX(-14%) scale(.96);
+  filter: blur(2px);
+  opacity: .55;
+}
+
+.pb-dlink {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 15px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
+  opacity: 0;
+  transform: translateX(26px);
+  will-change: transform, opacity;
+}
+.pb-dn { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc); letter-spacing: .1em; width: 22px; flex: none }
+.pb-dt { font-size: 30px; font-weight: 600; letter-spacing: -.03em; color: var(--fg-strong); line-height: 1.1 }
+.pb-dlink[aria-current="page"] .pb-dt { color: var(--acc) }
+.pb-darr { margin-left: auto; font-family: var(--font-mono), monospace; color: color-mix(in srgb, var(--fg) 26%, transparent) }
+/* Links arrive after the slide is underway rather than travelling with it */
+body.pb-navopen .pb-dlink { animation: pb-dlink-in .55s cubic-bezier(.2,.85,.3,1) forwards }
+body.pb-navopen .pb-dlink:nth-child(1) { animation-delay: .10s }
+body.pb-navopen .pb-dlink:nth-child(2) { animation-delay: .16s }
+body.pb-navopen .pb-dlink:nth-child(3) { animation-delay: .22s }
+body.pb-navopen .pb-dlink:nth-child(4) { animation-delay: .28s }
+body.pb-navopen .pb-dlink:nth-child(5) { animation-delay: .34s }
+body.pb-navopen .pb-dlink:nth-child(6) { animation-delay: .40s }
+@keyframes pb-dlink-in { to { opacity: 1; transform: none } }
+
+.pb-dft { opacity: 0; transform: translateY(12px); will-change: transform, opacity }
+body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s forwards }
+@keyframes pb-dft-in { to { opacity: 1; transform: none } }
+.pb-dcta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: var(--acc);
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 16px;
+  border-radius: 12px;
+}
+.pb-dcta:hover { color: var(--ink) }
+
+@media (min-width: 721px) {
+  .pb-drawer, .pb-scrim, .pb-burger { display: none }
+}
+
+/* Contact-page capsule (no sliding pill) */
+.ct-capsule {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+.ct-capsule a {
+  white-space: nowrap;
+  padding: 9px 16px;
+  border-radius: var(--r-pill);
+  color: var(--fg-strong);
+  transition: color .2s ease, background .2s ease;
+}
+.ct-capsule a:hover { background: color-mix(in srgb, var(--fg) 6%, transparent); color: var(--fg-strong) }
+.ct-dash { opacity: .45; margin-right: 1px }
+
+/* ---------------- Buttons / cards / rows ---------------- */
+
+.pb-btn { transition: transform .2s ease, box-shadow .2s ease, background .2s ease }
+.pb-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px color-mix(in srgb, var(--acc) 30%, transparent) }
+.pb-btn:active { transform: translateY(0) }
+.pb-btn-primary {
+  display: inline-block;
+  background: var(--acc);
+  color: var(--bg);
+  padding: 15px 26px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.pb-btn-primary:hover { color: var(--bg) }
+.pb-btn-ghost {
+  display: inline-block;
+  border: 1px solid color-mix(in srgb, var(--fg) 16%, transparent);
+  padding: 15px 26px;
+  border-radius: 8px;
+  color: color-mix(in srgb, var(--fg) 82%, transparent);
+}
+
+.pb-card { transition: border-color .25s ease, transform .25s ease, background .25s ease }
+.pb-card:hover {
+  border-color: color-mix(in srgb, var(--acc) 55%, transparent);
+  transform: translateY(-3px);
+  background: color-mix(in srgb, var(--fg) 3.5%, transparent);
+}
+.pb-card:hover .pb-arrow { transform: translateX(5px) }
+
+/* ---------------- Type scale ---------------- */
+
+.pb-h-lg { font-size: 52px; line-height: 1.04; letter-spacing: -.035em; font-weight: 600 }
+.pb-h-md { font-size: 40px; line-height: 1.08; letter-spacing: -.03em; font-weight: 600 }
+.pb-h-sm { font-size: 28px; line-height: 1.15; letter-spacing: -.025em; font-weight: 600 }
+
+/* Shared utility: the lime→cyan drifting text gradient used on figure
+   and headline emphasis (client-portfolio $100B figures, closing proof
+   band). Cyan is mixed 42% into lime — atmosphere, noticed on the
+   second look. One definition; do not duplicate. */
+.pb-grad {
+  background: linear-gradient(100deg,
+    var(--acc) 22%,
+    color-mix(in srgb, var(--acc2) 42%, var(--acc)) 52%,
+    var(--acc) 80%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pb-grad-drift 9s ease-in-out infinite;
+}
+@keyframes pb-grad-drift {
+  0%, 100% { background-position: 0% 50% }
+  50%      { background-position: 100% 50% }
+}
+
+.pb-kicker {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--fg) 38%, transparent);
+  letter-spacing: .1em;
+}
+
+/* ---------------- Hero ---------------- */
+
+/* Split-ground hero: dark left cell / lime flood right cell, seam at
+   ~52.5%, the terminal panel absolutely positioned across it. Full-bleed
+   again inside the already-restored hero-wrap column — the margin trick
+   nests cleanly because both containers are viewport-centred. */
+.pb-hero {
+  position: relative;
+  overflow: hidden;
+  margin-inline: calc(50% - 50vw);
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  /* 150px reserved so the client strip lands ABOVE the fold on desktop;
+     the hero-wrap flex then stretches the hero to pin the strip to the
+     viewport bottom edge. */
+  min-height: calc(100dvh - 150px);
+}
+.pb-hero-left {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  padding: 110px 48px 40px;
+  /* Track the centred content column (--maxw + gutters) so the copy
+     stays flush with the brand above and the client strip below on
+     viewports wider than 1536px. */
+  padding-left: max(48px, calc(50vw - 720px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* Faint lime ambience on the dark side — replaces the old full-width
+   aurora inside the hero band. */
+.pb-hero-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(56% 46% at 25% 15%, rgba(198, 242, 78, .09), transparent 70%);
+  pointer-events: none;
+}
+.pb-hero-left > * { position: relative }
+/* Column max-width + the 48px padding must stay left of the terminal's
+   left edge (seat at 66% minus half of 680px). */
+.pb-hero-left .pb-hero-h,
+.pb-hero-left .pb-hero-sub,
+.pb-hero-left .pb-run,
+.pb-hero-left .pb-facts { max-width: 620px }
+.pb-hero-left .pb-hero-btns { max-width: 620px; margin-top: 14px }
+/* The clamp tracks the terminal's left edge (66vw − 360px with the
+   1.06 scale on the 680px seat) minus the column-tracking left
+   padding, so copy never slides under the panel at any desktop width.
+   Desktop only — the single-column hero keeps the flat 620px cap. */
+@media (min-width: 1200px) {
+  .pb-hero-left {
+    --hero-pl: max(48px, calc(50vw - 720px));
+    --hero-copy-w: min(620px, calc(66vw - 360px - var(--hero-pl)));
+  }
+  .pb-hero-left .pb-hero-h,
+  .pb-hero-left .pb-hero-sub,
+  .pb-hero-left .pb-run,
+  .pb-hero-left .pb-facts,
+  .pb-hero-left .pb-hero-btns { max-width: var(--hero-copy-w) }
+}
+/* Narrow desktop (1200–1399px): the clamped column is under the
+   ~510px the 80px headline needs for "From design to" on one line —
+   "deployment," cannot break and would slide under the panel. Step the
+   copy scale down a notch until the geometry gives the full line room;
+   the smaller wraps also keep the client strip above the fold on
+   900px-tall viewports. */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .pb-hero .pb-hero-h { font-size: 46px; line-height: 1.06 }
+  .pb-hero-left .pb-run { font-size: 12.5px }
+  .pb-hero-left .pb-fv { font-size: 18px }
+  .pb-hero-left .pb-fk { font-size: 12px }
+  /* The narrower clamp wraps the copy taller — give the height back so
+     the client strip holds above the fold at 900px-tall viewports. */
+  .pb-hero-left { padding-top: 96px; padding-bottom: 32px }
+}
+.pb-hero-lime {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(155deg, #d3f776 0%, #c6f24e 34%, #9aea8b 72%, #6fe3b0 100%);
+}
+/* Ghost ampersand, live text cropped by the cell */
+.pb-hero-amp {
+  position: absolute;
+  right: -110px;
+  bottom: -280px;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 700;
+  font-size: 900px;
+  line-height: 1;
+  color: rgba(5, 8, 13, .1);
+  pointer-events: none;
+  user-select: none;
+}
+/* Terminal on the seam. Position and float live on two nested elements
+   on purpose — the seat owns the centering translate, the float owns
+   the keyframes; one element would have the animation overwrite the
+   centering transform. */
+.pb-hero-seat {
+  position: absolute;
+  left: 66%;
+  top: 50%;
+  width: 680px;
+  /* The scale grows the panel proportionately (width AND height —
+     Engagement's internal height is content-fixed, so a plain width
+     bump would only widen it). Keyframe transforms live on the float
+     child, never here. */
+  transform: translate(-50%, -50%) scale(1.06);
+}
+/* The panel is the dominant object on the right half — on very wide
+   viewports it scales up before the lime flood gains whitespace. */
+@media (min-width: 1800px) {
+  .pb-hero-seat { width: 720px }
+}
+.pb-hero-float {
+  position: relative;
+  animation: pb-float 7s ease-in-out infinite;
+}
+@keyframes pb-float {
+  0%, 100% { transform: translateY(0) }
+  50% { transform: translateY(-12px) }
+}
+/* Seam shadow — grounds the panel over both halves; the panel keeps its
+   own .pb-term-halo on top of this. */
+.pb-hero-shadow {
+  position: absolute;
+  inset: -36px -26px;
+  border-radius: 30px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(5, 8, 13, .45), transparent 68%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+.pb-hero-termin { position: relative }
+/* iPad band: every iPad width — 744/820/1024 portrait and 1180
+   landscape — collapses to a single column, source order copy →
+   terminal band. The lime cell disappears; the seat becomes a
+   full-width lime band with the terminal static and centred inside.
+   Headline steps 62 → 54 → 46 (≤720) by breakpoint. */
+@media (max-width: 1199px) {
+  .pb-hero { display: block; min-height: 0 }
+  .pb-hero-left { padding: 110px 48px 44px; justify-content: flex-start }
+  .pb-hero .pb-hero-h { font-size: 52px; line-height: 1.06 }
+  .pb-hero-lime { display: none }
+  .pb-hero-seat {
+    position: static;
+    width: auto;
+    transform: none;
+    padding: 40px 28px;
+    background: linear-gradient(155deg, #d3f776 0%, #c6f24e 40%, #9aea8b 85%, #6fe3b0 100%);
+  }
+  .pb-hero-float { max-width: 620px; margin: 0 auto }
+}
+/* Keep the copy column's gutters in lockstep with .pb-main's responsive
+   gutters so the hero text stays aligned with the client strip below. */
+@media (max-width: 960px) {
+  .pb-hero-left { padding-inline: 28px }
+}
+@media (max-width: 720px) {
+  .pb-hero-left { padding: 96px 18px 36px }
+  .pb-hero .pb-hero-h { font-size: 40px }
+  .pb-hero-seat { padding: 28px 16px }
+}
+
+/* ---------------- Hero client strip ---------------- */
+
+.pb-cstrip {
+  border-top: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  padding-top: 20px;
+  margin-top: 8px;
+}
+.pb-cbar2 {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: color-mix(in srgb, var(--fg) 34%, transparent);
+}
+.pb-cline2 {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--fg) 12%, transparent), transparent);
+}
+/* The overline carries the cyan data voice (owner request) */
+.pb-clabel { color: color-mix(in srgb, var(--acc2) 85%, transparent); white-space: nowrap }
+.pb-clist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px 26px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pb-citem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--fg) 34%, transparent);
+  transition: color .3s ease;
+}
+.pb-citem.pb-con2 { color: var(--fg-strong) }
+.pb-cdot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--fg) 22%, transparent);
+  flex: none;
+  transition: background .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.pb-citem.pb-con2 .pb-cdot {
+  background: var(--acc);
+  border-color: var(--acc);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--acc) 60%, transparent);
+}
+.pb-cread {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+  min-width: 0;
+}
+.pb-cprompt { color: var(--acc); flex: none }
+.pb-ctxt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0 }
+.pb-cblk {
+  width: 7px;
+  height: 14px;
+  background: var(--acc);
+  flex: none;
+  animation: pb-cursor 1.05s steps(1) infinite;
+}
+@media (max-width: 960px) {
+  .pb-clist { gap: 10px 20px }
+}
+@media (max-width: 720px) {
+  .pb-cstrip { padding-top: 18px }
+  .pb-cbar2 { font-size: 10px; gap: 10px }
+  .pb-clist { gap: 9px 16px; margin-top: 15px }
+  .pb-citem { font-size: 12px; gap: 7px }
+  .pb-cread { font-size: 11.5px; margin-top: 14px }
+}
+@media (max-width: 480px) {
+  .pb-clist { gap: 8px 14px }
+  .pb-citem { font-size: 11.5px }
+  .pb-cread { font-size: 11px }
+}
+.pb-hero-h {
+  /* 52/46/40 by breakpoint — the canonical headline is 2.3× the old
+     six-word one, so the 80px scale can no longer set in the clamped
+     column; 52px matches the existing .pb-h-lg display size. */
+  font-size: 52px;
+  line-height: 1.06;
+  letter-spacing: -.035em;
+  font-weight: 600;
+  margin: 0;
+}
+.pb-hero-l1 { display: block; margin: 0 0 8px }
+.pb-hero-h-accent {
+  display: block;
+  margin: 0 0 22px;
+  background: linear-gradient(100deg, var(--acc) 20%, var(--fg-strong) 45%, var(--acc) 70%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pb-shine 5.5s ease-in-out infinite;
+}
+/* The subhead and connecting sentence (canonical positioning copy) sit
+   between the headline and the spine. Body voice, two weights down. */
+.pb-hero-sub {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--fg) 76%, transparent);
+}
+/* The spine — one labelled sequence, smaller than the headline. */
+.pb-run-cap {
+  margin-top: 20px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: color-mix(in srgb, var(--fg) 45%, transparent);
+}
+.pb-run {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+}
+.pb-rw { display: inline-flex; align-items: baseline; gap: 9px; color: var(--fg-strong) }
+.pb-rsep { color: color-mix(in srgb, var(--acc) 55%, transparent) }
+
+
+.pb-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 22px;
+  margin: 14px 0 14px;
+  padding-top: 15px;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+}
+.pb-fact { display: flex; flex-direction: column; gap: 4px }
+/* 24px values / 13.5px keys (split-hero spec — the 620px column gives
+   "Fortune 500" room on one line). Facts 2 and 4 carry the cyan data
+   voice. Phone sizes below stay on the existing collapse scale. */
+.pb-fv {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--acc);
+  line-height: 1.1;
+}
+.pb-fv.c { color: var(--acc2) }
+.pb-fk {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.42;
+  color: color-mix(in srgb, var(--fg) 58%, transparent);
+}
+@media (max-width: 720px) {
+  .pb-run { font-size: 11.5px; gap: 7px }
+  .pb-rw { gap: 7px }
+  .pb-facts { gap: 13px 16px }
+  .pb-fv { font-size: 16px }
+  .pb-fk { font-size: 11.5px }
+}
+@media (max-width: 430px) {
+  .pb-facts { grid-template-columns: 1fr } /* two across is too tight for "Fortune 500" */
+}
+.pb-hero-btns {
+  display: flex;
+  gap: 12px;
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+/* ---------------- Terminal ---------------- */
+
+.pb-term { position: relative }
+/* The one control under the engagement panel. Muted until hovered so it
+   never competes with the CTA for the accent. */
+.pb-term-halo {
+  position: absolute;
+  inset: -30px -20px;
+  border-radius: 26px;
+  background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--acc) 11%, transparent), transparent 66%);
+  filter: blur(14px);
+  animation: pb-halo 6s ease-in-out infinite;
+  pointer-events: none;
+}
+.pb-term-shell {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--acc) 22%, transparent);
+  border-radius: 13px;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 40px 110px rgba(0, 0, 0, .65), 0 0 0 1px color-mix(in srgb, var(--fg) 5%, transparent);
+}
+.pb-term-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
+}
+.pb-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--fg) 16%, transparent);
+  display: block;
+}
+.pb-term-name {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+  margin-left: 8px;
+}
+.pb-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-pill);
+  background: var(--acc);
+  display: block;
+  animation: pb-pulse 1.6s ease-out infinite;
+}
+.pb-term-status { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc) }
+/* ---------------- Engagement scenes ----------------
+   Four scenes driven by one stage index (7.2s each, ~29s per cycle).
+   Every scene animation is CSS keyed off .stage.on; scenes are flex
+   children with min-width: 0 and ellipsis on single-line strings so the
+   panel is never widened by its own content. */
+
+.stagewrap { position: relative; height: 292px; overflow: hidden }
+.stage {
+  position: absolute;
+  inset: 0;
+  padding: 18px 20px 40px; /* 40px reserves room for the caption */
+  opacity: 0;
+  transition: opacity .45s ease;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.stage.on { opacity: 1 }
+.st-cap {
+  position: absolute;
+  left: 20px;
+  bottom: 13px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--fg) 58%, transparent);
+  min-width: 0;
+}
+.st-cap > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+/* MOBILE_audit finding 5: two captions truncated mid-word on phones —
+   the short variant swaps in ≤720 so nothing relies on the ellipsis.
+   One DOM node: both variants live in data attributes and CSS picks
+   (the whole stage is aria-hidden, so the text is decorative). */
+.st-copy::before { content: attr(data-full) }
+@media (max-width: 720px) {
+  .st-copy::before { content: attr(data-short) }
+}
+.st-cap > span:last-child { flex: none }
+.st-cap b { color: var(--acc); font-weight: 400 }
+
+/* --- 01 ideation: the interview --- */
+.iv { flex: 1; display: flex; flex-direction: column; gap: 10px; min-height: 0; font-family: var(--font-mono), monospace }
+.iv-head { display: flex; align-items: center; gap: 12px; font-size: 10.5px; letter-spacing: .13em; color: color-mix(in srgb, var(--fg) 58%, transparent) }
+.iv-rule { flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--fg) 12%, transparent), transparent) }
+.iv-rec { display: inline-flex; align-items: center; gap: 6px; color: var(--acc); letter-spacing: .06em; flex: none }
+.iv-rec i { width: 5px; height: 5px; border-radius: var(--r-pill); background: var(--acc); font-style: normal; animation: pb-tick 1.6s ease-in-out infinite }
+.iv-q { display: flex; gap: 9px; font-size: 12.5px; color: var(--fg-strong); align-items: baseline; min-width: 0 }
+.iv-q i { color: var(--acc); font-style: normal; flex: none }
+.iv-qwrap { position: relative; flex: 1; min-width: 0 }
+/* Width target must be 100% inside a max-content wrapper — a ch value
+   clipped the tail of the question and hid the caret in an earlier
+   build. steps(34) matches the 34-character question; change both
+   together. */
+.iv-qt { position: relative; display: inline-block; white-space: nowrap; overflow: hidden; width: 0; max-width: max-content }
+.stage.on .iv-qt { animation: iv-type .55s steps(34) .1s forwards }
+@keyframes iv-type { to { width: 100% } }
+.iv-caret { display: inline-block; width: 6px; height: 13px; background: var(--acc); vertical-align: -2px; margin-left: 3px; opacity: 0 }
+.stage.on .iv-caret { animation: pb-cursor 1.05s steps(1) infinite, iv-caret-out .1s linear 1.8s forwards }
+@keyframes iv-caret-out { to { opacity: 0 } }
+.iv-turn { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; opacity: 0; transform: translateY(7px) }
+/* Timeline compressed to the 2.5s scene clock (STAGE_MS) */
+.stage.on .iv-turn { animation: iv-turn-in .5s cubic-bezier(.2,.9,.3,1) forwards; animation-delay: calc(.7s + var(--i) * .32s) }
+@keyframes iv-turn-in { to { opacity: 1; transform: none } }
+.iv-av { width: 22px; height: 22px; border-radius: var(--r-pill); border: 1px solid color-mix(in srgb, var(--fg) 16%, transparent); background: color-mix(in srgb, var(--fg) 4%, transparent); display: flex; align-items: center; justify-content: center; font-size: 9px; color: color-mix(in srgb, var(--fg) 55%, transparent); flex: none }
+.iv-body { min-width: 0 }
+.iv-who { display: block; font-size: 9.5px; letter-spacing: .1em; color: color-mix(in srgb, var(--fg) 40%, transparent); margin-bottom: 3px }
+.iv-said { display: block; font-size: 11.5px; line-height: 1.5; color: color-mix(in srgb, var(--fg) 70%, transparent) }
+.iv-key { position: relative; color: var(--fg-strong) }
+.iv-key::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--acc);
+  box-shadow: 0 0 7px color-mix(in srgb, var(--acc) 60%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.stage.on .iv-key::after { animation: iv-mark .45s cubic-bezier(.3,.8,.3,1) forwards; animation-delay: calc(1.05s + var(--i) * .32s) }
+@keyframes iv-mark { to { transform: scaleX(1) } }
+.iv-note { margin-top: auto; display: flex; align-items: center; gap: 10px; border: 1px solid var(--acc); background: color-mix(in srgb, var(--acc) 11%, transparent); border-radius: 9px; padding: 10px 12px; font-size: 12px; color: var(--acc); opacity: 0; transform: translateY(9px) }
+.stage.on .iv-note { animation: iv-turn-in .55s cubic-bezier(.2,1.2,.3,1) 1.75s forwards }
+.iv-tick { width: 16px; height: 16px; border-radius: var(--r-pill); background: var(--acc); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 9px; flex: none }
+.iv-note span:last-child { margin-left: auto; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent) }
+
+/* --- 02 design --- */
+.dz { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center }
+.dz svg { width: 92%; max-height: 100% }
+.dz-real { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; clip-path: inset(0 100% 0 0) }
+.stage.on .dz-real { animation: dz-wipe 1.5s cubic-bezier(.5,0,.5,1) .35s forwards }
+@keyframes dz-wipe { to { clip-path: inset(0 0 0 0) } }
+.dz-beam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  left: 0;
+  background: linear-gradient(180deg, transparent, var(--acc), transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--acc) 70%, transparent);
+  opacity: 0;
+}
+.stage.on .dz-beam { animation: dz-beam 1.5s cubic-bezier(.5,0,.5,1) .35s forwards }
+@keyframes dz-beam { 0% { left: 0; opacity: 0 } 10% { opacity: 1 } 90% { opacity: 1 } 100% { left: 100%; opacity: 0 } }
+
+/* --- 03 engineering --- */
+.en { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; flex: 1; min-height: 0 }
+.en > * { min-width: 0 }
+.en-code { font-family: var(--font-mono), monospace; font-size: 11.5px; line-height: 1.85; color: color-mix(in srgb, var(--fg) 62%, transparent) }
+.en-code div { opacity: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+/* Timeline compressed to the 2.5s scene clock (STAGE_MS) */
+.stage.on .en-code div { animation: ln-in .3s ease both }
+.stage.on .en-code div:nth-child(1) { animation-delay: .1s }
+.stage.on .en-code div:nth-child(2) { animation-delay: .23s }
+.stage.on .en-code div:nth-child(3) { animation-delay: .36s }
+.stage.on .en-code div:nth-child(4) { animation-delay: .49s }
+.stage.on .en-code div:nth-child(5) { animation-delay: .62s }
+.stage.on .en-code div:nth-child(6) { animation-delay: .75s }
+.stage.on .en-code div:nth-child(7) { animation-delay: .88s }
+@keyframes ln-in { from { opacity: 0; transform: translateX(-8px) } to { opacity: 1; transform: none } }
+.en-k { color: var(--acc2) }
+.en-f { color: var(--acc) }
+.en-c { color: color-mix(in srgb, var(--fg) 42%, transparent) } /* comments — syntax convention */
+.en-ok { color: var(--acc) }
+.en-graph { position: relative; display: flex; flex-direction: column; gap: 11px; min-width: 0; border-left: 1px solid color-mix(in srgb, var(--fg) 9%, transparent); padding-left: 18px; font-family: var(--font-mono), monospace }
+.en-ghead { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 10.5px; letter-spacing: .12em; color: color-mix(in srgb, var(--fg) 58%, transparent) }
+.en-gok { color: var(--acc); letter-spacing: .04em }
+.en-checks { display: flex; flex-direction: column; gap: 5px }
+.en-chk { display: flex; align-items: center; gap: 7px; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 68%, transparent); opacity: 0; transform: translateX(-8px); white-space: nowrap; min-width: 0 }
+.en-cm { width: 12px; height: 12px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--acc) 16%, transparent); color: var(--acc); display: flex; align-items: center; justify-content: center; font-size: 7.5px; flex: none }
+.en-ct { margin-left: auto; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); flex: none }
+.stage.on .en-chk { animation: chk-in .38s cubic-bezier(.2,.9,.3,1) forwards }
+@keyframes chk-in { to { opacity: 1; transform: none } }
+.stage.on .k1 { animation-delay: .2s }
+.stage.on .k2 { animation-delay: .4s }
+.stage.on .k3 { animation-delay: .6s }
+.stage.on .k4 { animation-delay: .8s }
+.en-scorewrap { margin-top: 2px; opacity: 0 }
+.stage.on .en-scorewrap { animation: chk-in .45s ease 1s forwards }
+.en-scorehead { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-bottom: 6px }
+.en-scoreval { font-size: 17px; color: var(--acc); line-height: 1 }
+.en-bar { height: 4px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--fg) 9%, transparent); overflow: hidden }
+.en-bar > span { display: block; height: 4px; border-radius: var(--r-pill); width: 0; background: linear-gradient(90deg, var(--acc2), var(--acc)); box-shadow: 0 0 10px color-mix(in srgb, var(--acc) 50%, transparent) }
+.stage.on .en-bar > span { animation: en-fill .8s cubic-bezier(.3,.8,.3,1) 1.1s forwards }
+@keyframes en-fill { to { width: 94% } }
+.en-delta { font-size: 10px; color: var(--acc2); margin-top: 6px }
+.en-deploy { margin-top: 12px; display: flex; align-items: center; gap: 7px; font-size: 10.5px; color: var(--acc); border-top: 1px solid color-mix(in srgb, var(--acc) 20%, transparent); padding-top: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0 }
+.stage.on .en-deploy { animation: chk-in .45s ease 1.6s forwards }
+.en-dot { width: 5px; height: 5px; border-radius: var(--r-pill); background: var(--acc); flex: none; animation: pb-tick 1.4s ease-in-out infinite }
+
+/* --- 04 deployment --- */
+.dp { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px }
+.dp-top { display: flex; align-items: center; gap: 12px }
+.dp-badge { position: relative; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--acc); background: color-mix(in srgb, var(--acc) 14%, transparent); color: var(--acc); border-radius: var(--r-pill); padding: 6px 13px; font-family: var(--font-mono), monospace; font-size: 11px; opacity: 0 }
+.stage.on .dp-badge { animation: scope-in2 .6s cubic-bezier(.2,1.2,.3,1) .12s forwards }
+@keyframes scope-in2 { from { opacity: 0; transform: translateY(10px) scale(.92) } to { opacity: 1; transform: none } }
+.dp-rule { flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--acc) 45%, transparent), transparent) }
+.dp-region { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); white-space: nowrap; opacity: 0 }
+.stage.on .dp-region { animation: scope-in2 .5s ease .5s forwards }
+.dp-chart { position: relative; flex: 1; overflow: hidden; border: 1px solid color-mix(in srgb, var(--fg) 9%, transparent); border-radius: 9px; background: color-mix(in srgb, var(--fg) 1.5%, transparent) }
+.dp-chart svg { position: absolute; inset: 0; width: 100%; height: 100% }
+.dp-grid line { stroke: color-mix(in srgb, var(--fg) 6%, transparent); stroke-width: 1 }
+.dp-area { fill: url(#dpg) }
+.dp-line { stroke: var(--acc2); stroke-width: 2; fill: none; stroke-dasharray: 460; stroke-dashoffset: 460; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--acc2) 55%, transparent)) }
+.stage.on .dp-line { animation: draw2 1.5s cubic-bezier(.4,0,.5,1) .25s forwards }
+@keyframes draw2 { to { stroke-dashoffset: 0 } }
+.dp-clip { clip-path: inset(0 100% 0 0) }
+.stage.on .dp-clip { animation: dz-wipe 1.5s cubic-bezier(.4,0,.5,1) .25s forwards }
+.dp-head { opacity: 0 }
+.stage.on .dp-head { animation: dp-head 1.5s cubic-bezier(.4,0,.5,1) .25s forwards }
+@keyframes dp-head { 0% { opacity: 0; offset-distance: 0% } 8% { opacity: 1 } 100% { opacity: 1; offset-distance: 100% } }
+/* must sit above the curve — the line reaches this corner */
+.dp-live { position: absolute; right: 9px; top: 8px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: var(--r-pill); background: color-mix(in srgb, var(--surface) 88%, transparent); font-family: var(--font-mono), monospace; font-size: 9.5px; color: var(--acc) }
+.dp-live i { width: 5px; height: 5px; border-radius: var(--r-pill); background: var(--acc); font-style: normal; animation: pb-tick 1.4s ease-in-out infinite }
+.dp-stats { display: flex; gap: 26px; font-family: var(--font-mono), monospace }
+.dp-stats > * { min-width: 0 }
+.dp-stat { position: relative; padding-left: 11px }
+.dp-stat::before { content: ""; position: absolute; left: 0; top: 2px; bottom: 3px; width: 2px; border-radius: 2px; background: color-mix(in srgb, var(--acc) 45%, transparent) }
+.dp-stat:nth-child(2)::before { background: color-mix(in srgb, var(--acc2) 50%, transparent) }
+.dp-v { font-size: 19px; color: var(--acc); line-height: 1; font-variant-numeric: tabular-nums }
+.dp-stat:nth-child(2) .dp-v { color: var(--acc2) }
+.dp-k { font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+
+.pb-term-foot {
+  padding: 16px 20px 18px;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  background: color-mix(in srgb, var(--fg) 1.5%, transparent);
+}
+.pb-pipeline { display: flex; align-items: center; gap: 6px; margin-bottom: 14px }
+.pb-pstep {
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  /* the spine words are capitalized in data; chips keep the terminal
+     lowercase voice */
+  text-transform: lowercase;
+  color: color-mix(in srgb, var(--fg) 38%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  white-space: nowrap;
+  transition: all .35s ease;
+  background: transparent;
+  cursor: pointer;
+}
+.pb-pstep:hover { color: color-mix(in srgb, var(--fg) 70%, transparent) }
+.pb-pstep.pb-pon {
+  color: var(--acc);
+  border-color: color-mix(in srgb, var(--acc) 45%, transparent);
+  background: color-mix(in srgb, var(--acc) 12%, transparent);
+}
+.pb-pstep.pb-pnow {
+  color: var(--bg);
+  background: var(--acc);
+  border-color: var(--acc);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--acc) 45%, transparent);
+}
+.pb-pconn {
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, var(--fg) 12%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+.pb-pconn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--acc);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .5s cubic-bezier(.3,.8,.3,1);
+}
+.pb-pconn.pb-con::after { transform: scaleX(1) }
+.pb-meter {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--fg) 8%, transparent);
+  overflow: hidden;
+}
+.pb-meter-fill {
+  display: block;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--acc2), var(--acc));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--acc) 55%, transparent);
+  transition: width .5s cubic-bezier(.3,.8,.3,1);
+}
+.pb-term-footrow {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+  margin-top: 9px;
+}
+.pb-pct { color: var(--acc) }
+
+/* ---------------- Offerings tabs ---------------- */
+
+/* More air between the hero band's client strip and the first section
+   (owner request 2026-08-11). */
+.pb-services { padding: 108px 0 60px }
+.pb-services-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.pb-services-h { margin: 12px 0 0 }
+/* The tab switcher sits on its own row between the heading and the
+   pane it controls, pushed to the right edge. */
+.pb-tabs-row { display: flex; justify-content: flex-end; margin-bottom: 18px }
+.pb-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--fg) 2%, transparent);
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  flex-wrap: wrap;
+}
+.pb-tab {
+  padding: 9px 16px;
+  border-radius: var(--r-pill);
+  color: color-mix(in srgb, var(--fg) 52%, transparent);
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease, border-color .2s ease;
+  border: 1px solid transparent;
+  background: transparent;
+  white-space: nowrap;
+}
+.pb-tab:hover { color: var(--fg) }
+.pb-tab.pb-tab-on {
+  color: var(--fg);
+  background: color-mix(in srgb, var(--acc) 16%, transparent);
+  border-color: color-mix(in srgb, var(--acc) 42%, transparent);
+}
+.pb-ai {
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--fg) 2%, transparent);
+  padding: 46px 44px;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 58px;
+}
+.pb-pane .pb-pi { animation: pb-pane-in .5s cubic-bezier(.2,.78,.3,1) both }
+.pb-pane .pb-pi:nth-child(1) { animation-delay: 0s }
+.pb-pane .pb-pi:nth-child(2) { animation-delay: .07s }
+.pb-pane .pb-pi:nth-child(3) { animation-delay: .14s }
+.pb-pane .pb-pi:nth-child(4) { animation-delay: .21s }
+.pb-pane .pb-pi:nth-child(5) { animation-delay: .28s }
+.pb-offer-kicker {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: var(--acc);
+  letter-spacing: .1em;
+  margin-bottom: 22px;
+}
+.pb-offer-title { margin: 0 0 20px }
+.pb-offer-body {
+  font-size: 16px;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--fg) 60%, transparent);
+  margin: 0 0 28px;
+}
+.pb-offer-cta {
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  background: var(--acc);
+  color: var(--bg);
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.pb-offer-cta:hover { color: var(--bg) }
+.pb-offer-points { display: flex; flex-direction: column; gap: 14px }
+.pb-point {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
+}
+.pb-point-n {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: var(--acc);
+  padding-top: 3px;
+}
+.pb-point-title { font-size: 17px; font-weight: 600; margin-bottom: 5px }
+.pb-point-body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+}
+
+/* ---------------- Ask panel ---------------- */
+
+/* Positioned after the testimonial bleed band, before the closing CTA
+   (which carries 72px of its own top padding). */
+.pb-ask { padding: 64px 0 8px }
+.pb-ask-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.pb-ask-h { margin: 12px 0 0 }
+/* ---------------- FAQ accordion (FAQ_accordion.md) ----------------
+   One answer open at a time; the expansion is grid-template-rows
+   0fr → 1fr (NEVER max-height — a guess that clips or drags when copy
+   changes length), which needs the exact .fq-ans > .fq-ans-in > content
+   nesting. Cyan carries exactly two things: the row flag and the source
+   link — metadata about the answer, not the answer. */
+
+.fq-pnl {
+  border: 1px solid color-mix(in srgb, var(--acc) 20%, transparent);
+  border-radius: 13px;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(0,0,0,.5);
+}
+
+.fq-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
+  font-family: var(--font-mono), monospace;
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--fg) 45%, transparent);
+}
+.fq-td { width: 8px; height: 8px; border-radius: 999px; background: color-mix(in srgb, var(--fg) 16%, transparent) }
+.fq-meta { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; color: var(--acc) }
+.fq-dot { width: 5px; height: 5px; border-radius: 999px; background: var(--acc); animation: pb-tick 1.7s ease-in-out infinite }
+
+.fq-body { padding: 10px 18px 16px; font-family: var(--font-mono), monospace }
+
+/* ---------- the row ---------- */
+.fq-r { border-bottom: 1px solid color-mix(in srgb, var(--fg) 6%, transparent) }
+.fq-r:last-of-type { border-bottom: 0 }
+
+.fq-q {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  font-size: 13.5px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+  transition: color .3s ease, padding-left .3s ease;
+}
+.fq-r:hover .fq-q { color: color-mix(in srgb, var(--fg) 82%, transparent); padding-left: 6px }
+.fq-r.on .fq-q { color: var(--fg-strong) }
+.fq-q:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+
+.fq-p { flex: none; color: color-mix(in srgb, var(--acc) 50%, transparent); transition: color .3s ease }
+.fq-r.on .fq-p { color: var(--acc) }
+.fq-qt { flex: 1; min-width: 0 }
+
+/* the flag is metadata, not the question — it sits right-aligned and
+   brightens when opened */
+.fq-flag { flex: none; font-size: 10.5px; color: color-mix(in srgb, var(--acc2) 40%, transparent); transition: color .3s ease }
+.fq-r.on .fq-flag { color: color-mix(in srgb, var(--acc2) 90%, transparent) }
+
+.fq-ms { flex: none; font-size: 10px; color: color-mix(in srgb, var(--fg) 22%, transparent); transition: color .3s ease }
+.fq-r.on .fq-ms { color: color-mix(in srgb, var(--acc) 65%, transparent) }
+
+.fq-car { flex: none; display: inline-block; color: var(--acc); transition: transform .34s cubic-bezier(.32,.72,0,1) }
+.fq-r.on .fq-car { transform: rotate(90deg) } /* > becomes v */
+
+/* ---------- the expansion ---------- */
+.fq-ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .44s cubic-bezier(.32,.72,0,1) }
+.fq-r.on .fq-ans { grid-template-rows: 1fr }
+.fq-ans-in { overflow: hidden }
+
+.fq-out {
+  padding: 0 0 14px 20px;
+  margin-left: 4px;
+  border-left: 1px solid color-mix(in srgb, var(--acc) 22%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/* the text arrives a beat after the box so it never renders mid-resize */
+.fq-atx {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: color-mix(in srgb, var(--fg) 72%, transparent);
+  max-width: 690px;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity .32s ease .06s, transform .38s cubic-bezier(.2,.9,.3,1) .06s;
+}
+.fq-r.on .fq-atx { opacity: 1; transform: none }
+.fq-atx b { color: color-mix(in srgb, var(--fg) 92%, transparent); font-weight: 500 }
+
+.fq-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; opacity: 0; transition: opacity .3s ease .2s }
+.fq-r.on .fq-foot { opacity: 1 }
+.fq-ex {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: var(--acc);
+  border: 1px solid color-mix(in srgb, var(--acc) 32%, transparent);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+.fq-src { font-size: 10.5px; color: color-mix(in srgb, var(--fg) 42%, transparent) }
+.fq-src a { color: var(--acc2) }
+
+/* ---------- the live prompt ---------- */
+.fq-prompt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  font-size: 13px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+}
+.fq-blk { flex: none; width: 7px; height: 14px; background: var(--acc); animation: pb-cursor 1.05s steps(1) infinite }
+.fq-cta { margin-left: auto; font-size: 11.5px; color: var(--acc) }
+
+@media (max-width: 860px) {
+  .fq-ms { display: none } /* the timing is the first thing to go */
+}
+@media (max-width: 720px) {
+  .fq-body { padding: 8px 14px 14px }
+  .fq-q { font-size: 12.5px; gap: 8px; align-items: flex-start; flex-wrap: wrap }
+  .fq-qt { flex: 1 1 100%; order: 2 } /* the question takes its own line */
+  .fq-flag { order: 3; margin-left: 20px }
+  .fq-car { order: 1; margin-left: auto }
+  .fq-atx { font-size: 14px }
+  .fq-out { padding-left: 16px }
+  .fq-cta { margin-left: 0; flex: 1 1 100%; margin-top: 8px }
+}
+@media (max-width: 430px) {
+  .fq-flag { display: none } /* five flags in a column is noise here */
+  .fq-foot { gap: 8px }
+}
+
+/* ---------------- Selected work: measured deck ----------------
+   design_handoff_client_portfolio — measured vertical centering with
+   peeking neighbors. The section is a scroll runway; a viewport-height
+   sticky pin holds the chrome; the card stage positions every card
+   absolutely and moves it ONLY via translateY computed from real
+   measured heights (in SelectedWork.tsx). Neighbours peek in through
+   56px gradient fades, so the frame is full whatever the card lengths.
+   One mechanic at every breakpoint; 900px switches the chrome (left
+   index column vs chip rail). */
+
+.pf2 { position: relative; height: calc(10 * 80vh + 100vh) } /* the runway */
+
+.stg-sticky {
+  position: sticky;
+  top: 0;
+  height: 100dvh; /* dvh — iOS address-bar collapse must not jump the pin */
+  overflow: hidden;
+}
+
+/* desktop chrome: left column + stage */
+.stg {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(340px, 430px) 1fr;
+  gap: 5vw;
+  align-items: center;
+}
+
+/* The left column scales with viewport height and must never hard-clip
+   on 700–800px laptops: clamp()ed type and margins, with an
+   internally-scrolling index as the last resort. */
+.stg-side {
+  min-height: 0;
+  max-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.stg-side > .pb-rev { display: flex; flex-direction: column; min-height: 0 }
+.intro .pb-kicker { font-size: clamp(12px, 1.8vh, 14px); margin-bottom: clamp(10px, 2vh, 18px) }
+.sr-h { font-size: clamp(28px, 5vh, 46px); line-height: 1.06; letter-spacing: -.036em; font-weight: 600; margin: 0 }
+.sr-lead {
+  margin: clamp(8px, 2vh, 14px) 0 0;
+  font-size: clamp(14px, 2vh, 16.5px);
+  line-height: 1.68;
+  color: color-mix(in srgb, var(--fg) 58%, transparent);
+}
+
+.stg-idx {
+  margin-top: clamp(12px, 2.5vh, 20px);
+  border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.si {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  flex-shrink: 0;
+  padding: clamp(6px, 1.2vh, 12px) 10px;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  position: relative;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--fg) 32%, transparent);
+  transition: padding-left .34s cubic-bezier(.32,.72,0,1), color .34s ease;
+}
+.si b {
+  width: 19px;
+  flex: none;
+  font-weight: 400;
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  color: color-mix(in srgb, var(--fg) 22%, transparent);
+  transition: color .34s ease;
+}
+.si:hover { color: color-mix(in srgb, var(--fg) 74%, transparent) }
+.si.past { color: color-mix(in srgb, var(--fg) 50%, transparent) }
+.si.past b { color: color-mix(in srgb, var(--acc) 42%, transparent) }
+.si.on { padding-left: 22px; color: var(--fg-strong) }
+.si.on b { color: var(--acc) }
+.si.on::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  bottom: 7px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--acc);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--acc) 65%, transparent);
+}
+.si:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+
+.stg-prog {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: clamp(10px, 2vh, 15px);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+}
+.stg-bar { flex: 1; height: 2px; border-radius: 2px; background: color-mix(in srgb, var(--fg) 10%, transparent); overflow: hidden }
+.stg-bar > i { display: block; height: 2px; border-radius: 2px; background: var(--acc); transition: width .4s ease }
+
+/* ---------- the card stage ---------- */
+.deck {
+  position: relative;
+  overflow: hidden;
+  height: min(76vh, 800px);
+  align-self: center;
+}
+/* the fades the neighbours peek through */
+.deck::before,
+.deck::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 56px;
+  z-index: 5;
+  pointer-events: none;
+}
+.deck::before { top: 0; background: linear-gradient(to bottom, var(--bg), transparent) }
+.deck::after { bottom: 0; background: linear-gradient(to top, var(--bg), transparent) }
+
+/* Cards: absolute, moved only via the measured translateY (inline).
+   The active card may scroll internally when taller than the stage. */
+.dk {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: .06;
+  filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 1;
+  scrollbar-width: thin;
+  transition: transform .65s cubic-bezier(.22, .9, .26, 1), opacity .45s ease, filter .45s ease;
+}
+.dk.near { opacity: .3 }
+/* the active card renders ABOVE the fade masks (z5) — otherwise a
+   tall card's top edge gets darkened and reads as cut off */
+.dk.on { opacity: 1; filter: none; pointer-events: auto; z-index: 6 }
+.dk > article { transition: border-color .45s ease }
+.dk.on > article {
+  border-color: color-mix(in srgb, var(--acc) 45%, transparent);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, .55);
+}
+.dk.near > article,
+.dk.far > article { border-color: rgba(255, 255, 255, .08) }
+
+/* Cards must be OPAQUE — a faded neighbour parked behind a translucent
+   active card bleeds its text through. Accents mix over the opaque
+   base, never over transparent. */
+.deck .pb-card, .deck .pb-case { background: #0a0d13 }
+/* The legacy card hover lifts by -3px and swaps to a TRANSLUCENT tint —
+   inside the stage the lift clips the top edge against the overflow
+   boundary and the tint lets ghosts bleed through. Neither applies in
+   the deck. */
+.deck .pb-card:hover { transform: none; background: #0a0d13 }
+.deck .pb-redcard { background: color-mix(in srgb, var(--acc) 5%, #0a0d13) !important }
+.deck .pb-feature { background: color-mix(in srgb, var(--acc) 4%, #0a0d13) }
+
+/* Deck cards are a single column — the stats rows get the full width. */
+.deck .pb-case, .deck .pb-redcard { grid-template-columns: 1fr; gap: 24px; padding: 28px }
+.deck .pb-redcard-stats { flex-direction: row; flex-wrap: wrap; gap: 20px 36px }
+.deck .pb-feature { grid-template-columns: 1fr }
+.deck .pb-feature-body { max-width: 640px }
+.deck .pb-feature-stats {
+  border-left: 0;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  flex-direction: row;
+}
+.deck .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
+.deck .pb-fstat:last-child { border-right: 0 }
+
+/* the standard card for cases 06–11: one column, no stats block */
+.std2 { display: flex; flex-direction: column; gap: 13px }
+.std2-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
+/* All case pills (NDA included) ride the second accent; lime stays
+   reserved for the stat figures. */
+.std2-tag {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  color: color-mix(in srgb, var(--acc2) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--acc2) 36%, transparent);
+  border-radius: var(--r-pill);
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+.std2-bullets { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px }
+.std2-bullets li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+}
+.std2-bullets li::before { content: "—"; position: absolute; left: 0; color: color-mix(in srgb, var(--acc) 70%, transparent) }
+
+/* the client quote */
+.qb {
+  margin: 4px 0 0;
+  padding: 15px 17px 14px;
+  border: 1px solid color-mix(in srgb, var(--acc2) 26%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--acc2) 6%, #0d1017);
+}
+.qb blockquote {
+  margin: 0 0 10px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  letter-spacing: -.008em;
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+  text-wrap: pretty;
+}
+.qb em { font-style: normal; color: var(--acc2) }
+.qb figcaption { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap }
+.qb-name { font-size: 12.5px; font-weight: 600; color: var(--fg-strong) }
+.qb-role { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 45%, transparent) }
+
+/* Desktop reading measure — only where there's vertical room; the cap
+   wraps paragraphs onto more lines and short laptops need the shorter
+   card. */
+@media (min-width: 900px) and (min-height: 821px) {
+  .deck .pb-case-blurb,
+  .deck .pb-case-detail,
+  .deck .qb blockquote { max-width: 68ch }
+}
+
+/* the exit handoff: pull the process section into the sticky
+   viewport's spare bottom half so the runway ends near the content */
+@media (min-width: 900px) {
+  .pb-process { margin-top: min(0px, calc(40px - (100dvh - min(76vh, 800px)) / 2)) }
+}
+
+/* the strip is mobile-only (rendered only there, too) */
+.strip { display: none }
+
+/* ---------- mobile chrome (<900px): chip rail / stage / skip ---------- */
+@media (max-width: 899px) {
+  /* the heading scrolls away before the pin; the pinned viewport is
+     the rail, the stage and the skip pill */
+  /* the wrapper releases but keeps the full runway height so the
+     stage's sticky has room to travel below the intro */
+  .stg-sticky { position: static; height: 100%; overflow: visible }
+  .stg { display: flex; flex-direction: column; height: 100% }
+  .stg-idx, .stg-prog { display: none }
+  .stg-side { max-height: none; display: block }
+  .stg-side > .pb-rev { display: block }
+  .intro { padding: 26px 0 18px }
+  .sr-h { font-size: 26px }
+  .sr-lead { font-size: 14px; margin-top: 10px }
+
+  .stg-stage {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 14px;
+    padding: 64px 0 14px; /* clears the translucent header */
+    min-width: 0;
+  }
+  .deck { height: auto; min-height: 0; align-self: stretch }
+
+  /* the index becomes a horizontal chip rail */
+  .strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 18px;
+    margin: 0 -18px;
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent);
+            mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent);
+  }
+  .strip::-webkit-scrollbar { display: none }
+  .chip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 11px;
+    border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+    font-family: var(--font-mono), monospace;
+    font-size: 10.5px;
+    color: color-mix(in srgb, var(--fg) 40%, transparent);
+    white-space: nowrap;
+    transition: color .3s ease, border-color .3s ease, background .3s ease;
+  }
+  .chip b {
+    font-weight: 400;
+    font-size: 9px;
+    letter-spacing: .08em;
+    color: color-mix(in srgb, var(--fg) 26%, transparent);
+    transition: color .3s ease;
+  }
+  .chip.past { color: color-mix(in srgb, var(--fg) 52%, transparent) }
+  .chip.past b { color: color-mix(in srgb, var(--acc) 45%, transparent) }
+  .chip.on { color: var(--ink); background: var(--acc); border-color: var(--acc) }
+  .chip.on b { color: color-mix(in srgb, var(--ink) 60%, transparent) }
+  .chip:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+}
+/* Narrow cards — phones AND the 900–1100 desktop band, where the stage
+   column is just as tight. */
+@media (max-width: 1100px) {
+  .deck .pb-card, .deck .pb-redcard, .deck .pb-case { padding: 18px 16px 20px }
+  .deck .pb-feature-side { padding: 18px 16px 20px }
+  .deck h3 { font-size: 18px }
+  .deck .pb-case-blurb, .deck .pb-case-detail, .deck .pb-feature-body { font-size: 13.5px }
+  .deck .pb-case-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px }
+  .deck .pb-case-figure { font-size: 16px }
+  .deck .pb-case-figcap { font-size: 10px }
+  .deck .pb-redcard-stats { gap: 12px 22px }
+  .deck .pb-redcard .pb-redstat:nth-child(3) { display: none }
+  .deck .pb-redstat-figure { font-size: 16px }
+  .deck .pb-feature-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-right: 0 }
+  .deck .pb-fstat { min-width: 0; padding: 12px 8px; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
+  .deck .pb-fstat:last-child { border-right: 0 }
+  .deck .pb-fstat > span:last-child { font-size: 11px }
+  .deck .pb-fstat .pb-figure { font-size: 14px }
+}
+@media (max-width: 430px) {
+  .deck .pb-fstat .pb-figure { font-size: 11.5px }
+  .deck .pb-fstat { padding: 10px 6px }
+}
+/* the redcard scan band is 100px where the card is narrow (the one
+   sanctioned difference in CASE_01) */
+@media (max-width: 1100px) {
+  .pb-redcard::after { height: 100px; top: -100px }
+}
+
+.pb-case {
+  border: 1px solid color-mix(in srgb, var(--fg) 11%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--fg) 2%, transparent);
+  padding: 38px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 52px;
+}
+.pb-case-left { display: flex; flex-direction: column; gap: 12px }
+.pb-case-num { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc); letter-spacing: .1em }
+.pb-case-h { margin: 0 }
+.pb-case-blurb { margin: 0; font-size: 15px; line-height: 1.65; color: color-mix(in srgb, var(--fg) 55%, transparent) }
+.pb-case-meta { font-family: var(--font-mono), monospace; font-size: 12px; color: color-mix(in srgb, var(--fg) 40%, transparent); margin-top: 4px }
+.pb-case-link { font-family: var(--font-mono), monospace; font-size: 13px; margin-top: 4px }
+.pb-case-right { display: flex; flex-direction: column; gap: 22px; justify-content: center }
+.pb-case-stats { display: flex; gap: 40px; flex-wrap: wrap; font-family: var(--font-mono), monospace }
+.pb-case-figure { font-size: 28px }
+.pb-case-figcap { font-size: 12px; color: color-mix(in srgb, var(--fg) 45%, transparent); margin-top: 4px }
+.pb-case-detail { margin: 0; font-size: 15px; line-height: 1.7; color: color-mix(in srgb, var(--fg) 72%, transparent) }
+/* Case headings as path notation: company as directory, role as file.
+   Mono 500 on purpose — do not swap back to the sans face. Each segment
+   is one span, so wraps land at the separator, never mid-segment. */
+.pb-case-path {
+  display: flex; align-items: baseline; gap: 2px; flex-wrap: wrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 30px; letter-spacing: -.02em; font-weight: 500;
+  line-height: 1.15; margin: 0;
+}
+.pb-case-co { color: var(--fg-strong) }
+.pb-case-sep { color: color-mix(in srgb, var(--fg) 28%, transparent) }
+.pb-case-role { color: var(--acc) }
+@media (max-width: 960px) { .pb-case-path { font-size: 24px } }
+@media (max-width: 480px) { .pb-case-path { font-size: 20px } }
+.pb-figure { color: var(--acc) }
+
+/* Redacted card (CASE_01) */
+.pb-redcard {
+  border: 1px solid color-mix(in srgb, var(--acc) 34%, transparent) !important;
+  background: color-mix(in srgb, var(--acc) 5%, transparent) !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--acc) 10%, transparent), 0 24px 70px color-mix(in srgb, var(--acc) 13%, transparent);
+  border-radius: 14px;
+  padding: 34px 34px 36px;
+  display: grid;
+  grid-template-columns: 1.35fr .65fr;
+  gap: 44px;
+  align-items: start;
+}
+.pb-redcard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--acc) 30%, transparent) 1px, transparent 0);
+  background-size: 16px 16px;
+  mask-image: radial-gradient(ellipse 75% 90% at 88% 8%, #000, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 90% at 88% 8%, #000, transparent 72%);
+  pointer-events: none;
+}
+.pb-redcard::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 140px;
+  top: -140px;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--acc) 9%, transparent) 65%, color-mix(in srgb, var(--acc) 26%, transparent));
+  border-bottom: 1px solid color-mix(in srgb, var(--acc) 40%, transparent);
+  pointer-events: none;
+  transform: translateY(var(--pb-scan, 0px));
+}
+.pb-redcard-left { display: flex; flex-direction: column; gap: 12px; position: relative }
+.pb-redcard .pb-case-blurb { color: color-mix(in srgb, var(--fg) 62%, transparent) }
+.pb-redcard-tags { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
+.pb-redcard-stats { display: flex; flex-direction: column; gap: 20px }
+.pb-redstat { display: flex; flex-direction: column; gap: 3px }
+.pb-redstat-figure { font-family: var(--font-mono), monospace; font-size: 28px; line-height: 1 }
+.pb-redstat-cap { font-size: 13px; color: color-mix(in srgb, var(--fg) 50%, transparent) }
+.pb-decipher { font-variant-ligatures: none }
+.pb-decipher span { transition: color .2s ease }
+.pb-nda {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  color: var(--acc2);
+  border: 1px solid color-mix(in srgb, var(--acc2) 40%, transparent);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.pb-nda-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--acc2);
+  display: block;
+  animation: pb-tick 1.8s ease-in-out infinite;
+}
+.pb-redact {
+  position: relative;
+  display: inline-block;
+  vertical-align: -4px;
+  padding: 0 14px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--fg) 88%, transparent);
+  color: transparent;
+  cursor: default;
+  overflow: hidden;
+  user-select: none;
+  transition: background .25s ease;
+}
+.pb-redact > span[aria-hidden] { visibility: hidden }
+.pb-redact::after {
+  content: "nice try";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: var(--bg);
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.pb-redact:hover { background: var(--acc) }
+.pb-redact:hover::after { opacity: 1 }
+.pb-whoami {
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--fg) 42%, transparent);
+  margin-top: 4px;
+}
+.pb-redline {
+  display: inline-block;
+  height: 1em;
+  width: 5.5em;
+  vertical-align: -.16em;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--fg) 22%, transparent);
+  animation: pb-redpulse 3.2s ease-in-out infinite;
+}
+
+/* Feature card (CASE_02) */
+.pb-feature {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 0;
+  border: 1px solid color-mix(in srgb, var(--acc) 20%, transparent);
+  border-radius: 14px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--acc) 4%, transparent);
+}
+.pb-feature-side { padding: 44px 42px }
+.pb-feature-h { margin: 10px 0 16px }
+.pb-feature-body {
+  margin: 0 0 22px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+  max-width: 460px;
+}
+.pb-feature-stats { border-left: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); display: flex; flex-direction: column }
+.pb-fstat {
+  padding: 26px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  flex: 1;
+  justify-content: center;
+}
+.pb-fstat:last-child { border-bottom: 0 }
+.pb-fstat > span:last-child { font-size: 13px; color: color-mix(in srgb, var(--fg) 50%, transparent) }
+.pb-fstat .pb-figure { font-family: var(--font-mono), monospace; line-height: 1; font-size: 34px }
+
+/* ---------------- Process schedule (PROCESS_schedule.md) ----------------
+   Four horizontal bars on a shared axis — the phases overlap and Build
+   dominates. Two semantic voices: cyan for 01–02 (before any code
+   exists), lime for 03–04 (building and shipping); the axis runs cyan
+   START → lime SHIPPED. No fixed durations anywhere — the 8 tracks are
+   proportion, not weeks; never label them. */
+
+.pb-process { padding: 64px 0 20px }
+/* ≤1100 the portfolio stage is a full-screen pin whose bottom third is
+   empty on the short last card (skip hidden, card settled high). Pull
+   the process section up into that vacated air: it peeks beneath the
+   last card during its scroll window, and after the unpin the gap
+   between deck and process is breathing room, not a void. */
+
+.sc-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+/* 9 tracks: the phase column plus 8 equal proportion tracks. 190px is
+   the width at which "Prototype / design" fits on one line at 12.5px
+   mono — do not reduce below the 150px tablet step. */
+.sc-ruler, .sc-lane { display: grid; grid-template-columns: var(--sc-col, 190px) repeat(8, 1fr) }
+
+/* ---------- the axis ---------- */
+.sc-ruler {
+  position: relative;
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  color: color-mix(in srgb, var(--fg) 36%, transparent);
+  padding-bottom: 9px;
+}
+.sc-ruler::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--acc2) 45%, transparent),
+    color-mix(in srgb, var(--acc) 38%, transparent) 62%,
+    color-mix(in srgb, var(--fg) 10%, transparent));
+}
+.sc-axis {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 9px;
+  border-left: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+}
+.sc-axis > span:first-child { color: color-mix(in srgb, var(--acc2) 75%, transparent); flex: none }
+.sc-axis > span:last-child { color: color-mix(in srgb, var(--acc) 80%, transparent); flex: none }
+.sc-axline {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--fg) 16%, transparent) 0 3px, transparent 3px 8px);
+}
+
+/* ---------- lanes ---------- */
+.sc-lanes { list-style: none; margin: 0; padding: 0 }
+.sc-lane {
+  align-items: center;
+  min-height: 50px;
+  position: relative;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
+}
+.sc-lane:last-of-type { border-bottom: 0 }
+.sc-cols {
+  position: absolute;
+  inset: 0 0 0 var(--sc-col, 190px);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  pointer-events: none;
+}
+.sc-cols span + span { border-left: 1px solid color-mix(in srgb, var(--fg) 5%, transparent) }
+.sc-lbl {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  color: color-mix(in srgb, var(--fg) 36%, transparent);
+  padding-right: 14px;
+}
+
+.sc-name {
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  color: var(--fg-strong);
+  padding-right: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity .38s ease, transform .45s cubic-bezier(.2,.9,.3,1);
+}
+.sc-name b { font-weight: 400; font-size: 10.5px; letter-spacing: .1em; flex: none; color: var(--acc) }
+.sc-lane.pre .sc-name b { color: var(--acc2) }
+.sc-lane.on .sc-name { opacity: 1; transform: none }
+
+/* ---------- the bar ----------
+   The slot is NEVER given overflow: hidden — the tick and the leading
+   edge are positioned relative to it, and clipping slices them. */
+.sc-slot { grid-row: 1; position: relative; height: 28px; z-index: 2 }
+.sc-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  transition: width var(--dur, .6s) cubic-bezier(.32,.72,0,1) .16s, box-shadow .5s ease;
+}
+.sc-lane.on .sc-fill { width: 100% }
+
+/* the lit leading edge rides the fill's right side */
+.sc-edge {
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--eg, var(--acc));
+  box-shadow: 0 0 12px var(--eg, var(--acc));
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.sc-lane.on .sc-edge { opacity: 1 }
+.sc-lane.done .sc-edge { opacity: 0 }
+
+.sc-in {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity .4s ease, transform .4s cubic-bezier(.2,.9,.3,1);
+}
+.sc-lane.done .sc-in { opacity: 1; transform: none }
+.sc-in.hastick { padding-right: 30px } /* reserves room for the tick */
+
+/* the tick sits INSIDE the bar at its right end */
+.sc-tick {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  border-radius: 999px;
+  background: var(--tk, var(--acc));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity .28s ease, transform .42s cubic-bezier(.2,1.35,.35,1);
+}
+.sc-lane.done .sc-tick { opacity: 1; transform: none }
+
+/* the two voices */
+.sc-b2 { background: color-mix(in srgb, var(--acc2) 22%, transparent); border-color: color-mix(in srgb, var(--acc2) 52%, transparent) }
+.sc-t2 { color: var(--acc2) }
+.sc-b1 { background: color-mix(in srgb, var(--acc) 25%, transparent); border-color: color-mix(in srgb, var(--acc) 55%, transparent) }
+.sc-t1 { color: var(--acc) }
+.sc-bfin { background: var(--acc); border-color: var(--acc) }
+.sc-lane.done .sc-bfin { box-shadow: 0 0 26px color-mix(in srgb, var(--acc) 48%, transparent) }
+.sc-tfin { color: var(--ink); font-weight: 600 }
+
+/* ---------- deliverables row ---------- */
+.sc-mile {
+  display: block;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid color-mix(in srgb, var(--acc2) 20%, transparent);
+}
+.sc-mhead {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 15px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .4s ease, transform .45s cubic-bezier(.2,.9,.3,1);
+}
+.sc-mile.on .sc-mhead { opacity: 1; transform: none }
+.sc-mlbl {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  color: color-mix(in srgb, var(--acc2) 85%, transparent);
+  white-space: nowrap;
+}
+.sc-mrule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--acc2) 30%, transparent),
+    color-mix(in srgb, var(--acc) 26%, transparent) 65%, transparent);
+}
+.sc-mnote {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: color-mix(in srgb, var(--fg) 42%, transparent);
+  white-space: nowrap;
+}
+
+.sc-mgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; list-style: none; margin: 0; padding: 0 }
+
+/* --mc is the whole colour mechanism — hairline, diamond and number all
+   read from it; .lime is the only change cards 03–04 need. */
+.sc-m {
+  --mc: var(--acc2);
+  position: relative;
+  min-width: 0;
+  padding: 14px 15px 15px;
+  border: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--fg) 2%, transparent);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(9px);
+  transition: opacity .45s ease, transform .5s cubic-bezier(.2,1.15,.3,1),
+              border-color .25s ease, background .25s ease;
+}
+.sc-m.lime { --mc: var(--acc) }
+.sc-m.on { opacity: 1; transform: none }
+.sc-m:hover {
+  border-color: color-mix(in srgb, var(--mc) 42%, transparent);
+  background: color-mix(in srgb, var(--mc) 5%, transparent);
+}
+.sc-m::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--mc);
+  opacity: .55;
+}
+.sc-mtop { display: flex; align-items: center; gap: 8px; margin-bottom: 9px }
+.sc-mdi {
+  width: 7px;
+  height: 7px;
+  background: var(--mc);
+  transform: rotate(45deg);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--mc) 70%, transparent);
+  flex: none;
+}
+.sc-mv { font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .1em; color: color-mix(in srgb, var(--mc) 88%, transparent) }
+.sc-mph { margin-left: auto; font-family: var(--font-mono), monospace; font-size: 9.5px; color: color-mix(in srgb, var(--fg) 38%, transparent); white-space: nowrap }
+.sc-mk { display: block; font-size: 13px; line-height: 1.45; letter-spacing: -.008em; color: color-mix(in srgb, var(--fg) 80%, transparent); text-wrap: pretty }
+
+/* ---------- Handover launch — the finale ---------- */
+.sc-rkn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  border-radius: 999px;
+  background: var(--ink);
+  z-index: 5;
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity .26s ease, transform .4s cubic-bezier(.2,1.35,.35,1);
+}
+.sc-lane.done .sc-rkn { opacity: 1; transform: none }
+.sc-pad { position: absolute; left: 0; right: 0; top: 0; bottom: 0 }
+
+/* the rocket travels 62px past the badge, so its layer must not clip.
+   sc-fly must run `linear` — the per-stage curves live inside the
+   keyframes and an easing on the shorthand silently overrides them. */
+.sc-rk {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  margin: -8px 0 0 -7.5px;
+  opacity: 0;
+  transform: translateY(2px) scale(.9);
+  transform-origin: 50% 80%;
+  z-index: 3;
+}
+.sc-lane.done .sc-rk { animation: sc-fly 1.5s linear .2s forwards }
+@keyframes sc-fly {
+  0%   { opacity: 1; transform: translateY(2px) scale(.9) }
+  10%  { transform: translate(-.6px,2.4px) scale(.92) }
+  16%  { transform: translate(.6px,1.8px) scale(.92) }
+  22%  { transform: translate(-.5px,2.8px) scaleX(1.08) scaleY(.86) }
+  30%  { transform: translate(.5px,2.2px) scaleX(1.05) scaleY(.92); animation-timing-function: cubic-bezier(.5,0,.75,.2) }
+  52%  { opacity: 1;   transform: translateY(-14px) scale(1) }
+  76%  { opacity: .75; transform: translateY(-34px) scale(.9) }
+  100% { opacity: 0;   transform: translateY(-62px) scale(.66) }
+}
+
+/* two flame layers, flickering deliberately OUT OF PHASE — sync them
+   and they collapse into one object */
+.sc-core, .sc-flare { position: absolute; left: 50%; top: 100%; transform-origin: 50% 0; opacity: 0 }
+.sc-core {
+  width: 3px;
+  height: 11px;
+  margin-left: -1.5px;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(180deg,#fff,#eaffb0 55%,transparent);
+  transform: scaleY(.1);
+  z-index: 2;
+}
+.sc-flare {
+  width: 8px;
+  height: 20px;
+  margin-left: -4px;
+  border-radius: 0 0 60% 60%;
+  background: linear-gradient(180deg,#eaffb0,color-mix(in srgb,#eaffb0 26%,transparent) 55%,transparent);
+  filter: blur(1.5px);
+  transform: scaleY(.1);
+}
+.sc-lane.done .sc-core { animation: sc-core 1.35s linear .24s forwards }
+.sc-lane.done .sc-flare { animation: sc-flare 1.4s linear .24s forwards }
+@keyframes sc-core {
+  0% { opacity: 0; transform: scaleY(.1) }   8% { opacity: 1;   transform: scaleY(1) }
+  14% { opacity: .55; transform: scaleY(.7) } 21% { opacity: 1; transform: scaleY(1.3) }
+  30% { opacity: .8; transform: scaleY(1) }   42% { opacity: 1; transform: scaleY(1.2) }
+  62% { opacity: .7; transform: scaleY(.85) } 100% { opacity: 0; transform: scaleY(.3) }
+}
+@keyframes sc-flare {
+  0% { opacity: 0; transform: scaleY(.1) scaleX(.6) }  12% { opacity: .85; transform: scaleY(1) scaleX(1) }
+  26% { opacity: .55; transform: scaleY(1.5) scaleX(1.15) } 40% { opacity: .8; transform: scaleY(1.8) scaleX(1) }
+  64% { opacity: .5; transform: scaleY(1.4) scaleX(1.25) }  100% { opacity: 0; transform: scaleY(.7) scaleX(1.5) }
+}
+
+/* smoke left on the pad */
+.sc-puff {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ink) 34%, transparent), transparent 68%);
+  filter: blur(2px);
+  opacity: 0;
+  transform: scale(.3);
+}
+.sc-lane.done .sc-puff { animation: sc-puff 1.1s ease-out .5s forwards }
+@keyframes sc-puff { 0% { opacity: 0; transform: scale(.3) } 22% { opacity: .8; transform: scale(1) } 100% { opacity: 0; transform: scale(2.1) } }
+
+/* the check strokes in after the rocket has gone */
+.sc-ck { position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; z-index: 4 }
+.sc-ck path {
+  stroke: var(--acc);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 18;
+  stroke-dashoffset: 18;
+}
+.sc-lane.done .sc-ck path { animation: sc-draw .42s cubic-bezier(.3,.85,.3,1) 1.34s forwards }
+@keyframes sc-draw { to { stroke-dashoffset: 0 } }
+.sc-lane.done .sc-rkn { animation: sc-pad-fill .5s ease 1.34s forwards }
+@keyframes sc-pad-fill { to { background: var(--ink); box-shadow: 0 0 0 2px color-mix(in srgb, var(--acc) 30%, transparent) } }
+
+/* ---------- mobile (≤720px) ---------- */
+.sc-mobile { display: none }
+
+.mb-p {
+  --mv: var(--acc);
+  padding: 16px 0 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .45s ease, transform .5s cubic-bezier(.2,.9,.3,1);
+}
+.mb-p.pre { --mv: var(--acc2) }
+.mb-p.on { opacity: 1; transform: none }
+.mb-p:last-of-type { border-bottom: 0 }
+
+.mb-top { display: flex; align-items: center; gap: 10px }
+.mb-n { font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .1em; color: var(--mv) }
+.mb-t { font-size: 16px; font-weight: 600; letter-spacing: -.015em; color: var(--fg-strong) }
+
+.mb-steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 9px 0 10px }
+.mb-steps span {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid color-mix(in srgb, var(--mv) 38%, transparent);
+  color: color-mix(in srgb, var(--mv) 90%, transparent);
+}
+
+.mb-track { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; height: 6px; margin-bottom: 10px }
+.mb-seg { border-radius: 2px; background: color-mix(in srgb, var(--fg) 8%, transparent) }
+.mb-seg.f { background: color-mix(in srgb, var(--mv) 55%, transparent) }
+.mb-p.fin .mb-seg.f { background: var(--acc) }
+
+.mb-b { margin: 0; font-size: 13px; line-height: 1.55; color: color-mix(in srgb, var(--fg) 55%, transparent) }
+
+/* the shipped pill: rocket launches out of it, a check strokes into
+   the vacated spot — the desktop finale at pill scale */
+.mb-ship {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--acc);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.mb-pad { position: relative; width: 12px; height: 12px; flex: none }
+.mb-rk { position: absolute; inset: 0; opacity: 0; transform: translateY(1px) scale(.9); transform-origin: 50% 80% }
+.mb-p.fin.on .mb-rk { animation: mb-fly 1.3s linear .5s forwards }
+@keyframes mb-fly {
+  0%   { opacity: 1; transform: translateY(1px) scale(.9) }
+  14%  { transform: translate(-.5px,1.6px) scale(.92) }
+  24%  { transform: translate(.5px,1.9px) scaleX(1.07) scaleY(.88); animation-timing-function: cubic-bezier(.5,0,.75,.2) }
+  55%  { opacity: 1;  transform: translateY(-11px) scale(1) }
+  100% { opacity: 0;  transform: translateY(-40px) scale(.7) }
+}
+.mb-core {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 2.5px;
+  height: 8px;
+  margin-left: -1.25px;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(180deg,#fff,#eaffb0 55%,transparent);
+  transform-origin: 50% 0;
+  transform: scaleY(.1);
+  opacity: 0;
+}
+.mb-p.fin.on .mb-core { animation: sc-core 1.2s linear .54s forwards }
+.mb-ck2 { position: absolute; inset: 0; width: 12px; height: 12px }
+.mb-ck2 path {
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 18;
+  stroke-dashoffset: 18;
+}
+.mb-p.fin.on .mb-ck2 path { animation: sc-draw .4s cubic-bezier(.3,.85,.3,1) 1.7s forwards }
+
+/* ---------- responsive ---------- */
+/* 721–1100: the desktop chart with a narrower phase column. Do NOT
+   reintroduce the tablet stepper. */
+@media (max-width: 1100px) {
+  .sc-ruler, .sc-lane { --sc-col: 150px }
+  .sc-cols { inset: 0 0 0 150px }
+  .sc-in { font-size: 10px }
+  /* "Prototype / design" cannot hold one line in 150px — wrap the name
+     rather than clip it or shrink the column further. */
+  .sc-name { white-space: normal; font-size: 11.5px; line-height: 1.3 }
+  .sc-mgrid { grid-template-columns: repeat(2, 1fr) }
+}
+@media (max-width: 720px) {
+  .sc-chart { display: none }
+  .sc-mobile { display: block }
+  .sc-head { flex-direction: column; align-items: flex-start; gap: 14px }
+  .sc-mile-m .sc-mgrid { grid-template-columns: 1fr }
+}
+
+/* ---------------- Closing section ---------------- */
+/* Claim → proof band → the full-lime close. The lime block is the one
+   light surface on the site: plain sans, literal rgba() inks. */
+
+.cl { padding: 64px 0 96px }
+.k-lead { display: flex; align-items: baseline; gap: 16px; margin-bottom: 22px }
+.k-kick {
+  font-size: 12.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--acc) 88%, transparent);
+  white-space: nowrap;
+}
+.k-rule { flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--acc) 45%, transparent), transparent) }
+.k-h { font-size: 44px; line-height: 1.08; letter-spacing: -.038em; font-weight: 600; margin: 0 0 12px; max-width: 780px; text-wrap: pretty }
+.k-h em { font-style: normal }
+.k-sub { font-size: 16.5px; line-height: 1.6; color: color-mix(in srgb, var(--fg) 55%, transparent); max-width: 520px; margin: 0 0 40px }
+.k-band {
+  display: grid;
+  /* three cells since the $100B+ tile moved out (it duplicated the
+     hero's scale argument verbatim) */
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  margin-bottom: 44px;
+}
+.k-cell {
+  padding: 30px 26px 32px;
+  border-right: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
+  position: relative;
+  overflow: hidden;
+  transition: background .25s ease;
+}
+.k-cell:last-child { border-right: 0 }
+.k-cell:first-child { padding-left: 0 } /* aligns the first figure with the column edge */
+.k-cell:hover { background: color-mix(in srgb, var(--acc) 5%, transparent) }
+.k-spark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--acc);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .5s cubic-bezier(.3,.8,.3,1);
+}
+.k-cell:hover .k-spark { transform: scaleX(1) }
+/* tabular-nums stops the digits jittering while counting up */
+.fig { font-size: 60px; line-height: .95; letter-spacing: -.045em; font-weight: 700; color: var(--acc); font-variant-numeric: tabular-nums }
+/* Text figures (e.g. "Fortune 500") — smaller than the digits so the
+   words fit their cell at every column count; same weight and colour. */
+.fig-txt { font-size: 38px; letter-spacing: -.03em }
+.lab { font-size: 13.5px; line-height: 1.5; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-top: 10px; max-width: 210px }
+.note { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-top: 6px; letter-spacing: .04em }
+.close {
+  background: var(--acc);
+  color: var(--ink);
+  border-radius: 20px;
+  padding: 46px 46px 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+}
+.close-blob {
+  position: absolute;
+  right: -70px;
+  bottom: -150px;
+  width: 380px;
+  height: 380px;
+  border-radius: var(--r-pill);
+  background: radial-gradient(circle, rgba(255,255,255,.3), transparent 62%);
+  pointer-events: none;
+}
+.close-h { font-size: 40px; line-height: 1.04; letter-spacing: -.038em; font-weight: 700; margin: 0; max-width: 520px; position: relative }
+.close-sub { font-size: 15px; color: rgba(5,8,13,.68); margin: 12px 0 0; max-width: 470px; position: relative }
+.close-act { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; position: relative }
+.ibtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: var(--acc);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 17px 30px;
+  border-radius: 12px;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.ibtn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(5,8,13,.32); color: var(--acc) }
+.ialt { display: inline-flex; align-items: center; font-size: 15px; font-weight: 600; color: rgba(5,8,13,.62); padding: 17px 20px; transition: color .2s ease }
+.ialt:hover { color: var(--ink) }
+
+/* ---------------- Footer ---------------- */
+
+.pb-footer { border-top: 1px solid color-mix(in srgb, var(--fg) 9%, transparent); position: relative }
+.pb-footer > div {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 26px 48px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  /* 58% clears WCAG 4.5:1 against --bg; 40% failed the contrast audit. */
+  color: color-mix(in srgb, var(--fg) 58%, transparent);
+}
+.pb-footer-brand { color: var(--fg) }
+a.pb-footer-brand:hover { color: var(--fg) }
+
+/* ---------------- Contact page ---------------- */
+
+.ct-in { animation: ct-in .8s cubic-bezier(.2,.75,.3,1) both }
+.ct-intro { padding: 76px 0 44px; max-width: 780px }
+.ct-intro-kicker { margin-bottom: 16px }
+.ct-h1 { font-size: 60px; line-height: 1.04; letter-spacing: -.035em; font-weight: 600; margin: 0 0 20px }
+.ct-lead {
+  font-size: 18px;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--fg) 60%, transparent);
+  max-width: 620px;
+  margin: 0;
+}
+.ct-shell { display: grid; grid-template-columns: 1.35fr .65fr; gap: 28px; align-items: start }
+.ct-form-shell {
+  border: 1px solid color-mix(in srgb, var(--fg) 13%, transparent);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
+  animation-delay: .12s;
+}
+.ct-form-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  background: color-mix(in srgb, var(--fg) 2.5%, transparent);
+}
+.ct-form-name { font-family: var(--font-mono), monospace; font-size: 12px; color: color-mix(in srgb, var(--fg) 40%, transparent); margin-left: 8px }
+.ct-form-count { font-family: var(--font-mono), monospace; font-size: 11px; color: color-mix(in srgb, var(--fg) 35%, transparent) }
+.ct-progress { height: 3px; background: color-mix(in srgb, var(--fg) 7%, transparent) }
+.ct-progress-fill {
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--acc) 55%, transparent), var(--acc));
+  width: 0;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--acc) 55%, transparent);
+  transition: width .4s cubic-bezier(.3,.8,.3,1);
+}
+.ct-form-body { padding: 32px 30px 34px; display: flex; flex-direction: column; gap: 28px }
+.ct-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px }
+.ct-two-wide { gap: 26px }
+.ct-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--fg) 42%, transparent);
+  letter-spacing: .06em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.ct-label-dim { color: color-mix(in srgb, var(--fg) 28%, transparent) }
+.ct-tick { color: var(--acc); font-size: 12px }
+.ct-req { color: color-mix(in srgb, var(--fg) 24%, transparent); font-size: 10.5px; letter-spacing: .1em }
+.ct-field {
+  width: 100%;
+  background: color-mix(in srgb, var(--fg) 2%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fg) 13%, transparent);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: var(--fg);
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  transition: border-color .2s ease, background .2s ease;
+}
+.ct-field::placeholder { color: color-mix(in srgb, var(--fg) 28%, transparent) }
+.ct-field:hover { border-color: color-mix(in srgb, var(--fg) 24%, transparent) }
+.ct-field:focus { outline: none; border-color: var(--acc); background: color-mix(in srgb, var(--fg) 3.5%, transparent) }
+/* pointer focus keeps the quiet lime border; keyboard focus gets the
+   full site-palette ring the border alone doesn't provide */
+.ct-field:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
+.ct-field.ct-bad { border-color: #ff5c5c }
+.ct-err { font-family: var(--font-mono), monospace; font-size: 11.5px; color: #ff8080; margin-top: 7px; display: block }
+.ct-chips { display: flex; gap: 10px; flex-wrap: wrap }
+.ct-chips-tight { gap: 8px }
+.ct-chip {
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--fg) 68%, transparent);
+  background: color-mix(in srgb, var(--fg) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fg) 13%, transparent);
+  border-radius: var(--r-pill);
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.ct-chip:hover { border-color: color-mix(in srgb, var(--acc) 50%, transparent); color: var(--fg); transform: translateY(-2px) }
+.ct-chip[data-on="1"] { background: var(--acc); border-color: var(--acc); color: var(--bg); font-weight: 600 }
+.ct-submit-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 6%, transparent);
+}
+.ct-btn { transition: transform .2s ease, box-shadow .2s ease }
+.ct-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 34px color-mix(in srgb, var(--acc) 32%, transparent) }
+.ct-btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; box-shadow: none !important }
+.ct-send {
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  background: var(--acc);
+  color: var(--bg);
+  padding: 15px 30px;
+  border: 0;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 18px;
+}
+.ct-hint { font-family: var(--font-mono), monospace; font-size: 12px; color: color-mix(in srgb, var(--fg) 35%, transparent); margin-top: 18px }
+.ct-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Submitted state */
+.ct-sent { padding: 40px 30px 44px; display: flex; flex-direction: column; gap: 18px; min-height: 380px }
+.ct-log { font-family: var(--font-mono), monospace; font-size: 13px; line-height: 2.1; display: flex; flex-direction: column }
+.ct-log-line { color: color-mix(in srgb, var(--fg) 60%, transparent); animation: ct-token .45s ease both }
+.ct-log-mark { color: var(--acc) }
+.ct-log-line.ct-log-err { color: #ff8080 }
+.ct-log-line.ct-log-err .ct-log-mark { color: #ff5c5c }
+.ct-confirm {
+  border-top: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: ct-in .6s ease both;
+}
+.ct-confirm h2 { font-size: 32px; letter-spacing: -.03em; font-weight: 600; margin: 0 }
+.ct-confirm p { margin: 0; font-size: 16px; line-height: 1.7; color: color-mix(in srgb, var(--fg) 60%, transparent); max-width: 560px }
+.ct-recap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px }
+.ct-tag {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fg) 13%, transparent);
+  border-radius: var(--r-pill);
+  padding: 5px 10px;
+}
+.ct-confirm-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px }
+.ct-ghost-btn {
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  border: 1px solid color-mix(in srgb, var(--fg) 16%, transparent);
+  padding: 13px 22px;
+  border-radius: 9px;
+  color: color-mix(in srgb, var(--fg) 85%, transparent);
+  background: transparent;
+  cursor: pointer;
+}
+.ct-ghost-btn.ct-ghost-dim { color: color-mix(in srgb, var(--fg) 55%, transparent) }
+
+/* Aside */
+.ct-aside { display: flex; flex-direction: column; gap: 14px; animation-delay: .22s }
+.ct-aside-card {
+  border: 1px solid color-mix(in srgb, var(--fg) 11%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--fg) 2%, transparent);
+  padding: 24px;
+}
+/* Proof card — the one light surface in the aside. Literal ink rgba()s:
+   the foreground scale is for dark grounds and would wash out on lime.
+   No border (the fill is the boundary) and no gradient on the figure. */
+.ct-proof {
+  background: var(--acc);
+  color: var(--ink);
+  border: 0;
+  border-radius: 12px;
+  padding: 22px 22px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.ct-proof-blob {
+  position: absolute;
+  right: -50px;
+  bottom: -110px;
+  width: 240px;
+  height: 240px;
+  border-radius: var(--r-pill);
+  background: radial-gradient(circle, rgba(255,255,255,.34), transparent 62%);
+  pointer-events: none;
+}
+.ct-proof-label {
+  position: relative;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  color: rgba(5,8,13,.55);
+  margin-bottom: 12px;
+}
+.ct-proof-fig {
+  position: relative;
+  font-family: var(--font-mono), monospace;
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.ct-proof-sub {
+  position: relative;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(5,8,13,.68);
+  margin: 8px 0 14px;
+}
+.ct-proof-chips { position: relative; display: flex; flex-wrap: wrap; gap: 6px }
+.ct-pchip {
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  border: 1px solid rgba(5,8,13,.24);
+  color: rgba(5,8,13,.78);
+  border-radius: var(--r-pill);
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+.ct-pchip.nda {
+  background: rgba(5,8,13,.86);
+  color: var(--acc);
+  border-color: transparent;
+}
+.ct-aside-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--fg) 38%, transparent);
+  letter-spacing: .1em;
+  margin-bottom: 14px;
+}
+.ct-aside-big { font-family: var(--font-mono), monospace; font-size: 30px; color: var(--acc); line-height: 1 }
+.ct-aside-p { margin: 10px 0 0; font-size: 14px; line-height: 1.6; color: color-mix(in srgb, var(--fg) 50%, transparent) }
+.ct-steps { display: flex; flex-direction: column; gap: 14px }
+.ct-step { display: flex; gap: 12px }
+.ct-step-n { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--acc); padding-top: 2px }
+.ct-step-t { font-size: 15px; font-weight: 600; margin-bottom: 3px }
+.ct-step-p { margin: 0; font-size: 13.5px; line-height: 1.55; color: color-mix(in srgb, var(--fg) 50%, transparent) }
+.ct-form-only { margin: 0 0 6px; font-family: var(--font-mono), monospace; font-size: 15px; color: var(--acc) }
+.ct-reach-p { margin: 0; font-size: 13.5px; line-height: 1.6; color: color-mix(in srgb, var(--fg) 45%, transparent) }
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .bg-grid { background-size: 40px 40px }
+}
+
+@media (max-width: 1000px) {
+  .pb-navlink { padding: 9px 11px }
+  .pb-capsule { font-size: 12px }
+}
+@media (max-width: 1040px) {
+  .ct-capsule a { padding: 9px 11px }
+  .ct-capsule { font-size: 12px }
+}
+
+@media (max-width: 960px) {
+  .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 28px !important; padding-right: 28px !important }
+  .pb-ai { grid-template-columns: 1fr !important; gap: 32px !important }
+  .pb-ai { padding: 34px 28px !important }
+  /* The hero headline steps 62/54/46 on its own schedule (split-hero
+     spec) — keep it out of the generic clamp. */
+  h1:not(.pb-hero-h) { font-size: 46px !important }
+  h2 { font-size: 34px !important }
+  /* The offer pane title moved from h2 to h3 for hierarchy; keep it on
+     the h2 scale it always had. */
+  .pb-offer-title { font-size: 34px !important }
+  .pb-h-lg { font-size: 38px }
+  .ct-shell { grid-template-columns: 1fr !important }
+  .ct-h1 { font-size: 44px !important }
+}
+
+@media (max-width: 860px) {
+  /* Five links no longer fit beside the wordmark and CTA with their
+     dash prefixes — drop the decoration, keep the labels. */
+  .pb-navlink { padding: 9px 9px }
+  .pb-navlink .pb-dash { display: none }
+}
+@media (max-width: 860px) {
+  .en { grid-template-columns: 1fr }
+  .en-graph { display: none } /* the code is the point; CI is supporting detail */
+  .pb-feature { grid-template-columns: 1fr }
+  .pb-feature-stats { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); flex-direction: row }
+  .pb-fstat { border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--fg) 8%, transparent) }
+  .pb-fstat:last-child { border-right: 0 }
+}
+@media (max-width: 800px) {
+  .pb-navlink { padding: 9px 7px }
+  .pb-capsule { font-size: 11.5px }
+  /* The longer "send us the problem" CTA overflows this band with its
+     brackets on — drop them here, keep the label and arrow. */
+  .pb-cta .pb-brk { display: none }
+  .pb-cta { font-size: 12px; padding: 9px 4px }
+}
+
+@media (max-width: 720px) {
+  .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 18px !important; padding-right: 18px !important }
+  /* MOBILE_audit finding 6: no side-by-side comparison to keep stable
+     on phones — release the reserved bottom padding */
+  .pb-services { padding-bottom: 40px }
+  .pb-capsule { display: none !important }
+  .ct-capsule { display: none !important }
+  .stagewrap { height: 320px } /* taller — content stacks */
+  .bg-grid {
+    background-size: 32px 32px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 50% at 40% 10%, #000 4%, transparent 72%);
+            mask-image: radial-gradient(ellipse 90% 50% at 40% 10%, #000 4%, transparent 72%);
+  }
+  .bg-fade { background: linear-gradient(180deg, transparent 48%, var(--bg) 100%) }
+  .stage { padding: 16px 14px 38px }
+  .st-cap { left: 14px; right: 14px }
+  .iv { gap: 8px }
+  .iv-q { font-size: 11.5px }
+  .iv-said { font-size: 11px }
+  .iv-turn { grid-template-columns: 19px 1fr; gap: 8px }
+  .iv-av { width: 19px; height: 19px; font-size: 8.5px }
+  .iv-note { font-size: 11px; padding: 9px 10px }
+  .iv-note span:last-child { display: none } /* drops before the label wraps */
+  .dp-stats { gap: 16px }
+  .dp-v { font-size: 16px }
+  .pb-pipeline { flex-wrap: wrap; gap: 6px }
+  .pb-pstep { font-size: 10px; padding: 6px 10px }
+  .pb-pconn { display: none } /* connectors can't span a wrapped row */
+  .pb-navlinks { display: none !important }
+  .pb-burger { display: flex }
+  h1:not(.pb-hero-h) { font-size: 34px !important; letter-spacing: -.025em !important }
+  h2 { font-size: 27px !important }
+  h3 { font-size: 24px !important }
+  /* Headings that are h3 for hierarchy but deliberately not on the
+     display scale: keep their own sizes. */
+  .pb-offer-title { font-size: 27px !important }
+  .mb-t { font-size: 16px !important }
+  .pb-chip, .ct-chip { font-size: 11.5px !important; padding: 8px 12px !important }
+  .ct-chip { padding: 9px 13px !important }
+  .ct-h1 { font-size: 33px !important; letter-spacing: -.025em !important }
+  .ct-two { grid-template-columns: 1fr !important; gap: 16px !important }
+}
+
+@media (max-width: 480px) {
+  .stagewrap { height: 300px }
+  .iv-head span:first-child { font-size: 9.5px }
+  .iv-who { font-size: 9px }
+  .iv-turn-3 { display: none } /* the note must fit; drop the third turn, not the type size */
+  .dp-stats { flex-wrap: wrap; gap: 12px 18px }
+  .dp-region { display: none }
+}
+
+/* ============================================================
+   Mobile fixes (MOBILE_FIXES.md) — everything below sits inside
+   max-width queries except the min-width: 0 rules, which are the
+   actual overflow fix and inert where nothing overflows.
+   ============================================================ */
+
+/* Fix 1 — grid/flex children default to min-width: auto and cannot
+   shrink below their content, so long paragraphs and wide mono figures
+   overflow the card. Applies to the feature card, the standard case
+   cards and the redacted card (same two-column grid). */
+.pb-feature > *,
+.pb-case > *,
+.pb-redcard > * {
+  min-width: 0;
+}
+@media (max-width: 860px) {
+  .pb-feature-side { padding: 30px 24px }
+}
+@media (max-width: 620px) {
+  .pb-feature-stats { flex-direction: column }
+  .pb-fstat {
+    padding: 18px 24px;
+    border-right: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  }
+  .pb-fstat:last-child { border-bottom: 0 }
+  .pb-fstat .pb-figure { font-size: 26px }
+}
+
+/* Fix 3 — tab bar becomes an explicit 2×2 grid; a pill radius only
+   reads on a single row. Tabs land at ~44px tall (tap target). */
+@media (max-width: 720px) {
+  .pb-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 5px;
+    border-radius: 12px;
+    width: 100%;
+  }
+  .pb-tab {
+    justify-content: center;
+    text-align: center;
+    border-radius: 8px;
+    padding: 11px 8px;
+    font-size: 11.5px;
+  }
+}
+
+/* Fix 5 — hero buttons stack full-width and aligned. */
+@media (max-width: 720px) {
+  .pb-hero-btns > a { flex: 1 1 100%; text-align: center }
+}
+
+/* Fix 8 — the "nice try" reveal works on tap where hover doesn't exist. */
+@media (hover: none) {
+  .pb-redact:active { background: var(--acc) }
+  .pb-redact:active::after { opacity: 1 }
+}
+
+/* Closing section + carousel responsive */
+@media (max-width: 960px) {
+  .k-h { font-size: 34px }
+  .k-band { grid-template-columns: 1fr 1fr }
+  .k-cell:nth-child(2) { border-right: 0 }
+  /* row 2 is the lone third cell — full width, left edge on the column */
+  .k-cell:nth-child(3) { padding-left: 0; grid-column: 1 / -1 }
+  .k-cell:nth-child(1), .k-cell:nth-child(2) { border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent) }
+  .fig { font-size: 48px }
+  .fig-txt { font-size: 34px }
+  .close { padding: 38px 32px 34px }
+  .close-h { font-size: 32px }
+}
+@media (max-width: 620px) {
+  .k-h { font-size: 27px }
+  /* 2×2 on phones (owner request) — inherits the ≤960 two-column grid;
+     only the sizing tightens. "Fortune 500" must fit a half column. */
+  .k-cell { padding: 18px 12px 20px }
+  .k-cell:nth-child(3), .k-cell:nth-child(4) { border-bottom: 0 }
+  .fig { font-size: 34px }
+  .fig-txt { font-size: 20px }
+  .lab { max-width: none; font-size: 12px }
+  .close { padding: 30px 22px 28px; flex-direction: column; align-items: flex-start }
+  .close-h { font-size: 27px }
+  .close-act { width: 100%; flex-direction: column; gap: 8px }
+  .ibtn { width: 100%; justify-content: center }
+  /* "See the work" becomes a full-width outlined button under the
+     primary — ink border on lime, centred, matching radius. */
+  .ialt {
+    width: 100%;
+    justify-content: center;
+    padding: 15px 20px;
+    border: 1px solid rgba(5,8,13,.28);
+    border-radius: 12px;
+    color: rgba(5,8,13,.72);
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .ialt:hover { color: var(--ink); border-color: rgba(5,8,13,.5) }
+}
+@media (max-width: 480px) {
+}
+
+/* ---------------- Touch ---------------- */
+
+@media (pointer: coarse) {
+  .pb-chip, .ct-chip, .pb-tab { min-height: 44px }
+  .pb-navlink, .ct-capsule a { min-height: 44px; display: inline-flex; align-items: center }
+  /* 16px inputs prevent iOS zoom-on-focus */
+  .ct-field { font-size: 16px }
+}
+
+/* ---------------- Reduced motion ---------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto }
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .pb-rev, .pb-rev-l, .pb-rev-r, .pb-rev-s { opacity: 1; transform: none }
+  .pb-hero-h-accent {
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    color: var(--acc);
+    animation: none;
+  }
+  .pb-wave > span { transform: scaleY(.18) !important }
+  .bg-aurora, .bg-grid { animation: none !important }
+  .pb-hero-float { animation: none !important }
+  .pb-drawer {
+    transform: none;
+    opacity: 0;
+    transition: opacity .15s ease, visibility 0s .15s !important;
+  }
+  body.pb-navopen .pb-drawer { opacity: 1; transition: opacity .15s ease !important }
+  body.pb-navopen .pb-recede { transform: none; filter: none; opacity: 1 }
+  .pb-dlink, .pb-dft { opacity: 1; transform: none; animation: none !important }
+  .pb-scrim { transition: opacity .15s ease !important }
+}
