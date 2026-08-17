@@ -9,27 +9,6 @@ export const PIPELINE_STEPS = ["Scoping", "Design", "Build", "Handover"];
 /* Every conversion CTA on both pages reads the same. */
 export const CTA_LABEL = "send us the problem";
 
-/* The four service outcomes, readable without touching the tabs —
-   labelled by the spine, in spine order. */
-export const SERVICE_OUTCOMES: { label: string; line: string }[] = [
-  {
-    label: "Scoping",
-    line: 'A week on site turns "we should use AI here" into a measurable brief.',
-  },
-  {
-    label: "Design",
-    line: "Interfaces for agent products, tested on operators before code.",
-  },
-  {
-    label: "Build",
-    line: "React/Next, services, CI and evals, deployed from week one.",
-  },
-  {
-    label: "Handover",
-    line: "We sit with your team until the thing is live in their hands.",
-  },
-];
-
 export interface Offer {
   tab: string;
   kicker: string;
@@ -46,7 +25,7 @@ export const OFFERS: Offer[] = [
     tab: "scoping",
     kicker: "SCOPING",
     title: "The cheapest decision is what not to build.",
-    body: "Most engagements start with a scoping week. We map the workflow, talk to the people inside it, and come back with the smallest thing worth building — plus an honest read on what to cut.",
+    body: "We turn your team's intuition of \"we should use AI here\" into a measurable, executable and well-defined project scope. Most engagements start with a scoping week — we map the workflow, talk to the people inside it, and come back with the smallest thing worth building, plus an honest read on what to cut.",
     points: [
       ["01", "A scoping week, not a discovery phase", "Five days on site, ending in a written scope and a number. Not a two-month audit."],
       ["02", "Talk to the people doing the work", "The workflow on the slide and the workflow in the building are different documents. We design against the second."],
@@ -58,7 +37,7 @@ export const OFFERS: Offer[] = [
     tab: "design",
     kicker: "PRODUCT DESIGN",
     title: "Design that survives contact with the engineering team.",
-    body: "We design as the people who will build it. Flows, interfaces and systems drawn against real constraints — data you actually have, latency you actually pay, deadlines you actually hold.",
+    body: "We can take your ideas from wireframes to high-fidelity designs and working prototypes you can experience. We design as the people who will build it — against real constraints: data you actually have, latency you actually pay, deadlines you actually hold.",
     points: [
       ["01", "Flows before pixels", "The argument is about what happens, in what order, for whom. Visual design comes after that is settled."],
       ["02", "Prototypes people can click", "Working prototypes rather than static screens, so feedback is about the product and not the picture."],
@@ -70,7 +49,7 @@ export const OFFERS: Offer[] = [
     tab: "build",
     kicker: "PRODUCT ENGINEERING",
     title: "Ship the whole thing, then keep it shippable.",
-    body: "Full-stack delivery from data model to interface, on products that took real traffic — 1.4M transactions in a single day at the peak of a Coinbase campaign — and on internal tools nobody outside the company ever sees.",
+    body: "We use the most modern tech stack and agentic engineering approaches to efficiently and effectively build and deliver your projects. Full-stack, from data model to interface, on products that took real traffic — 1.4M transactions in a single day at the peak of a Coinbase campaign.",
     points: [
       ["01", "One team, front to back", "React and Next.js on the front, real services and data behind it. No handoff seam to lose things in."],
       ["02", "Deploy from week one", "A working environment before there is a product, so progress is visible and integration risk lands early."],
@@ -82,7 +61,7 @@ export const OFFERS: Offer[] = [
     tab: "handover",
     kicker: "FORWARD DEPLOYED ENGINEERING",
     title: "Most teams can build with an LLM. Few can land one inside a real business.",
-    body: "Two years as forward deployed engineers — at Decagon AI and Scotts Miracle-Gro — sitting with the customer, learning the workflow, and turning a demo into something their staff actually uses.",
+    body: "We always deliver the highest-quality product, well documented and easy for your team to continue to iterate on. Two years as forward deployed engineers — at Decagon AI and Scotts Miracle-Gro — sitting with the customer and turning a demo into something their staff actually uses.",
     points: [
       ["01", "On site, not over email", "We watch the work happen and design against what people really do, not the process on the slide."],
       ["02", "Evals before opinions", "Prompts, retrieval and agent flows measured against real transcripts, so quality is a number the team can argue with."],

@@ -25,14 +25,8 @@ export default function Hero(): JSX.Element {
           <span className="pb-hero-h-accent">for teams shipping AI.</span>
         </h1>
         <p className="pb-hero-sub">
-          Research, design, build and deployment by one team — the forward
-          deployed engineers who take an LLM product from demo to production.
-        </p>
-        <p className="pb-hero-note">
-          AI is the domain. End-to-end is how we work in it. AI products fail
-          at the seams — between what research found, what design assumed, and
-          what deployment actually hit — so one team across all of it is the
-          thing that makes them ship.
+          Research, design, and engineering; we can do it all and everything
+          in between.
         </p>
         {/* The spine, verbatim wherever the offering is enumerated. */}
         <div className="pb-run-cap">one engagement, four phases</div>
