@@ -653,40 +653,47 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 .pb-hero-left > * { position: relative }
 /* Column max-width + the 48px padding must stay left of the terminal's
-   left edge (seat at 66% minus half of 680px). */
+   left edge (seat at 67% minus --term-half, the scaled half-width),
+   with a 24px breathing gap. */
 .pb-hero-left .pb-hero-h,
 .pb-hero-left .pb-hero-sub,
-.pb-hero-left .pb-run,
-.pb-hero-left .pb-facts { max-width: 620px }
-.pb-hero-left .pb-hero-btns { max-width: 620px; margin-top: 14px }
-/* The clamp tracks the terminal's left edge (66vw − 360px with the
-   1.06 scale on the 680px seat) minus the column-tracking left
-   padding, so copy never slides under the panel at any desktop width.
-   Desktop only — the single-column hero keeps the flat 620px cap. */
+.pb-hero-left .pb-proof,
+.pb-hero-left .pb-run2 { max-width: 620px }
+.pb-hero-left .pb-hero-btns { max-width: 620px }
+/* The clamp tracks the terminal's left edge (67vw − --term-half, set
+   beside the seat rules below) minus a 24px gap and the column-tracking left padding,
+   so copy never slides under the panel at any desktop width. The
+   headline then tracks the column: "for teams shipping AI" measures
+   ≈9.22× the font size and must never orphan "AI", so fs ≤ (column −
+   4px) / 9.22, capped at the 64px display size. Desktop only — the
+   single-column hero keeps the flat 620px cap and fixed sizes. */
 @media (min-width: 1200px) {
   .pb-hero-left {
     --hero-pl: max(48px, calc(50vw - 720px));
-    --hero-copy-w: min(620px, calc(66vw - 360px - var(--hero-pl)));
+    --hero-copy-w: min(620px, calc(67vw - var(--term-half) - var(--hero-pl) - 24px));
+  }
+  .pb-hero .pb-hero-h {
+    font-size: clamp(38px, calc((var(--hero-copy-w) - 4px) / 9.22), 64px);
+    line-height: 1.06;
+  }
+  /* The supporting values are nowrap, and "10 yrs" sets at ≈3.42× its
+     font size. Each cell gets a third of the column minus 20px of
+     padding, so track the column below ~1400px (36px holds from there
+     up; ≈29px at 1200). */
+  .pb-hero-left .pb-sup-v {
+    font-size: clamp(24px, calc((var(--hero-copy-w) / 3 - 20px) / 3.5), 36px);
   }
   .pb-hero-left .pb-hero-h,
   .pb-hero-left .pb-hero-sub,
-  .pb-hero-left .pb-run,
-  .pb-hero-left .pb-facts,
+  .pb-hero-left .pb-proof,
+  .pb-hero-left .pb-run2,
   .pb-hero-left .pb-hero-btns { max-width: var(--hero-copy-w) }
 }
-/* Narrow desktop (1200–1399px): the clamped column is under the
-   ~510px the 80px headline needs for "From design to" on one line —
-   "deployment," cannot break and would slide under the panel. Step the
-   copy scale down a notch until the geometry gives the full line room;
-   the smaller wraps also keep the client strip above the fold on
-   900px-tall viewports. */
+/* Narrow desktop (1200–1399px): the headline already tracks the column
+   (≈40px at 1200 up to ≈55px at 1399). The narrower clamp wraps the
+   copy taller — give the height back so the client strip holds above
+   the fold at 900px-tall viewports. */
 @media (min-width: 1200px) and (max-width: 1399px) {
-  .pb-hero .pb-hero-h { font-size: 46px; line-height: 1.06 }
-  .pb-hero-left .pb-run { font-size: 12.5px }
-  .pb-hero-left .pb-fv { font-size: 18px }
-  .pb-hero-left .pb-fk { font-size: 12px }
-  /* The narrower clamp wraps the copy taller — give the height back so
-     the client strip holds above the fold at 900px-tall viewports. */
   .pb-hero-left { padding-top: 96px; padding-bottom: 32px }
 }
 .pb-hero-lime {
@@ -713,19 +720,29 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    centering transform. */
 .pb-hero-seat {
   position: absolute;
-  left: 66%;
+  left: 67%;
   top: 50%;
   width: 680px;
   /* The scale grows the panel proportionately (width AND height —
      Engagement's internal height is content-fixed, so a plain width
      bump would only widen it). Keyframe transforms live on the float
-     child, never here. */
+     child, never here. --term-half (on .pb-hero, read by the copy
+     clamp above) must equal width × scale / 2 at every breakpoint. */
   transform: translate(-50%, -50%) scale(1.06);
 }
+.pb-hero { --term-half: 360px }
+/* From 1400px the copy column has room to spare, so the panel steps up
+   to fill more of the hero's height (680 × 1.22 / 2 ≈ 415). */
+@media (min-width: 1400px) {
+  .pb-hero-seat { transform: translate(-50%, -50%) scale(1.22) }
+  .pb-hero { --term-half: 415px }
+}
 /* The panel is the dominant object on the right half — on very wide
-   viewports it scales up before the lime flood gains whitespace. */
+   viewports it scales up before the lime flood gains whitespace
+   (720 × 1.22 / 2 ≈ 439). */
 @media (min-width: 1800px) {
   .pb-hero-seat { width: 720px }
+  .pb-hero { --term-half: 439px }
 }
 .pb-hero-float {
   position: relative;
@@ -750,11 +767,11 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    landscape — collapses to a single column, source order copy →
    terminal band. The lime cell disappears; the seat becomes a
    full-width lime band with the terminal static and centred inside.
-   Headline steps 62 → 54 → 46 (≤720) by breakpoint. */
+   Headline steps 62 → 48 (≤720) by breakpoint. */
 @media (max-width: 1199px) {
   .pb-hero { display: block; min-height: 0 }
   .pb-hero-left { padding: 110px 48px 44px; justify-content: flex-start }
-  .pb-hero .pb-hero-h { font-size: 52px; line-height: 1.06 }
+  .pb-hero .pb-hero-h { font-size: 62px; line-height: 1.06 }
   .pb-hero-lime { display: none }
   .pb-hero-seat {
     position: static;
@@ -772,8 +789,14 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 @media (max-width: 720px) {
   .pb-hero-left { padding: 96px 18px 36px }
-  .pb-hero .pb-hero-h { font-size: 40px }
+  .pb-hero .pb-hero-h { font-size: 48px }
   .pb-hero-seat { padding: 28px 16px }
+}
+/* Phones: the column is 100vw − 36px of gutter and the accent line is
+   ≈9.22× the font size, so track the width to keep "AI" off its own
+   line (≈38px at 390, ≈35px at 360). */
+@media (max-width: 480px) {
+  .pb-hero .pb-hero-h { font-size: clamp(32px, calc(10.8vw - 4px), 48px) }
 }
 
 /* ---------------- Hero client strip ---------------- */
@@ -865,10 +888,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .pb-cread { font-size: 11px }
 }
 .pb-hero-h {
-  /* 52/46/40 by breakpoint — the canonical headline is 2.3× the old
-     six-word one, so the 80px scale can no longer set in the clamped
-     column; 52px matches the existing .pb-h-lg display size. */
-  font-size: 52px;
+  /* 64/52/48 by breakpoint — "for teams shipping AI" is the longest line
+     (≈590px at 64px) and still sets inside the clamped 620px column. */
+  font-size: 64px;
   line-height: 1.06;
   letter-spacing: -.035em;
   font-weight: 600;
@@ -877,7 +899,12 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .pb-hero-l1 { display: block; margin: 0 0 8px }
 .pb-hero-h-accent {
   display: block;
-  margin: 0 0 22px;
+  /* background-clip: text only paints inside the box, and the 1.06
+     line-height box stops above the descenders of "shipping" — pad the
+     bottom so the g and p tails get painted, and pull the same amount
+     back out of the margin so the gap to the subhead is unchanged. */
+  padding-bottom: .18em;
+  margin: 0 0 calc(22px - .18em);
   background: linear-gradient(100deg, var(--acc) 20%, var(--fg-strong) 45%, var(--acc) 70%);
   background-size: 220% 100%;
   -webkit-background-clip: text;
@@ -893,65 +920,87 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   line-height: 1.6;
   color: color-mix(in srgb, var(--fg) 76%, transparent);
 }
-/* The spine — one labelled sequence, smaller than the headline. */
-.pb-run-cap {
-  margin-top: 20px;
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  letter-spacing: .14em;
-  color: color-mix(in srgb, var(--fg) 45%, transparent);
-}
-.pb-run {
+/* Hero proof block (design_handoff_hero_proof, option 1a "Lead
+   number"): one lime lead fact over a ruled row of three cyan
+   supporting facts, then the phase line as a quiet supporting line.
+   Lime is for the lead value only. */
+.pb-proof { margin: 40px 0 0 }
+.pb-lead {
   display: flex;
-  align-items: center;
-  gap: 9px;
-  flex-wrap: wrap;
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-  font-family: var(--font-mono), monospace;
-  font-size: 15px;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding-bottom: 26px;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
 }
-.pb-rw { display: inline-flex; align-items: baseline; gap: 9px; color: var(--fg-strong) }
-.pb-rsep { color: color-mix(in srgb, var(--acc) 55%, transparent) }
-
-
-.pb-facts {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px 22px;
-  margin: 14px 0 14px;
-  padding-top: 15px;
-  border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
-}
-.pb-fact { display: flex; flex-direction: column; gap: 4px }
-/* 24px values / 13.5px keys (split-hero spec — the 620px column gives
-   "Fortune 500" room on one line). Facts 2 and 4 carry the cyan data
-   voice. Phone sizes below stay on the existing collapse scale. */
-.pb-fv {
+.pb-lead-v {
   margin: 0;
   font-family: var(--font-mono), monospace;
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 84px;
+  line-height: .95;
+  letter-spacing: -.04em;
+  font-weight: 500;
   color: var(--acc);
-  line-height: 1.1;
 }
-.pb-fv.c { color: var(--acc2) }
-.pb-fk {
+.pb-lead-k {
   margin: 0;
-  font-size: 13.5px;
-  line-height: 1.42;
-  color: color-mix(in srgb, var(--fg) 58%, transparent);
+  max-width: 400px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--fg) 72%, transparent);
+  text-wrap: pretty;
 }
+.pb-sup { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0 }
+.pb-sup-i { display: flex; flex-direction: column; gap: 6px; padding: 22px 20px 0 }
+.pb-sup-i:first-child { padding-left: 0 }
+.pb-sup-i:last-child { padding-right: 0 }
+.pb-sup-i + .pb-sup-i { border-left: 1px solid color-mix(in srgb, var(--fg) 10%, transparent) }
+.pb-sup-v {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -.03em;
+  font-weight: 400;
+  color: var(--acc2);
+  white-space: nowrap;
+}
+.pb-sup-k { margin: 0; font-size: 14px; line-height: 1.4; color: color-mix(in srgb, var(--fg) 60%, transparent) }
+/* The phase line. The prototype spaces it 28px under the supporting
+   row and 32px above the CTAs; the hero column is a flex column, so
+   margins don't collapse and the gap is set once, here. */
+.pb-run2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 28px 0 32px;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  text-transform: lowercase;
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+}
+.pb-run2-sep { color: var(--acc) }
+/* ≤1199: single-column hero. The column is wider; values stay at
+   desktop size. */
+@media (max-width: 1199px) {
+  .pb-proof { margin-top: 36px }
+  .pb-lead-k { max-width: 460px }
+}
+/* ≤720: phone. Three supporting columns stay; labels may wrap. */
 @media (max-width: 720px) {
-  .pb-run { font-size: 11.5px; gap: 7px }
-  .pb-rw { gap: 7px }
-  .pb-facts { gap: 13px 16px }
-  .pb-fv { font-size: 16px }
-  .pb-fk { font-size: 11.5px }
+  .pb-proof { margin-top: 30px }
+  .pb-lead { padding-bottom: 20px }
+  .pb-lead-v { font-size: 60px }
+  .pb-lead-k { font-size: 15px; max-width: 300px }
+  .pb-sup-i { padding: 18px 12px 0 }
+  .pb-sup-v { font-size: 26px }
+  .pb-sup-k { font-size: 12.5px }
+  .pb-run2 { font-size: 11.5px; gap: 4px 7px; margin: 24px 0 26px }
 }
-@media (max-width: 430px) {
-  .pb-facts { grid-template-columns: 1fr } /* two across is too tight for "Fortune 500" */
+/* ≤360: the three supporting values get tight. */
+@media (max-width: 360px) {
+  .pb-sup-v { font-size: 22px }
 }
 .pb-hero-btns {
   display: flex;
@@ -1019,7 +1068,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    children with min-width: 0 and ellipsis on single-line strings so the
    panel is never widened by its own content. */
 
-.stagewrap { position: relative; height: 292px; overflow: hidden }
+.stagewrap { position: relative; height: 312px; overflow: hidden }
 .stage {
   position: absolute;
   inset: 0;
@@ -1276,59 +1325,89 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 .pb-pct { color: var(--acc) }
 
-/* ---------------- Offerings tabs ---------------- */
+/* ---------------- Services: spine stepper + offer pane ---------------- */
 
 /* More air between the hero band's client strip and the first section
    (owner request 2026-08-11). */
 .pb-services { padding: 108px 0 60px }
-.pb-services-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 22px;
-  flex-wrap: wrap;
+/* The section heading is on its own scale (design handoff 2026-10-11),
+   so it carries !important against the generic h2 clamps below. */
+.pb-services-h {
+  margin: 12px 0 40px;
+  font-size: 56px !important;
+  line-height: 1.04;
+  letter-spacing: -.03em;
+  font-weight: 600;
+  color: var(--fg-strong);
 }
-.pb-services-h { margin: 12px 0 0 }
-/* The tab switcher sits on its own row between the heading and the
-   pane it controls, pushed to the right edge. */
-.pb-tabs-row { display: flex; justify-content: flex-end; margin-bottom: 18px }
-.pb-tabs {
-  display: flex;
-  gap: 2px;
-  padding: 4px;
-  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--fg) 2%, transparent);
-  font-family: var(--font-mono), monospace;
-  font-size: 12.5px;
-  flex-wrap: wrap;
+
+/* The stepper (tablist): four equal columns. Every step up to and
+   including the active one is "done" — lime bar and number; only the
+   active step's name is white. */
+.pb-step-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
 }
-.pb-tab {
-  padding: 9px 16px;
-  border-radius: var(--r-pill);
-  color: color-mix(in srgb, var(--fg) 52%, transparent);
+.pb-step {
+  all: unset;
+  box-sizing: border-box;
   cursor: pointer;
-  transition: color .2s ease, background .2s ease, border-color .2s ease;
-  border: 1px solid transparent;
-  background: transparent;
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 4px 4px 0;
+  border-radius: 6px;
+  min-height: 44px;
+  text-align: left;
 }
-.pb-tab:hover { color: var(--fg) }
-.pb-tab.pb-tab-on {
-  color: var(--fg);
-  background: color-mix(in srgb, var(--acc) 16%, transparent);
-  border-color: color-mix(in srgb, var(--acc) 42%, transparent);
+.pb-step:focus-visible { outline: 2px solid var(--acc); outline-offset: 4px }
+.pb-step-bar {
+  display: block;
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--fg) 12%, transparent);
+  transition: background .35s ease;
 }
+.pb-step-head { display: flex; align-items: baseline; gap: 12px }
+.pb-step-n {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--fg) 30%, transparent);
+  transition: color .35s ease;
+}
+.pb-step-name {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: color-mix(in srgb, var(--fg) 45%, transparent);
+  transition: color .35s ease;
+}
+.pb-step:hover .pb-step-name { color: color-mix(in srgb, var(--fg) 80%, transparent) }
+.pb-step-sub {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--fg) 36%, transparent);
+  padding-left: 33px; /* lines up under the name */
+}
+.pb-step.is-done .pb-step-bar { background: var(--acc) }
+.pb-step.is-done .pb-step-n { color: var(--acc) }
+.pb-step[aria-selected="true"] .pb-step-name { color: var(--fg-strong) }
+.pb-step-cur { display: none } /* phone-only line under the stepper */
+
+/* The card. */
 .pb-ai {
   border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   border-radius: 14px;
   background: color-mix(in srgb, var(--fg) 2%, transparent);
-  padding: 46px 44px;
+  padding: 52px 52px 48px;
   display: grid;
   grid-template-columns: 1.05fr 1fr;
-  gap: 58px;
+  gap: 64px;
 }
+.pb-pane-l { display: flex; flex-direction: column }
 .pb-pane .pb-pi { animation: pb-pane-in .5s cubic-bezier(.2,.78,.3,1) both }
 .pb-pane .pb-pi:nth-child(1) { animation-delay: 0s }
 .pb-pane .pb-pi:nth-child(2) { animation-delay: .07s }
@@ -1342,13 +1421,62 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   letter-spacing: .1em;
   margin-bottom: 22px;
 }
-.pb-offer-title { margin: 0 0 20px }
+.pb-offer-title {
+  margin: 0 0 20px;
+  font-size: 44px;
+  line-height: 1.08;
+  letter-spacing: -.03em;
+  font-weight: 600;
+  color: var(--fg-strong);
+  text-wrap: pretty;
+}
 .pb-offer-body {
+  margin: 0 0 40px;
   font-size: 16px;
   line-height: 1.7;
   color: color-mix(in srgb, var(--fg) 60%, transparent);
-  margin: 0 0 28px;
+  text-wrap: pretty;
 }
+
+/* Deliverable row, pinned to the bottom of the left column. */
+.pb-deliv {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+.pb-deliv-k {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--fg) 40%, transparent);
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+}
+.pb-deliv-v { font-size: 19px; font-weight: 500; line-height: 1.4; color: var(--fg-strong) }
+.pb-next {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  color: var(--acc);
+  padding: 10px 16px;
+  border: 1px solid color-mix(in srgb, var(--acc) 35%, transparent);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  transition: background .2s ease;
+}
+.pb-next:hover { background: color-mix(in srgb, var(--acc) 12%, transparent) }
+.pb-next:active { background: color-mix(in srgb, var(--acc) 20%, transparent) }
+.pb-next:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px }
+
 .pb-offer-cta {
   display: inline-block;
   font-family: var(--font-mono), monospace;
@@ -1360,25 +1488,108 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   font-weight: 600;
 }
 .pb-offer-cta:hover { color: var(--bg) }
-.pb-offer-points { display: flex; flex-direction: column; gap: 14px }
+.pb-offer-points { display: flex; flex-direction: column }
 .pb-point {
   display: flex;
-  gap: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
+  gap: 18px;
+  padding: 20px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
 }
 .pb-point-n {
   font-family: var(--font-mono), monospace;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--acc);
-  padding-top: 3px;
+  padding-top: 4px;
 }
-.pb-point-title { font-size: 17px; font-weight: 600; margin-bottom: 5px }
+.pb-point-title { font-size: 18px; font-weight: 600; color: var(--fg-strong); margin-bottom: 6px }
 .pb-point-body {
   margin: 0;
-  font-size: 14px;
+  font-size: 14.5px;
   line-height: 1.6;
   color: color-mix(in srgb, var(--fg) 55%, transparent);
+}
+
+/* Compact two-column (iPad Pro portrait): 900–1199. The card keeps two
+   columns here; stacking starts at ≤899, not ≤1199. */
+@media (max-width: 1199px) {
+  .pb-services-h { font-size: 48px !important; margin-bottom: 34px }
+  .pb-step-row { gap: 10px; margin-bottom: 18px }
+  .pb-step-name { font-size: 19px }
+  .pb-step-sub { font-size: 11px; padding-left: 0 }
+  .pb-ai { padding: 40px 36px 36px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 44px }
+  .pb-offer-title { font-size: 34px }
+  .pb-deliv { flex-direction: column; align-items: flex-start; gap: 18px; padding-top: 22px }
+  .pb-deliv-v { font-size: 17px }
+  .pb-point { padding: 16px 0 }
+  .pb-point-title { font-size: 17px; margin-bottom: 5px }
+}
+
+/* Stacked (iPad mini): 721–899. Copy → points → deliverable box. */
+@media (max-width: 899px) {
+  .pb-services-h { font-size: 44px !important; margin-bottom: 32px }
+  .pb-step-head { gap: 9px }
+  .pb-step-n { font-size: 12px }
+  .pb-step { gap: 12px }
+  .pb-ai { display: flex; flex-direction: column; gap: 36px; padding: 40px 34px 34px }
+  .pb-offer-title { font-size: 36px; margin-bottom: 18px }
+  .pb-offer-body { margin-bottom: 0 }
+  .pb-pane-l { display: contents }
+  .pb-deliv {
+    order: 3;
+    margin-top: 0;
+    border-top: 0;
+    padding: 22px 24px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--fg) 3.5%, transparent);
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .pb-offer-points { order: 2 }
+  .pb-point {
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 0;
+    border-top: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+  }
+  .pb-next { padding: 12px 16px }
+}
+
+/* Phone: ≤720. Number + name only in the stepper; the active phase's
+   steps repeat on one line beneath it. */
+@media (max-width: 720px) {
+  .pb-services { padding-bottom: 40px }
+  .pb-services-h { font-size: 36px !important; margin: 10px 0 26px }
+  .pb-step-row { gap: 6px; margin-bottom: 0 }
+  .pb-step { gap: 9px; min-height: 52px; padding: 0 }
+  .pb-step-head { flex-direction: column; align-items: flex-start; gap: 9px }
+  .pb-step-n { font-size: 11px }
+  .pb-step-name { font-size: 14px; letter-spacing: -.01em }
+  .pb-step-sub { display: none }
+  .pb-step-cur {
+    display: block;
+    font-family: var(--font-mono), monospace;
+    font-size: 11.5px;
+    color: color-mix(in srgb, var(--fg) 40%, transparent);
+    margin: 12px 0 16px;
+  }
+  .pb-ai { padding: 28px 20px 20px; gap: 26px }
+  .pb-offer-kicker { font-size: 11.5px; margin-bottom: 14px }
+  .pb-offer-title { font-size: 27px !important; line-height: 1.1; letter-spacing: -.025em; margin-bottom: 14px }
+  .pb-offer-body { font-size: 15px; line-height: 1.65 }
+  .pb-deliv { flex-direction: column; align-items: stretch; gap: 16px; padding: 18px }
+  .pb-deliv-k { font-size: 11.5px; margin-bottom: 6px }
+  .pb-deliv-v { font-size: 16px }
+  /* .pb-deliv prefix outranks the 44px coarse-pointer floor below. */
+  .pb-deliv .pb-next { display: flex; min-height: 46px; white-space: normal }
+  .pb-point { gap: 12px; padding: 16px 0 }
+  .pb-point-n { font-size: 12px; padding-top: 3px }
+  .pb-point-title { font-size: 16px; margin-bottom: 5px }
+  .pb-point-body { font-size: 14px }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-step-bar, .pb-step-n, .pb-step-name, .pb-next { transition: none }
 }
 
 /* ---------------- Ask panel ---------------- */
@@ -1551,7 +1762,12 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
    One mechanic at every breakpoint; 900px switches the chrome (left
    index column vs chip rail). */
 
-.pf2 { position: relative; height: calc(10 * 80vh + 100vh) } /* the runway */
+.pf2 { position: relative; height: calc(11 * 80vh + 100vh) } /* the runway */
+
+/* Stage height. Short laptops keep the 76vh stage; on taller screens it
+   grows to fill the pinned viewport (less the header and a margin), so
+   the neighbours peek in rather than empty bands above and below. */
+:root { --deck-h: max(min(76vh, 800px), calc(100dvh - 200px)) }
 
 .stg-sticky {
   position: sticky;
@@ -1658,7 +1874,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 .deck {
   position: relative;
   overflow: hidden;
-  height: min(76vh, 800px);
+  height: var(--deck-h);
   align-self: center;
 }
 /* the fades the neighbours peek through */
@@ -1728,6 +1944,44 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 
 /* the standard card for cases 06–11: one column, no stats block */
 .std2 { display: flex; flex-direction: column; gap: 13px }
+
+/* Tech stack band — runs edge to edge along the card's foot, ruled off
+   like the feature card's figure strip; one mono chip per tool. The
+   negative margins cancel the deck card padding (28px, 16/20px ≤1100). */
+.deck .pb-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 4px -28px -28px;
+  padding: 16px 28px;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+  background: color-mix(in srgb, var(--fg) 2.5%, #0a0d13);
+  border-radius: 0 0 13px 13px;
+}
+.deck .std2 .pb-stack { margin-top: 12px }
+/* the feature card has no padding of its own (its side column does),
+   so the band sits flush under the figure strip */
+.deck .pb-feature > .pb-stack { margin: 0; padding: 16px 42px; border-radius: 0; background: transparent }
+.deck .pb-feature > .pb-stack li { background: #000 }
+.pb-stack-k {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: color-mix(in srgb, var(--fg) 45%, transparent);
+}
+.pb-stack ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px }
+.pb-stack li {
+  font-family: var(--font-mono), monospace;
+  font-size: 11.5px;
+  line-height: 1;
+  padding: 6px 10px;
+  border: 1px solid color-mix(in srgb, var(--acc) 38%, transparent);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--acc) 7%, transparent);
+  color: var(--acc);
+}
 .std2-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
 /* All case pills (NDA included) ride the second accent; lime stays
    reserved for the stat figures. */
@@ -1784,7 +2038,13 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 /* the exit handoff: pull the process section into the sticky
    viewport's spare bottom half so the runway ends near the content */
 @media (min-width: 900px) {
-  .pb-process { margin-top: min(0px, calc(40px - (100dvh - min(76vh, 800px)) / 2)) }
+  .pb-process { margin-top: min(0px, calc(40px - (100dvh - var(--deck-h)) / 2)) }
+  /* Same trick above the deck: the pinned stage centres the deck in a
+     full viewport, so pull the section up until the first card sits
+     40px below the hero. The hero stays on top so its strip keeps
+     receiving pointer events in the overlap. */
+  .pf2 { margin-top: min(0px, calc(40px - (100dvh - var(--deck-h)) / 2)) }
+  .pb-hero-wrap { z-index: 2 }
 }
 
 /* the strip is mobile-only (rendered only there, too) */
@@ -1864,6 +2124,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 @media (max-width: 1100px) {
   .deck .pb-card, .deck .pb-redcard, .deck .pb-case { padding: 18px 16px 20px }
   .deck .pb-feature-side { padding: 18px 16px 20px }
+  .deck .pb-stack { margin: 4px -16px -20px; padding: 12px 16px }
+  .deck .std2 .pb-stack { margin-top: 10px }
+  .deck .pb-feature > .pb-stack { padding: 12px 16px }
   .deck h3 { font-size: 18px }
   .deck .pb-case-blurb, .deck .pb-case-detail, .deck .pb-feature-body { font-size: 13.5px }
   .deck .pb-case-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px }
@@ -1883,7 +2146,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   .deck .pb-fstat { padding: 10px 6px }
 }
 /* the redcard scan band is 100px where the card is narrow (the one
-   sanctioned difference in CASE_01) */
+   sanctioned difference in CLIENT_01) */
 @media (max-width: 1100px) {
   .pb-redcard::after { height: 100px; top: -100px }
 }
@@ -1924,7 +2187,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 @media (max-width: 480px) { .pb-case-path { font-size: 20px } }
 .pb-figure { color: var(--acc) }
 
-/* Redacted card (CASE_01) */
+/* Redacted card (CLIENT_01) */
 .pb-redcard {
   border: 1px solid color-mix(in srgb, var(--acc) 34%, transparent) !important;
   background: color-mix(in srgb, var(--acc) 5%, transparent) !important;
@@ -2036,7 +2299,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   animation: pb-redpulse 3.2s ease-in-out infinite;
 }
 
-/* Feature card (CASE_02) */
+/* Feature card (CLIENT_02) */
 .pb-feature {
   position: relative;
   display: grid;
@@ -2049,6 +2312,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
 }
 .pb-feature-side { padding: 44px 42px }
 .pb-feature-h { margin: 10px 0 16px }
+/* the feature card's side reads blurb → meta → bullets → stack line */
+.pb-feature-side .std2-bullets { margin-top: 20px }
+.pb-feature-side .pb-case-detail { margin-top: 16px }
 .pb-feature-body {
   margin: 0 0 22px;
   font-size: 16px;
@@ -2576,46 +2842,9 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   white-space: nowrap;
 }
 .k-rule { flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in srgb, var(--acc) 45%, transparent), transparent) }
-.k-h { font-size: 44px; line-height: 1.08; letter-spacing: -.038em; font-weight: 600; margin: 0 0 12px; max-width: 780px; text-wrap: pretty }
+.k-h { font-size: 44px; line-height: 1.08; letter-spacing: -.038em; font-weight: 600; margin: 0 0 40px; max-width: 780px; text-wrap: pretty }
 .k-h em { font-style: normal }
 .k-sub { font-size: 16.5px; line-height: 1.6; color: color-mix(in srgb, var(--fg) 55%, transparent); max-width: 520px; margin: 0 0 40px }
-.k-band {
-  display: grid;
-  /* three cells since the $100B+ tile moved out (it duplicated the
-     hero's scale argument verbatim) */
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
-  margin-bottom: 44px;
-}
-.k-cell {
-  padding: 30px 26px 32px;
-  border-right: 1px solid color-mix(in srgb, var(--fg) 9%, transparent);
-  position: relative;
-  overflow: hidden;
-  transition: background .25s ease;
-}
-.k-cell:last-child { border-right: 0 }
-.k-cell:first-child { padding-left: 0 } /* aligns the first figure with the column edge */
-.k-cell:hover { background: color-mix(in srgb, var(--acc) 5%, transparent) }
-.k-spark {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: var(--acc);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .5s cubic-bezier(.3,.8,.3,1);
-}
-.k-cell:hover .k-spark { transform: scaleX(1) }
-/* tabular-nums stops the digits jittering while counting up */
-.fig { font-size: 60px; line-height: .95; letter-spacing: -.045em; font-weight: 700; color: var(--acc); font-variant-numeric: tabular-nums }
-/* Text figures (e.g. "Fortune 500") — smaller than the digits so the
-   words fit their cell at every column count; same weight and colour. */
-.fig-txt { font-size: 38px; letter-spacing: -.03em }
-.lab { font-size: 13.5px; line-height: 1.5; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-top: 10px; max-width: 210px }
 .note { font-family: var(--font-mono), monospace; font-size: 10.5px; color: color-mix(in srgb, var(--fg) 58%, transparent); margin-top: 6px; letter-spacing: .04em }
 .close {
   background: var(--acc);
@@ -2641,7 +2870,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   pointer-events: none;
 }
 .close-h { font-size: 40px; line-height: 1.04; letter-spacing: -.038em; font-weight: 700; margin: 0; max-width: 520px; position: relative }
-.close-sub { font-size: 15px; color: rgba(5,8,13,.68); margin: 12px 0 0; max-width: 470px; position: relative }
+.close-sub { font-size: 18px; line-height: 1.5; color: rgba(5,8,13,.74); margin: 14px 0 0; max-width: 660px; text-wrap: pretty; position: relative }
 .close-act { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; position: relative }
 .ibtn {
   display: inline-flex;
@@ -2649,10 +2878,12 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   gap: 10px;
   background: var(--ink);
   color: var(--acc);
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 600;
-  padding: 17px 30px;
-  border-radius: 12px;
+  padding: 24px 56px;
+  min-width: 280px;
+  justify-content: center;
+  border-radius: 14px;
   transition: transform .2s ease, box-shadow .2s ease;
 }
 .ibtn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(5,8,13,.32); color: var(--acc) }
@@ -2899,8 +3130,9 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 .ct-pchip {
   font-family: var(--font-mono), monospace;
   font-size: 10.5px;
-  border: 1px solid rgba(5,8,13,.24);
-  color: rgba(5,8,13,.78);
+  border: 1px solid #05080d;
+  background: #05080d;
+  color: #fff;
   border-radius: var(--r-pill);
   padding: 5px 10px;
   white-space: nowrap;
@@ -2946,15 +3178,10 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 
 @media (max-width: 960px) {
   .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 28px !important; padding-right: 28px !important }
-  .pb-ai { grid-template-columns: 1fr !important; gap: 32px !important }
-  .pb-ai { padding: 34px 28px !important }
   /* The hero headline steps 62/54/46 on its own schedule (split-hero
      spec) — keep it out of the generic clamp. */
   h1:not(.pb-hero-h) { font-size: 46px !important }
   h2 { font-size: 34px !important }
-  /* The offer pane title moved from h2 to h3 for hierarchy; keep it on
-     the h2 scale it always had. */
-  .pb-offer-title { font-size: 34px !important }
   .pb-h-lg { font-size: 38px }
   .ct-shell { grid-template-columns: 1fr !important }
   .ct-h1 { font-size: 44px !important }
@@ -2977,7 +3204,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 @media (max-width: 800px) {
   .pb-navlink { padding: 9px 7px }
   .pb-capsule { font-size: 11.5px }
-  /* The longer "send us the problem" CTA overflows this band with its
+  /* A long CTA label overflows this band with its
      brackets on — drop them here, keep the label and arrow. */
   .pb-cta .pb-brk { display: none }
   .pb-cta { font-size: 12px; padding: 9px 4px }
@@ -2985,9 +3212,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 
 @media (max-width: 720px) {
   .pb-header nav, .ct-header nav, .pb-main, .ct-main, .pb-footer > div { padding-left: 18px !important; padding-right: 18px !important }
-  /* MOBILE_audit finding 6: no side-by-side comparison to keep stable
-     on phones — release the reserved bottom padding */
-  .pb-services { padding-bottom: 40px }
   .pb-capsule { display: none !important }
   .ct-capsule { display: none !important }
   .stagewrap { height: 320px } /* taller — content stacks */
@@ -3018,7 +3242,6 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   h3 { font-size: 24px !important }
   /* Headings that are h3 for hierarchy but deliberately not on the
      display scale: keep their own sizes. */
-  .pb-offer-title { font-size: 27px !important }
   .mb-t { font-size: 16px !important }
   .pb-chip, .ct-chip { font-size: 11.5px !important; padding: 8px 12px !important }
   .ct-chip { padding: 9px 13px !important }
@@ -3064,29 +3287,11 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
   .pb-fstat .pb-figure { font-size: 26px }
 }
 
-/* Fix 3 — tab bar becomes an explicit 2×2 grid; a pill radius only
-   reads on a single row. Tabs land at ~44px tall (tap target). */
+/* Fix 5 — hero buttons stack full-width and aligned (hero proof
+   handoff: 10px gap, centred text). */
 @media (max-width: 720px) {
-  .pb-tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px;
-    padding: 5px;
-    border-radius: 12px;
-    width: 100%;
-  }
-  .pb-tab {
-    justify-content: center;
-    text-align: center;
-    border-radius: 8px;
-    padding: 11px 8px;
-    font-size: 11.5px;
-  }
-}
-
-/* Fix 5 — hero buttons stack full-width and aligned. */
-@media (max-width: 720px) {
-  .pb-hero-btns > a { flex: 1 1 100%; text-align: center }
+  .pb-hero-btns { flex-direction: column; align-items: stretch; gap: 10px }
+  .pb-hero-btns > a { text-align: center }
 }
 
 /* Fix 8 — the "nice try" reveal works on tap where hover doesn't exist. */
@@ -3098,25 +3303,11 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 /* Closing section + carousel responsive */
 @media (max-width: 960px) {
   .k-h { font-size: 34px }
-  .k-band { grid-template-columns: 1fr 1fr }
-  .k-cell:nth-child(2) { border-right: 0 }
-  /* row 2 is the lone third cell — full width, left edge on the column */
-  .k-cell:nth-child(3) { padding-left: 0; grid-column: 1 / -1 }
-  .k-cell:nth-child(1), .k-cell:nth-child(2) { border-bottom: 1px solid color-mix(in srgb, var(--fg) 9%, transparent) }
-  .fig { font-size: 48px }
-  .fig-txt { font-size: 34px }
   .close { padding: 38px 32px 34px }
   .close-h { font-size: 32px }
 }
 @media (max-width: 620px) {
   .k-h { font-size: 27px }
-  /* 2×2 on phones (owner request) — inherits the ≤960 two-column grid;
-     only the sizing tightens. "Fortune 500" must fit a half column. */
-  .k-cell { padding: 18px 12px 20px }
-  .k-cell:nth-child(3), .k-cell:nth-child(4) { border-bottom: 0 }
-  .fig { font-size: 34px }
-  .fig-txt { font-size: 20px }
-  .lab { max-width: none; font-size: 12px }
   .close { padding: 30px 22px 28px; flex-direction: column; align-items: flex-start }
   .close-h { font-size: 27px }
   .close-act { width: 100%; flex-direction: column; gap: 8px }
@@ -3140,7 +3331,7 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 /* ---------------- Touch ---------------- */
 
 @media (pointer: coarse) {
-  .pb-chip, .ct-chip, .pb-tab { min-height: 44px }
+  .pb-chip, .ct-chip, .pb-step, .pb-next { min-height: 44px }
   .pb-navlink, .ct-capsule a { min-height: 44px; display: inline-flex; align-items: center }
   /* 16px inputs prevent iOS zoom-on-focus */
   .ct-field { font-size: 16px }

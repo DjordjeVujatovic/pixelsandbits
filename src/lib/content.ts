@@ -1,5 +1,6 @@
 /* Approved copy, verbatim from the design handoff and the conversion
-   review's rewritten-copy appendix. Do not reword. */
+   review's rewritten-copy appendix. Do not reword. OFFERS re-approved by
+   the owner 2026-10-11: no durations or timelines anywhere in the panes. */
 
 /* The spine — the one enumeration of the offering, verbatim wherever
    the phases appear (hero, services, process, FAQ, engagement chips).
@@ -7,7 +8,7 @@
 export const PIPELINE_STEPS = ["Scoping", "Design", "Build", "Handover"];
 
 /* Every conversion CTA on both pages reads the same. */
-export const CTA_LABEL = "send us the problem";
+export const CTA_LABEL = "get in touch";
 
 export interface Offer {
   tab: string;
@@ -18,55 +19,120 @@ export interface Offer {
 }
 
 /* Tab order and labels follow the spine; each pane keeps its own
-   descriptive copy. The forward-deployed pane carries the Handover
-   phase — leaving the team faster is the finish line of the work. */
+   descriptive copy. The handover pane covers deployment to production
+   and the handover itself: leaving the team able to run it is the
+   finish line. */
 export const OFFERS: Offer[] = [
   {
     tab: "scoping",
     kicker: "SCOPING",
-    title: "The cheapest decision is what not to build.",
-    body: "We turn your team's intuition of \"we should use AI here\" into a measurable, executable and well-defined project scope. Most engagements start with a scoping week — we map the workflow, talk to the people inside it, and come back with the smallest thing worth building, plus an honest read on what to cut.",
+    title: "Know what you are building before you build it.",
+    body: "Working with your team to understand the problem, the workflow it lives in and the people it affects, then defining the smallest version worth building and how you will know it worked. You get a clear scope, a plan to deliver it and a candid view of the risks.",
     points: [
-      ["01", "A scoping week, not a discovery phase", "Five days on site, ending in a written scope and a number. Not a two-month audit."],
-      ["02", "Talk to the people doing the work", "The workflow on the slide and the workflow in the building are different documents. We design against the second."],
-      ["03", "Success defined in numbers", "Before anything gets built we agree what would make this worth having, in terms you can measure later."],
-      ["04", "We'll tell you not to build it", "If the problem is process rather than software, that is the finding — and it is cheaper than a prototype."],
+      [
+        "01",
+        "Understand the problem first",
+        "The workflow and the people in it come first, so the solution fits how the work is done.",
+      ],
+      [
+        "02",
+        "A written scope you can act on",
+        "The problem, the proposed solution, what it will take to deliver and how success will be measured, in a document your team owns.",
+      ],
+      [
+        "03",
+        "Measurable from the start",
+        "Success is defined in numbers before anything is built, so the result is judged on evidence and agents have a measurable target.",
+      ],
+      [
+        "04",
+        "Honest about what not to build",
+        "If a smaller change, or no software at all, solves the problem, that is the recommendation.",
+      ],
     ],
   },
   {
     tab: "design",
     kicker: "PRODUCT DESIGN",
-    title: "Design that survives contact with the engineering team.",
-    body: "We can take your ideas from wireframes to high-fidelity designs and working prototypes you can experience. We design as the people who will build it — against real constraints: data you actually have, latency you actually pay, deadlines you actually hold.",
+    title: "Design that is ready to be built.",
+    body: "Products go from first flows to finished interfaces: research, wireframes, high-fidelity screens and prototypes you can click through. Design and build sit on one team, so every decision is made against real constraints and engineering starts from designs that already work.",
     points: [
-      ["01", "Flows before pixels", "The argument is about what happens, in what order, for whom. Visual design comes after that is settled."],
-      ["02", "Prototypes people can click", "Working prototypes rather than static screens, so feedback is about the product and not the picture."],
-      ["03", "Systems, not screens", "Tokens and components a team can extend — the same work that shipped across the Dapper Labs sports line."],
-      ["04", "Drawn in the browser", "Design decisions get checked in real type, real data and real widths, not a 1440 artboard."],
+      [
+        "01",
+        "Flows before visuals",
+        "What happens, in what order and for whom is settled before any visual design.",
+      ],
+      [
+        "02",
+        "Prototypes you can click",
+        "Working prototypes, so your team and your users give feedback on how the product behaves.",
+      ],
+      [
+        "03",
+        "Design systems",
+        "Tokens and components that keep new screens consistent whether an engineer or an agent builds them, as built for Dapper Labs across their sports products.",
+      ],
+      [
+        "04",
+        "Agent-first by default",
+        "Design systems are structured for agents from day one: named tokens, components with documented props and states, and written rules for layout and behaviour. Approved designs turn into working code quickly.",
+      ],
     ],
   },
   {
     tab: "build",
     kicker: "PRODUCT ENGINEERING",
-    title: "Ship the whole thing, then keep it shippable.",
-    body: "We use the most modern tech stack and agentic engineering approaches to efficiently and effectively build and deliver your projects. Full-stack, from data model to interface, on products that took real traffic — 1.4M transactions in a single day at the peak of a Coinbase campaign.",
+    title: "Production-grade software that agents can ship in safely.",
+    body: "Complete products, from data model and services to APIs and interface, with no handoffs in between. Every codebase is built agent-first from the first commit: rules files that spell out its conventions, skills and commands for the jobs that repeat, and hooks that run tests and checks on every change an agent makes. Your coding agents get the context to move fast and the guardrails to keep from breaking what works. Engineered for the load you will see.",
     points: [
-      ["01", "One team, front to back", "React and Next.js on the front, real services and data behind it. No handoff seam to lose things in."],
-      ["02", "Deploy from week one", "A working environment before there is a product, so progress is visible and integration risk lands early."],
-      ["03", "Performance is a feature", "Measured, budgeted and defended — the reason the campaign work held up at peak."],
-      ["04", "Documented as we go", "Tests, CI and written decisions, so the codebase outlives the engagement."],
+      [
+        "01",
+        "Owned end to end",
+        "React and Next.js on the front, real services and data behind it, all built by the same engineers.",
+      ],
+      [
+        "02",
+        "Always deployable",
+        "A live environment from the first commit, so every change, from an engineer or an agent, lands somewhere real.",
+      ],
+      [
+        "03",
+        "Performance built in",
+        "Performance is measured against a budget throughout, which is why the campaign work held up at peak.",
+      ],
+      [
+        "04",
+        "Agent-first codebases",
+        "Every repo ships with rules files, skills, commands and hooks, so coding agents know the conventions, run the right checks on every change and work against tests and CI rather than guesswork. The same discipline cut ClassDojo's flaky tests by 70%.",
+      ],
     ],
   },
   {
     tab: "handover",
-    kicker: "FORWARD DEPLOYED ENGINEERING",
-    title: "Most teams can build with an LLM. Few can land one inside a real business.",
-    body: "We always deliver the highest-quality product, well documented and easy for your team to continue to iterate on. Two years as forward deployed engineers — at Decagon AI and Scotts Miracle-Gro — sitting with the customer and turning a demo into something their staff actually uses.",
+    kicker: "DEPLOYMENT AND HANDOVER",
+    title: "Your team and your agents keep shipping.",
+    body: "The product goes to production with the guardrails to keep shipping in it: tests, CI and written decisions your team and its agents can work within. Handover also leaves a documented codebase and working patterns your team can carry forward.",
     points: [
-      ["01", "On site, not over email", "We watch the work happen and design against what people really do, not the process on the slide."],
-      ["02", "Evals before opinions", "Prompts, retrieval and agent flows measured against real transcripts, so quality is a number the team can argue with."],
-      ["03", "Integration is the hard part", "Auth, data access, legacy systems, rollout. We ship through the plumbing rather than around it."],
-      ["04", "The team is faster after we leave", "Documentation, handover, and a working pattern in-house engineers can extend without us."],
+      [
+        "01",
+        "Live in your stack",
+        "Auth, data access, legacy systems and rollout are part of the build, so the product goes live inside the systems you already run.",
+      ],
+      [
+        "02",
+        "Quality you can measure",
+        "Quality is evaluated against real data, with tests and evals that engineers and agents can keep running after handover.",
+      ],
+      [
+        "03",
+        "Documented for the next engineer or agent",
+        "Documentation, written decisions and knowledge transfer, so the engineers and agents that inherit the codebase can pick it up.",
+      ],
+      [
+        "04",
+        "A pattern your team can extend",
+        "A working pattern your in-house engineers can extend.",
+      ],
     ],
   },
 ];
@@ -90,52 +156,42 @@ export interface AskItem {
 
 export const ASK_QA: AskItem[] = [
   {
-    q: "What do you actually do?",
-    a: "We take a product from the first sketch to something running in production — scoping, design, build and handover, done by the same team.",
-    aPre: "We take a product from the first sketch to something running in production — scoping, design, build and handover, done by the same team.",
+    q: "What do you do?",
+    a: "AI products, built end to end. You bring a problem; you leave with software running in production, a codebase your engineers can read, and the know-how to keep it running.",
+    aPre: "AI products, built end to end. You bring a problem; you leave with software running in production, a codebase your engineers can read, and the know-how to keep it running.",
     flag: "--scope",
     ms: "18ms",
     src: { label: "./services", href: "#services" },
   },
   {
     q: "How do you get an LLM into production?",
-    a: "On site with the people who will use it. We map the real workflow, wire evals to production transcripts so quality is a number, then do the unglamorous integration work — auth, data access, legacy systems — until it ships and holds up.",
-    aPre: "On site with the people who will use it. We map the real workflow, wire evals to production transcripts so quality is a number, then do the unglamorous integration work — auth, data access, legacy systems — until it ships and holds up.",
+    a: "Start with the people who will use it, not the model. Map the workflow they actually run, build evals from real transcripts so quality is a score instead of a hunch, then do the unglamorous part: auth, data access, legacy systems. It ships when the evals say it holds.",
+    aPre: "Start with the people who will use it, not the model. Map the workflow they actually run, build evals from real transcripts so quality is a score instead of a hunch, then do the unglamorous part: auth, data access, legacy systems. It ships when the evals say it holds.",
     flag: "--llm",
     ms: "24ms",
     src: { label: "./process", href: "#process" },
   },
   {
     q: "What does an engagement cost?",
-    a: "Fixed-price sprints or a monthly retainer, quoted after a scoping week once we know what we're actually building. No number before we understand the problem.",
-    aPre: "Fixed-price sprints or a monthly retainer, quoted after a scoping week once we know what we're actually building. ",
-    aEm: "No number before we understand the problem",
-    aPost: ".",
+    a: "Fixed-price sprints or a monthly retainer. The number comes after a scoping week, once the work is defined. Any quote before that is a guess.",
+    aPre: "Fixed-price sprints or a monthly retainer. The number comes after a scoping week, once the work is defined. Any quote before that is a guess.",
     flag: "--cost",
     ms: "21ms",
     src: { label: "./process", href: "#process" },
   },
   {
-    q: "Why hire you over an agency?",
-    a: "You get one team across the whole arc instead of a handoff chain, and engineers who have sat inside customer orgs shipping AI, not a deck about it. When we leave, your team can extend the work without us.",
-    aPre: "You get one team across the whole arc instead of a handoff chain, and engineers who have sat inside customer orgs shipping AI, not a deck about it. When we leave, your team can extend the work without us.",
-    flag: "--vs-agency",
-    ms: "19ms",
-    src: { label: "./work", href: "#work" },
-  },
-  {
     q: "How fast can you start?",
-    a: "Usually within two weeks, and a scoping week is the first thing on the calendar. Send us what you're building and we'll tell you honestly whether we're the right fit before anyone signs anything.",
-    aPre: "Usually within two weeks, and a scoping week is the first thing on the calendar. Send us what you're building and we'll tell you honestly whether we're the right fit before anyone signs anything.",
+    a: "Usually within two weeks, starting with the scoping week. Send what you're building and get a straight answer on fit before anything is signed.",
+    aPre: "Usually within two weeks, starting with the scoping week. Send what you're building and get a straight answer on fit before anything is signed.",
     flag: "--start",
     ms: "17ms",
     src: { label: "./contact", href: "/contact" },
   },
 ];
 
-/* Cases 06–10 (PORTFOLIO_one_at_a_time.md — copy from the client).
+/* Clients 06–10 (PORTFOLIO_one_at_a_time.md — copy from the client).
    These replaced the ALSO_SHIPPED list; there is no tiering between
-   "case studies" and "also shipped" any more. Quotes are split into
+   featured and "also shipped" clients any more. Quotes are split into
    pre/em/mid/em2/post so the emphasis markup is assembled in the
    template — <em> inside an interpolation escapes and renders as
    literal tag text. Cyan is reserved for these quote blocks. */
@@ -161,26 +217,54 @@ export const EXTRA_CASES: {
   bullets?: string[];
   stats?: { figure: string; caption: string; lime?: boolean }[];
   detail?: string;
+  /* rendered as the chip band along the card's foot */
+  stack?: string[];
   quote?: CaseQuote;
 }[] = [
   {
-    num: "CASE_06",
+    num: "CLIENT_11",
+    title: "Ditto — social list app",
+    path: { co: "ditto", role: "social-list-app" },
+    tag: "CONSUMER SOCIAL",
+    link: { label: "onditto.com/list →", href: "https://onditto.com/list" },
+    blurb:
+      "Ditto's React Native social app: lists, comments and the social graph.",
+    stats: [
+      { figure: "70%", caption: "increase in comment engagement", lime: true },
+      {
+        figure: "50%",
+        caption: "higher conversion from the new onboarding flow",
+      },
+    ],
+    bullets: [
+      "Threaded comments: replies nested two levels deep, optimistic updates, soft deletion that keeps a placeholder when replies remain, and a read-only list preview that opens into a full reply drawer",
+      "Recent mentions: up to ten recently tagged people appear the moment a user types @, cached per user in AsyncStorage and handed off to search on the next keystroke",
+      "Contact sync and friend discovery: a consent-led flow, a full-list sync with contact names removed from the schema, five suggestion states and batched notifications when a contact joins",
+      "Notification navigation: the current stack is saved before a notification opens, so Back returns to where the user was, including deep settings screens and in-progress creation flows",
+    ],
+    stack: ["React Native", "GraphQL", "Node.js", "MongoDB"],
+  },
+  {
+    num: "CLIENT_07",
     title: "ZeroDown — internal tools",
     path: { co: "zerodown", role: "internal-tools" },
     tag: "ACQUIRED BY FLYHOMES",
     link: { label: "zerodown.com →", href: "https://zerodown.com" },
     blurb:
-      "Product owner of internal tools: product management, UX/UI design and frontend engineering across four shipped tools.",
-    detail: "React, GraphQL, Apollo and Ant Design across all four.",
+      "Four internal tools shipped for ZeroDown: investment memos, offer tracking, lead search and property management.",
+    stack: ["React", "GraphQL", "Apollo", "Ant Design"],
     bullets: [
-      "IC memo tool automating Investment Committee memos per offer, an order of magnitude productivity gain for the PM",
-      "Offer process tool that moved status updates from phone calls into the web app, covering every state of an offer",
-      "Lead search dashboard with 10 to 15 backend filters (Python, GraphQL, SQLAlchemy) for sales and marketing",
-      "Property management dashboard for 50+ company-owned properties, monthly payments and repair scheduling",
+      "IC memo tool that turns the data already in the Flask backend into an Investment Committee memo for each offer, an order of magnitude productivity gain for the PM",
+      "Offer process tool that moved status updates from phone calls into a web app, with every state of an offer managed in one place",
+      "Lead search dashboard with 10 to 15 filters and search for sales and marketing, backed by Python, GraphQL and SQLAlchemy filters, so lead metrics can be quantified",
+      "Property management dashboard for 50+ company-owned properties, with property stats, monthly payments and repair setup",
     ],
     stats: [
-      { figure: "4 tools", caption: "shipped, owned end to end" },
-      { figure: "10×", caption: "productivity gains on memos and lead search", lime: true },
+      {
+        figure: "10×",
+        caption: "productivity gains on memos and lead search",
+        lime: true,
+      },
       { figure: "50+", caption: "properties managed in one dashboard" },
     ],
     quote: {
@@ -194,7 +278,7 @@ export const EXTRA_CASES: {
     },
   },
   {
-    num: "CASE_07",
+    num: "CLIENT_08",
     title: "Apparel Impact Institute — climate data platform",
     path: { co: "apparel-impact-institute", role: "climate-data" },
     tag: "NONPROFIT",
@@ -202,11 +286,21 @@ export const EXTRA_CASES: {
     blurb:
       "A full-stack dashboard apparel brands use to gauge environmental impact by tracking carbon emissions from their factories.",
     stats: [
-      { figure: "Nike, Lululemon, New Balance", caption: "brands using the platform" },
-      { figure: "exact CO₂e", caption: "totals reconcile to the decimal against Excel", lime: true },
+      {
+        figure: "Nike, Lululemon, New Balance",
+        caption: "brands using the platform",
+      },
+      {
+        figure: "exact CO₂e",
+        caption: "totals reconcile to the decimal against Excel",
+        lime: true,
+      },
     ],
-    detail:
-      "The hard part was ingestion: workbooks drifted from the template, so we built a deterministic Node.js/GraphQL engine that transposes heterogeneous multi-tab Excel files into a relational schema with no loss of numeric precision. Every failure became a failing unit test until a 50-file corpus ingested cleanly.",
+    bullets: [
+      "Ingestion engine: a deterministic Node.js/GraphQL engine transposes multi-tab Excel workbooks into a relational schema",
+      "Precision: no loss of numeric precision, even as workbooks drifted from the template",
+      "Hardening: every failure became a failing unit test until a 50-file corpus ingested cleanly",
+    ],
     quote: {
       pre: "“They were an absolute pleasure to work with. Their work ethic was ",
       em: "top-tier",
@@ -218,54 +312,35 @@ export const EXTRA_CASES: {
     },
   },
   {
-    num: "CASE_08",
+    num: "CLIENT_09",
     title: "Spindl — web3 attribution dashboard",
     path: { co: "spindl", role: "web3-attribution" },
     tag: "ACQUIRED BY COINBASE",
     link: { label: "spindl.xyz →", href: "https://spindl.xyz" },
     blurb:
-      "The frontend dashboard for Spindl's web3 attribution product, built greenfield from an empty repo.",
-    stats: [
-      { figure: "0 → 1", caption: "greenfield, from an empty repo" },
-      { figure: "Turborepo", caption: "TypeScript and Next.js monorepo" },
-      { figure: "CEO + CTO", caption: "worked with directly", lime: true },
+      "The frontend codebase and customer-facing analytics dashboard for Spindl's web3 attribution platform, built greenfield from an empty repo.",
+    bullets: [
+      "Customer dashboard: key business metrics and user behavior, tracked and visualized in real time",
+      "Forms and CRUD: pages across the app, built on React Hook Form and React Select",
+      "Auth: credentials-based sign-in through NextAuth on JWT",
     ],
-    detail:
-      "We owned the technical decisions: NextAuth credentials auth, Recharts for charting, React Hook Form. Designs were limited, so UX calls happened during the build.",
+    stack: ["TypeScript", "Next.js", "Turborepo", "NextAuth", "Recharts"],
   },
   {
-    num: "CASE_09",
+    num: "CLIENT_10",
     title: "Certn — background check tools",
     path: { co: "certn", role: "background-checks" },
     tag: "IDENTITY VERIFICATION",
     link: { label: "certn.co →", href: "https://certn.co" },
     blurb:
-      "Internal tools and dashboards for Certn, an identity verification and background checks company out of Victoria BC.",
-    stats: [
-      { figure: "US checks", caption: "criminal background checks team" },
-      { figure: "CS team", caption: "internal tools and dashboards" },
-      { figure: "React", caption: "Redux, AntD, styled-components", lime: true },
+      "The frontend for Certn's internal tools and dashboards and for its customer-facing background check products. Certn is an identity verification and background checks company out of Victoria BC.",
+    bullets: [
+      "Customer Success dashboards: the internal tools Certn's Customer Success team runs day to day to track and manage US criminal background checks for its clients",
+      "Customer-facing products: the frontend for the background check products Certn's customers use to order checks and review the results",
     ],
-    detail:
-      "We were on the US criminal background checks team, building the dashboards their Customer Success team runs on day to day. JavaScript, React, Redux, Ant Design, styled-components.",
-  },
-  {
-    num: "CASE_10",
-    title: "Ditto — social list app",
-    path: { co: "ditto", role: "social-list-app" },
-    tag: "CONSUMER SOCIAL",
-    link: { label: "onditto.com/list →", href: "https://onditto.com/list" },
-    blurb:
-      "Full-stack product engineering on Ditto's React Native social app: lists, comments and the social graph.",
-    stats: [
-      { figure: "70%", caption: "increase in comment engagement", lime: true },
-      { figure: "50%", caption: "increased conversion through the new onboarding flow" },
-    ],
-    detail:
-      "We built the threaded commenting system end to end with optimistic updates and soft deletion, a privacy-first contact sync where names never leave the device, and push notification navigation that restores your exact place instead of stranding you in the wrong tab. GraphQL, Node.js, MongoDB.",
+    stack: ["JavaScript", "React", "Redux", "Ant Design", "styled-components"],
   },
 ];
-
 
 /* The process schedule (PROCESS_schedule.md). NO fixed durations
    anywhere — the 8 proportion tracks claim the shape, not the calendar.
@@ -293,7 +368,10 @@ export const SCHEDULE: {
     segs: [1, 2],
     pre: true,
     body: "Workflows mapped on site with the people who do the work, and success defined in numbers.",
-    deliverable: { tag: "scoping", text: "A written scope document with a quote and timeline" },
+    deliverable: {
+      tag: "scoping",
+      text: "A written scope document with a quote and timeline",
+    },
   },
   {
     num: "02",
@@ -303,8 +381,11 @@ export const SCHEDULE: {
     col: [3, 5],
     segs: [2, 3],
     pre: true,
-    body: "Something clickable in front of real users, not stakeholders, before a line of production code.",
-    deliverable: { tag: "prototype", text: "A high-fidelity design / prototype that can be tested by you" },
+    body: "Something clickable in front of real users before a line of production code.",
+    deliverable: {
+      tag: "prototype",
+      text: "A high-fidelity prototype you can test",
+    },
   },
   {
     num: "03",
@@ -314,7 +395,7 @@ export const SCHEDULE: {
     col: [4, 8],
     segs: [3, 4, 5, 6],
     pre: false,
-    body: "Full-stack delivery with a working deploy from the first week, so nothing lands as a surprise.",
+    body: "Full-stack delivery with a working deploy from the first commit.",
     deliverable: { tag: "build", text: "A deployed production release" },
   },
   {
@@ -326,8 +407,11 @@ export const SCHEDULE: {
     segs: [7, 8],
     pre: false,
     fin: true,
-    body: "Docs, patterns and a team that can extend the work without us on the payroll.",
-    deliverable: { tag: "handover", text: "Handover documents and code that can be extended upon" },
+    body: "Docs, patterns and a team that can extend the work on its own.",
+    deliverable: {
+      tag: "handover",
+      text: "Handover documents and code your team can extend",
+    },
   },
 ];
 
@@ -339,7 +423,12 @@ export const CONTACT_KINDS = [
   "Something else",
 ];
 export const CONTACT_BUDGETS = ["< $25k", "$25–75k", "$75–150k", "$150k+"];
-export const CONTACT_TIMELINES = ["ASAP", "1–3 months", "This quarter", "Just exploring"];
+export const CONTACT_TIMELINES = [
+  "ASAP",
+  "1–3 months",
+  "This quarter",
+  "Just exploring",
+];
 export const CONTACT_LOG: [string, string][] = [
   ["→", "validating fields"],
   ["→", "routing to the team"],

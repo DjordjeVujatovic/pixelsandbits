@@ -190,7 +190,7 @@ export default function ProcessTimeline(): JSX.Element {
             $ cat ./process
           </div>
           <h2 className="pb-h-md" style={{ margin: 0 }}>
-            How an engagement runs
+            How a typical engagement runs
           </h2>
         </div>
       </div>

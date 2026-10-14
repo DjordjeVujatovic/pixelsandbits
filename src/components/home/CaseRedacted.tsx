@@ -40,15 +40,22 @@ function Decipher({ text, className }: { text: string; className?: string }): JS
 }
 
 const HEADLINE = "rl-environments";
+/* NDA wording (client guidelines, 2026-09-29). Owner: no G2i mention,
+   past tense. Allowed: RL environments, "frontier lab" unnamed, general feature descriptions,
+   RL training datasets for software engineering, benchmark quality
+   evaluation. Never: the lab's name, model/product names, tooling,
+   volume/scale/timelines, or any clue that identifies the lab or a
+   specific environment. The NDA outlives the engagement — never promise
+   to name them later. */
 const PARA =
-  "Currently embedded with a frontier AI lab, building reinforcement learning environments. We can name them when it ships.";
+  "Reinforcement learning environments for software engineering, built for a frontier AI lab: role-based access control for enterprise workflows, a SQL parsing engine for data-lake applications, inventory management for e-commerce. The lab stays unnamed.";
 const STATS: [string, string][] = [
-  ["RL envs", "training environments, not demos"],
-  ["frontier", "one of a handful of labs at this level"],
-  ["in flight", "name unlocks when it ships"],
+  ["RL envs", "training environments built"],
+  ["datasets", "RL training data contributed for software engineering skills"],
+  ["benchmarks", "well-known engineering benchmarks, evaluated for quality"],
 ];
 
-/* CASE_01 — the declassification scan. Each character gets ONE static
+/* CLIENT_01 — the declassification scan. Each character gets ONE static
    cipher glyph at setup; lines decode left-to-right as the scan bar's
    bright edge crosses them, with only the three frontier characters
    flickering. Runs once, then the observer disconnects. All text writes
@@ -203,7 +210,7 @@ export default function CaseRedacted(): JSX.Element {
     <article className="pb-rev-l pb-card pb-redcard" id="c1" ref={cardRef}>
       <div className="pb-redcard-left">
         <div className="pb-redcard-tags">
-          <span className="pb-case-num">CASE_01</span>
+          <span className="pb-case-num">CLIENT_01</span>
           <span className="pb-nda">
             <span className="pb-nda-dot" aria-hidden="true" />
             UNDER NDA

@@ -1,33 +1,49 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import Reveal from "@/components/Reveal";
 import { EXTRA_CASES } from "@/lib/content";
 import type { CaseQuote } from "@/lib/content";
-import CaseRedacted from "./CaseRedacted";
+// import CaseRedacted from "./CaseRedacted"; // CLIENT_01 (frontier lab) hidden for now — see CARDS
 
-/* PORTFOLIO_one_at_a_time.md — ten cases, one visible at a time,
+/* PORTFOLIO_one_at_a_time.md — eleven clients (ten while the frontier-lab
+   card is hidden), one visible at a time,
    advanced by scroll while the stage is pinned. The section's own
    height IS the pin's scroll distance. One scroll listener writes one
    state value (the index) behind a single in-flight rAF guard;
    everything else is CSS transitions keyed off classes. */
+/* The frontier-lab card (CLIENT_01, <CaseRedacted />) is hidden for now,
+   not deleted: its import, RAIL entry and deck slot are commented out
+   below and the deck indices shifted up by one. To bring it back,
+   restore those three, set CARDS = 11, and shift the indices down. */
 const CARDS = 10;
 /* design_handoff_client_portfolio: 30px is the design default peek gap
    (24–46 all read well). */
 const PEEK_GAP = 30;
 
 /* Rail labels; chips shorten two names for width on mobile. */
+/* Display numbers follow deck position, so hiding a card renumbers the
+   rest; the CASES `num` fields stay as stable React keys. */
+const clientNum = (k: number): string => `CLIENT_${`0${k + 1}`.slice(-2)}`;
+
 const RAIL: { label: string; chip?: string }[] = [
-  { label: "Frontier AI lab" },
-  { label: "Decagon AI" },
+  // { label: "Frontier AI lab" }, // hidden for now — see CARDS
   { label: "Scotts Miracle-Gro", chip: "Scotts" },
+  { label: "Decagon AI" },
   { label: "Coinbase" },
+  { label: "ClassDojo" },
   { label: "Dapper Labs" },
+  { label: "Ditto" },
   { label: "ZeroDown" },
   { label: "Apparel Impact Institute" },
   { label: "Spindl" },
   { label: "Certn" },
-  { label: "Ditto" },
 ];
 
 interface CaseStat {
@@ -42,7 +58,11 @@ function StatFigure({ stat }: { stat: CaseStat }): JSX.Element {
   return (
     <div>
       {stat.count ? (
-        <div className={cls} data-count={stat.count.target} data-suffix={stat.count.suffix}>
+        <div
+          className={cls}
+          data-count={stat.count.target}
+          data-suffix={stat.count.suffix}
+        >
           {stat.figure}
         </div>
       ) : (
@@ -64,56 +84,187 @@ const CASES: {
   meta?: string;
   link?: { label: string; href: string };
   stats: CaseStat[];
-  detail: string;
+  bullets?: string[];
+  detail?: string;
+  stack?: string[];
 }[] = [
   {
-    num: "CASE_03",
-    title: "Scotts Miracle-Gro — agentic lawn care app",
-    path: { co: "scotts-miracle-gro", role: "agentic-shopping" },
+    num: "CLIENT_04",
+    title: "Scotts Miracle-Gro — MyLawn, an agentic lawn care app",
+    path: { co: "scotts-miracle-gro", role: "mylawn" },
     tag: "FORTUNE 500",
     blurb:
-      "An agentic-first consumer app, built on Sierra, that helps Scotts Miracle-Gro customers take care of their lawns.",
-    meta: "agentic app · iOS + Android",
+      "MyLawn, Scotts Miracle-Gro's agentic lawn care app for iOS and Android: a chat assistant that turns an address into a care plan for each lawn, with the products to carry it out.",
     stats: [
-      { figure: "Sierra", caption: "agent platform" },
-      { figure: "lawn score", caption: "health, per yard", lime: true },
-      { figure: "React Native", caption: "iOS and Android" },
+      { figure: "Sierra", caption: "agent behind the chat" },
+      { figure: "0–100", caption: "health score, per lawn", lime: true },
+      { figure: "agentic UI", caption: "plans built in chat" },
     ],
-    detail:
-      "Onboarding is a lawn assessment quiz. The app turns that data into a care plan and a lawn health score, then recommends habit changes and the right products to raise it. A Salesforce-powered store recommends products against the same lawn data.",
+    bullets: [
+      "Chat-first onboarding: the Sierra agent runs the lawn assessment as a conversation, starting from verified parcel data for the address",
+      "Health score: 0–100 per lawn, weighting nutrition, plan follow-through and hydration, minus logged issues",
+      "Care plan engine: lawn profile, live weather and treatment history become tasks, product picks and safety blocks, re-planned nightly",
+      "Commerce: a native Salesforce Commerce Cloud shop, Gemini-personalized product pages and optional AutoPilot shipping",
+      "Built for agents: every backend operation runs from a CLI, and a Sim Lab tests the logic against 15 personas",
+    ],
+    stack: [
+      "React Native",
+      "Expo",
+      "TanStack",
+      "Stripe",
+      "Hono",
+      "Zod",
+      "PostgreSQL",
+      "Google Gemini",
+      "Vercel AI SDK",
+      "Sierra Agent SDK",
+    ],
   },
   {
-    num: "CASE_04",
+    num: "CLIENT_02",
+    title: "Decagon AI — agent playbooks and evals",
+    path: { co: "decagon-ai", role: "agent-evals" },
+    tag: "AI AGENT PLATFORM",
+    blurb:
+      "Playbooks, evals and manipulation detection for Decagon's agent platform, used by multi-billion dollar enterprise clients.",
+    meta: "agent playbooks · evals",
+    stats: [
+      {
+        figure: "playbooks",
+        caption: "tailored to each enterprise client",
+        lime: true,
+      },
+      { figure: "evals", caption: "to test agent quality" },
+      { figure: "manipulation", caption: "improved manipulation detection" },
+    ],
+    bullets: [
+      "Playbooks: improved the agent playbooks Decagon runs for its enterprise clients, the instructions that shape how each AI agent handles a customer conversation",
+      "Evals: added testing and evals for their chat systems, so changes to an agent can be measured before they reach customers",
+      "Manipulation detection: helped improve and scale the systems that catch users trying to push an agent off-script",
+    ],
+  },
+  {
+    num: "CLIENT_05",
     title: "Coinbase — Onchain Summer frontend",
     path: { co: "coinbase", role: "onchain-summer" },
     tag: "CRYPTO EXCHANGE",
     blurb:
-      "Delivered as part of the Lazer Technologies team. Frontend for Onchain Summer 2023, the multi-week festival that launched Base, Coinbase's Ethereum L2, with daily NFT drops from Coca-Cola, Atari and OpenSea.",
+      "Frontend for the inaugural Onchain Summer in 2023, the multi-week festival that promoted Base, Coinbase's Ethereum L2, with daily NFT drops from Coca-Cola, Atari and OpenSea.",
     link: { label: "coinbase.com →", href: "https://www.coinbase.com/" },
     stats: [
-      { figure: "700K+", caption: "NFTs minted", count: { target: 700, suffix: "K+" } },
-      { figure: "268K+", caption: "unique wallets", count: { target: 268, suffix: "K+" } },
-      { figure: "$242M", caption: "bridged to Base in two weeks", lime: true },
+      {
+        figure: "500K",
+        caption: "transactions",
+        lime: true,
+        count: { target: 500, suffix: "K" },
+      },
+      {
+        figure: "400K",
+        caption: "unique wallets",
+        count: { target: 400, suffix: "K" },
+      },
+      {
+        figure: "200+ ETH",
+        caption: "in volume",
+        count: { target: 200, suffix: "+ ETH" },
+      },
     ],
-    detail:
-      "We built wallet onboarding that took under 60 seconds for non-crypto users, and a custom ETH to Base bridge on the Optimism SDK. At peak: 145K+ users and 1.4M transactions in a single day. React, Next.js, TypeScript, Thirdweb.",
+    bullets: [
+      "Daily minting dApp: a new creator featured each day of the festival, with their NFT collection opened for minting, so there was something new to mint every time people came back",
+      "Wallet onboarding: wallet setup in under 60 seconds, so people new to crypto could join a drop without already owning a wallet",
+      "Onchain: smart contracts behind each daily drop, plus a custom bridge built on the Optimism SDK to move ETH from Ethereum onto Base",
+      "Peak day: 145K+ users and 1.4M transactions",
+    ],
+    stack: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Thirdweb",
+      "RainbowKit",
+      "Crossmint",
+      "Mint.fun",
+      "Arweave",
+      "Mirror",
+      "Twitter/X API",
+    ],
   },
   {
-    num: "CASE_05",
+    num: "CLIENT_03",
+    title: "ClassDojo — AI-assisted QA in the CI/CD pipeline",
+    path: { co: "classdojo", role: "ai-qa-pipeline" },
+    tag: "EDTECH UNICORN",
+    blurb:
+      "An AI layer in the CI/CD pipeline at ClassDojo, the $1B+ edtech platform, that turns failing builds into ready-to-work bug tickets, plus a Vitest migration that cut flaky tests by 70%.",
+    meta: "AI in CI/CD · test infrastructure",
+    link: { label: "classdojo.com →", href: "https://www.classdojo.com/" },
+    stats: [
+      {
+        figure: "70%",
+        caption: "fewer flaky tests",
+        lime: true,
+        count: { target: 70, suffix: "%" },
+      },
+      { figure: "CI → ticket", caption: "bug tickets written by AI" },
+      {
+        figure: "60%",
+        caption: "faster tests, after the Vitest move",
+        count: { target: 60, suffix: "%" },
+      },
+    ],
+    bullets: [
+      "CI to ticket: an LLM reads a failing build's output and the change that caused it, then files a structured ticket with a summary, repro steps and the relevant logs, work an engineer used to do by hand",
+      "Vitest migration: moved the test suites to Vitest and made them 60% faster",
+      "Flakiness: shared state, timing assumptions and order-dependent tests fixed until flaky failures dropped 70%, so a red build meant a real bug again",
+    ],
+  },
+  {
+    num: "CLIENT_06",
     title: "Dapper Labs — design system",
     path: { co: "dapper-labs", role: "design-system" },
     tag: "SPORTS NFT PLATFORMS",
     blurb:
-      "One design system across Dapper's sports products: NBA Top Shot, NFL All Day and their successors.",
+      "A component system built on Chakra UI and shared across Dapper's sports products: NBA Top Shot, NFL All Day and their successors.",
     link: { label: "dapperlabs.com →", href: "https://www.dapperlabs.com/" },
     stats: [
-      { figure: "Shared Design System", caption: "Chakra UI, rethemed through component APIs" },
-      { figure: "NBA, NFL, UFC", caption: "one shared library between all sports products", lime: true },
+      {
+        figure: "Component system",
+        caption: "built on Chakra UI, through its component APIs",
+      },
+      {
+        figure: "NBA, NFL, UFC",
+        caption: "one shared library between all sports products",
+        lime: true,
+      },
     ],
-    detail:
-      "We joined as consultants on the NFL All Day frontend, then moved to the studio team that owned the shared design system. The work: applying the design team's specs to existing Chakra UI components, so brands with different personalities share one library without looking like the same app.",
+    bullets: [
+      "Component system: built on Chakra UI, extending its component APIs to carry the design team's specs",
+      "One library, many brands: products with different personalities share it without looking like the same app",
+      "Growth: began on the NFL All Day frontend and grew to serve all of Dapper's sports IPs",
+    ],
+    stack: [
+      "JavaScript",
+      "Turborepo",
+      "Next.js",
+      "Storybook",
+      "Chakra UI",
+      "Styled Components",
+    ],
   },
 ];
+
+/* The tech stack, as a chip band along the foot of a case card. */
+function StackBand({ items }: { items: string[] }): JSX.Element {
+  return (
+    <div className="pb-stack">
+      <span className="pb-stack-k">stack</span>
+      <ul aria-label="Tech stack">
+        {items.map((t) => (
+          <li key={t}>{t}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 /* Cyan is reserved for the client quotes — a reference is a different
    kind of evidence from the work itself. Emphasis is assembled here,
@@ -140,7 +291,7 @@ export default function SelectedWork(): JSX.Element {
   const [index, setIndex] = useState(0);
   const [ys, setYs] = useState<number[] | null>(null);
   const [stageH, setStageH] = useState(0);
-  /* The ten-client index renders ONCE — the desktop side list or the
+  /* The client index (ten entries while CLIENT_01 is hidden) renders ONCE — the desktop side list or the
      mobile chip rail, never both hidden-by-CSS (screen readers would
      announce the list twice). */
   const [mobileNav, setMobileNav] = useState(false);
@@ -193,7 +344,8 @@ export default function SelectedWork(): JSX.Element {
       next[0] = Math.min(next[0], 24);
     }
     for (let i = a - 1; i >= 0; i--) next[i] = next[i + 1] - PEEK_GAP - hs[i];
-    for (let i = a + 1; i < CARDS; i++) next[i] = next[i - 1] + hs[i - 1] + PEEK_GAP;
+    for (let i = a + 1; i < CARDS; i++)
+      next[i] = next[i - 1] + hs[i - 1] + PEEK_GAP;
     const prev = ysRef.current;
     const hChanged = stageHRef.current !== H;
     const changed = !prev || next.some((y, i) => Math.abs(y - prev[i]) > 1);
@@ -259,7 +411,8 @@ export default function SelectedWork(): JSX.Element {
         if (Math.abs(delta - settleRef.current) > 0.5) {
           settleRef.current = delta;
           Array.from(deck.children).forEach((el, k) => {
-            (el as HTMLElement).style.transform = `translateY(${Math.round(base[k] + delta)}px)`;
+            (el as HTMLElement).style.transform =
+              `translateY(${Math.round(base[k] + delta)}px)`;
           });
         }
       });
@@ -340,6 +493,117 @@ export default function SelectedWork(): JSX.Element {
     </button>
   );
 
+  /* The first card in the deck always takes the feature layout (tinted
+     card, figure strip along the bottom); every other case is a
+     standard card. */
+  const featureCard = (c: (typeof CASES)[number], k: number): JSX.Element => (
+    <div className={dkClass(k)} style={dkStyle(k)} key={c.num}>
+      <article className="pb-feature">
+        <div className="pb-feature-side">
+          <div className="std2-head">
+            <span className="pb-case-num">{clientNum(k)}</span>
+            <span className="std2-tag">{c.tag}</span>
+          </div>
+          <h3 className="pb-case-path pb-feature-h" aria-label={c.title}>
+            <span className="pb-case-co" aria-hidden="true">
+              {c.path.co}
+            </span>
+            <span className="pb-case-sep" aria-hidden="true">
+              /
+            </span>
+            <span className="pb-case-role" aria-hidden="true">
+              {c.path.role}
+            </span>
+          </h3>
+          <p className="pb-case-blurb">{c.blurb}</p>
+          {c.meta ? <span className="pb-case-meta">{c.meta}</span> : null}
+          {c.link ? (
+            <a
+              className="pb-case-link"
+              href={c.link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {c.link.label}
+            </a>
+          ) : null}
+          {c.bullets ? (
+            <ul className="std2-bullets">
+              {c.bullets.map((b) => (
+                <li key={b}>{b}</li>
+              ))}
+            </ul>
+          ) : null}
+          {c.detail ? <p className="pb-case-detail">{c.detail}</p> : null}
+        </div>
+        <div className="pb-feature-stats">
+          {c.stats.map((st) => (
+            <div className="pb-fstat" key={st.caption}>
+              <span className="pb-figure">{st.figure}</span>
+              <span>{st.caption}</span>
+            </div>
+          ))}
+        </div>
+        {c.stack ? <StackBand items={c.stack} /> : null}
+      </article>
+    </div>
+  );
+
+  const caseCard = (c: (typeof CASES)[number], k: number): JSX.Element =>
+    k === 0 ? (
+      featureCard(c, k)
+    ) : (
+      <div className={dkClass(k)} style={dkStyle(k)} key={c.num}>
+        <article className="pb-card pb-case">
+          <div className="pb-case-left">
+            <div className="std2-head">
+              <span className="pb-case-num">{clientNum(k)}</span>
+              <span className="std2-tag">{c.tag}</span>
+            </div>
+            <h3 className="pb-case-path" aria-label={c.title}>
+              <span className="pb-case-co" aria-hidden="true">
+                {c.path.co}
+              </span>
+              <span className="pb-case-sep" aria-hidden="true">
+                /
+              </span>
+              <span className="pb-case-role" aria-hidden="true">
+                {c.path.role}
+              </span>
+            </h3>
+            <p className="pb-case-blurb">{c.blurb}</p>
+            {c.meta ? <span className="pb-case-meta">{c.meta}</span> : null}
+            {c.link ? (
+              <a
+                className="pb-case-link"
+                href={c.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {c.link.label}
+              </a>
+            ) : null}
+          </div>
+          <div className="pb-case-right">
+            <div className="pb-case-stats">
+              {c.stats.map((s) => (
+                <StatFigure key={s.caption} stat={s} />
+              ))}
+            </div>
+            {c.bullets ? (
+              <ul className="std2-bullets">
+                {c.bullets.map((b) => (
+                  <li key={b}>{b}</li>
+                ))}
+              </ul>
+            ) : null}
+            {c.detail ? <p className="pb-case-detail">{c.detail}</p> : null}
+          </div>
+          {c.stack ? <StackBand items={c.stack} /> : null}
+        </article>
+      </div>
+    );
+
   return (
     <section id="work" className="pf2" ref={sectionRef}>
       <span id="trust" aria-hidden="true" />
@@ -349,14 +613,14 @@ export default function SelectedWork(): JSX.Element {
             <Reveal variant="rev">
               <div className="intro">
                 <div className="pb-kicker">$ cat ./client-portfolio</div>
-                <h2 className="sr-h">Companies we&apos;ve built inside</h2>
+                <h2 className="sr-h">Previous Clients</h2>
                 <p className="sr-lead">
-                  Crypto exchanges, a frontier AI lab, a Fortune 500 retailer,
-                  sports platforms with millions of collectors.
+                  Fortune 500 companies, unicorns, major AI labs, leading crypto
+                  platforms and social media products.
                 </p>
               </div>
               {!mobileNav ? (
-                <nav className="stg-idx" aria-label="Case studies">
+                <nav className="stg-idx" aria-label="Previous clients">
                   {RAIL.map((_, k) => railButton(k, false))}
                 </nav>
               ) : null}
@@ -371,118 +635,35 @@ export default function SelectedWork(): JSX.Element {
 
           <div className="stg-stage">
             {mobileNav ? (
-              <nav className="strip" aria-label="Case studies" ref={stripRef}>
+              <nav
+                className="strip"
+                aria-label="Previous clients"
+                ref={stripRef}
+              >
                 {RAIL.map((_, k) => railButton(k, true))}
               </nav>
             ) : null}
 
             <div className="deck" ref={deckRef}>
+              {/* Hidden for now — the frontier-lab card. See the CARDS note.
               <div className={dkClass(0)} style={dkStyle(0)}>
                 <CaseRedacted />
               </div>
+              */}
 
-              <div className={dkClass(1)} style={dkStyle(1)}>
-                <article className="pb-feature">
-                  <div className="pb-feature-side">
-                    <div className="std2-head">
-                      <span className="pb-case-num">CASE_02</span>
-                      <span className="std2-tag">AI AGENT PLATFORM</span>
-                    </div>
-                    <h3
-                      className="pb-case-path pb-feature-h"
-                      aria-label="Decagon AI — forward deployed engineering"
-                    >
-                      <span className="pb-case-co" aria-hidden="true">
-                        decagon-ai
-                      </span>
-                      <span className="pb-case-sep" aria-hidden="true">
-                        /
-                      </span>
-                      <span className="pb-case-role" aria-hidden="true">
-                        forward-deployed
-                      </span>
-                    </h3>
-                    <p className="pb-case-blurb" style={{ marginBottom: 14 }}>
-                      Forward deployed engineers at Decagon, embedded with
-                      enterprise clients including Wealthsimple.
-                    </p>
-                    <p className="pb-feature-body">
-                      We improved the playbooks Decagon runs for those clients,
-                      added testing and evals for their chat systems, and
-                      helped improve and scale their manipulation detection.
-                      The work that turns an agent platform into something a
-                      support org will trust.
-                    </p>
-                    <span className="pb-case-meta" style={{ marginTop: 0 }}>
-                      on-site engagement
-                    </span>
-                  </div>
-                  <div className="pb-feature-stats">
-                    <div className="pb-fstat">
-                      <span className="pb-figure">playbooks</span>
-                      <span>improved for enterprise clients</span>
-                    </div>
-                    <div className="pb-fstat">
-                      <span className="pb-figure">evals</span>
-                      <span>added for their chat systems</span>
-                    </div>
-                    <div className="pb-fstat">
-                      <span className="pb-figure">manipulation</span>
-                      <span>detection, improved and scaled</span>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              {CASES.map((c, i) => (
-                <div className={dkClass(i + 2)} style={dkStyle(i + 2)} key={c.num}>
-                  <article className="pb-card pb-case">
-                    <div className="pb-case-left">
-                      <div className="std2-head">
-                        <span className="pb-case-num">{c.num}</span>
-                        <span className="std2-tag">{c.tag}</span>
-                      </div>
-                      <h3 className="pb-case-path" aria-label={c.title}>
-                        <span className="pb-case-co" aria-hidden="true">
-                          {c.path.co}
-                        </span>
-                        <span className="pb-case-sep" aria-hidden="true">
-                          /
-                        </span>
-                        <span className="pb-case-role" aria-hidden="true">
-                          {c.path.role}
-                        </span>
-                      </h3>
-                      <p className="pb-case-blurb">{c.blurb}</p>
-                      {c.meta ? <span className="pb-case-meta">{c.meta}</span> : null}
-                      {c.link ? (
-                        <a
-                          className="pb-case-link"
-                          href={c.link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {c.link.label}
-                        </a>
-                      ) : null}
-                    </div>
-                    <div className="pb-case-right">
-                      <div className="pb-case-stats">
-                        {c.stats.map((s) => (
-                          <StatFigure key={s.caption} stat={s} />
-                        ))}
-                      </div>
-                      <p className="pb-case-detail">{c.detail}</p>
-                    </div>
-                  </article>
-                </div>
-              ))}
+              {CASES.map((c, i) => caseCard(c, i))}
 
               {EXTRA_CASES.map((c, i) => (
-                <div className={dkClass(i + 5)} style={dkStyle(i + 5)} key={c.num}>
+                <div
+                  className={dkClass(i + CASES.length)}
+                  style={dkStyle(i + CASES.length)}
+                  key={c.num}
+                >
                   <article className="pb-card pb-case std2">
                     <div className="std2-head">
-                      <span className="pb-case-num">{c.num}</span>
+                      <span className="pb-case-num">
+                        {clientNum(i + CASES.length)}
+                      </span>
                       {c.tag ? <span className="std2-tag">{c.tag}</span> : null}
                     </div>
                     <h3 className="pb-case-path" aria-label={c.title}>
@@ -521,13 +702,15 @@ export default function SelectedWork(): JSX.Element {
                         ))}
                       </ul>
                     ) : null}
-                    {c.detail ? <p className="pb-case-detail">{c.detail}</p> : null}
+                    {c.detail ? (
+                      <p className="pb-case-detail">{c.detail}</p>
+                    ) : null}
                     {c.quote ? <QuoteBlock q={c.quote} /> : null}
+                    {c.stack ? <StackBand items={c.stack} /> : null}
                   </article>
                 </div>
               ))}
             </div>
-
           </div>
         </div>
       </div>

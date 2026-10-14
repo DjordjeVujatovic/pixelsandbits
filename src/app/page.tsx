@@ -60,7 +60,7 @@ export default function HomePage(): JSX.Element {
           <div className="pb-ask-head">
             <div>
               <div className="pb-kicker">$ ./ask --faq</div>
-              <h2 className="pb-h-md pb-ask-h">Questions we get asked most</h2>
+              <h2 className="pb-h-md pb-ask-h">Most asked questions</h2>
             </div>
           </div>
           <AskPanel />

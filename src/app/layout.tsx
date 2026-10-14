@@ -30,27 +30,28 @@ const plexMono = IBM_Plex_Mono({
    og:url claimed the canonical one, and social scrapers cached that. */
 const siteUrl = "https://www.pixelsandbits.com";
 
+const siteTitle = "pixels&bits: product engineering and design for teams shipping AI";
+const siteDescription =
+  "Forward deployed engineers who scope, build and hand over LLM products. Clients include Coinbase, ClassDojo, Decagon AI, Scotts Miracle-Gro and Dapper Labs.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "pixels&bits — end-to-end product engineering for teams shipping AI",
-    template: "%s — pixels&bits",
+    default: siteTitle,
+    template: "%s | pixels&bits",
   },
-  description:
-    "Forward deployed engineers taking LLM products from demo to production. Work for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
+  description: siteDescription,
   openGraph: {
-    title: "pixels&bits — end-to-end product engineering for teams shipping AI",
-    description:
-      "End-to-end product engineering for teams shipping AI. Forward deployed engineers taking LLM products from demo to production for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
+    title: siteTitle,
+    description: siteDescription,
     url: "/",
     siteName: "pixels&bits",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "pixels&bits — end-to-end product engineering for teams shipping AI",
-    description:
-      "End-to-end product engineering for teams shipping AI. Forward deployed engineers taking LLM products from demo to production for Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
+    title: siteTitle,
+    description: siteDescription,
   },
 };
 
@@ -62,11 +63,10 @@ const orgJsonLd = {
   name: "pixels&bits",
   url: siteUrl,
   description:
-    "End-to-end product engineering for teams shipping AI. Forward deployed engineers taking LLM products from demo to production for companies including Coinbase, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
+    "Forward deployed engineers who scope, build and hand over LLM products for companies including Coinbase, ClassDojo, Decagon AI, Scotts Miracle-Gro and Dapper Labs.",
   knowsAbout: [
     "forward deployed engineering",
-    "AI deployment",
-    "LLM production",
+    "deploying LLM applications",
     "product design",
     "full-stack engineering",
   ],

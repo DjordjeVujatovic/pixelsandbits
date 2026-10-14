@@ -275,7 +275,7 @@ export default function ContactForm(): JSX.Element {
               ship it →
             </button>
             <span className="ct-hint">
-              {ready ? "ready to send" : "name, a valid email and a sentence or two are enough"}
+              {ready ? "ready to send" : ""}
             </span>
           </div>
         </form>
@@ -314,9 +314,9 @@ export default function ContactForm(): JSX.Element {
             <div className="ct-confirm">
               <h2>Got it, {firstName}.</h2>
               <p>
-                We read every one of these ourselves. Expect a reply within two
-                business days — and if we&apos;re not the right fit, we&apos;ll
-                say so and point you somewhere better.
+                Every message is read by a person. Expect a reply within two
+                business days, and if it&apos;s not the right fit, a straight
+                answer and a pointer somewhere better.
               </p>
               <div className="ct-recap">
                 {recap.map((r) => (

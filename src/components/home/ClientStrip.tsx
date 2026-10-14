@@ -85,18 +85,24 @@ export default function ClientStrip(): JSX.Element {
           <span className="pb-cdot" aria-hidden="true" />
           Coinbase
         </li>
-        <li className="pb-citem" data-path="decagon/agent-evals" data-metric="2 yrs embedded">
+        <li className="pb-citem" data-path="decagon/agent-evals" data-metric="agent playbooks + evals">
           <span className="pb-cdot" aria-hidden="true" />
           Decagon AI
+        </li>
+        <li className="pb-citem" data-path="classdojo/ai-qa-pipeline" data-metric="70% fewer flaky tests">
+          <span className="pb-cdot" aria-hidden="true" />
+          ClassDojo
         </li>
         <li className="pb-citem" data-path="scotts/lawn-agent" data-metric="built on Sierra">
           <span className="pb-cdot" aria-hidden="true" />
           Scotts Miracle-Gro
         </li>
+        {/* Hidden for now — frontier-lab engagement.
         <li className="pb-citem" data-path="[redacted]/rl-envs" data-metric="under NDA">
           <span className="pb-cdot" aria-hidden="true" />
           Frontier AI lab
         </li>
+        */}
         <li className="pb-citem" data-path="dapper/design-system" data-metric="multi-brand system">
           <span className="pb-cdot" aria-hidden="true" />
           Dapper Labs

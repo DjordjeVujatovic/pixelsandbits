@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ASK_QA } from "@/lib/content";
 
-/* FAQ_accordion.md — the five answers in a terminal accordion, one open
+/* FAQ_accordion.md — the four answers in a terminal accordion, one open
    at a time. Row 3 (--cost) opens on load: cost is the question a
    visitor is most likely scanning for, and an open row means the
    section is never an empty list of closed pills. State is a single
@@ -30,7 +30,7 @@ export default function AskPanel(): JSX.Element {
         <span className="fq-td" aria-hidden="true" />
         <span className="fq-td" aria-hidden="true" />
         <span className="fq-td" aria-hidden="true" />
-        <span>pixels&bits · ask-us</span>
+        <span>pixels&bits · ask</span>
         {/* the right side echoes the open row's flag, -- stripped */}
         <span className="fq-meta">
           <span className="fq-dot" aria-hidden="true" />
@@ -89,7 +89,7 @@ export default function AskPanel(): JSX.Element {
           <span>something else?</span>
           <span className="fq-blk" aria-hidden="true" />
           <a className="fq-cta" href="/contact">
-            ask us directly →
+            ask directly →
           </a>
         </div>
       </div>
