@@ -98,7 +98,7 @@ export const OFFERS: Offer[] = [
       [
         "03",
         "Performance built in",
-        "Performance is measured against a budget throughout, which is why the campaign work held up at peak.",
+        "Performance is measured against a budget throughout.",
       ],
       [
         "04",
@@ -157,17 +157,17 @@ export interface AskItem {
 export const ASK_QA: AskItem[] = [
   {
     q: "What do you do?",
-    a: "AI products, built end to end. You bring a problem; you leave with software running in production, a codebase your engineers can read, and the know-how to keep it running.",
-    aPre: "AI products, built end to end. You bring a problem; you leave with software running in production, a codebase your engineers can read, and the know-how to keep it running.",
+    a: "Product engineering with a specialization in shipping AI products end to end.",
+    aPre: "Product engineering with a specialization in shipping AI products end to end.",
     flag: "--scope",
     ms: "18ms",
     src: { label: "./services", href: "#services" },
   },
   {
-    q: "How do you get an LLM into production?",
-    a: "Start with the people who will use it, not the model. Map the workflow they actually run, build evals from real transcripts so quality is a score instead of a hunch, then do the unglamorous part: auth, data access, legacy systems. It ships when the evals say it holds.",
-    aPre: "Start with the people who will use it, not the model. Map the workflow they actually run, build evals from real transcripts so quality is a score instead of a hunch, then do the unglamorous part: auth, data access, legacy systems. It ships when the evals say it holds.",
-    flag: "--llm",
+    q: "How do you approach an AI project?",
+    a: "Start with the people who will use it, not the model. Map the workflow they actually run, build evals from real transcripts so quality is a score instead of a hunch, then do the unglamorous part: auth, data access, legacy systems.",
+    aPre: "Start with the people who will use it, not the model. Map the workflow they actually run, build evals from real transcripts so quality is a score instead of a hunch, then do the unglamorous part: auth, data access, legacy systems.",
+    flag: "--approach",
     ms: "24ms",
     src: { label: "./process", href: "#process" },
   },
@@ -181,8 +181,8 @@ export const ASK_QA: AskItem[] = [
   },
   {
     q: "How fast can you start?",
-    a: "Usually within two weeks, starting with the scoping week. Send what you're building and get a straight answer on fit before anything is signed.",
-    aPre: "Usually within two weeks, starting with the scoping week. Send what you're building and get a straight answer on fit before anything is signed.",
+    a: "Usually within two weeks, depending on capacity. Every engagement starts with a scoping week.",
+    aPre: "Usually within two weeks, depending on capacity. Every engagement starts with a scoping week.",
     flag: "--start",
     ms: "17ms",
     src: { label: "./contact", href: "/contact" },
@@ -254,10 +254,10 @@ export const EXTRA_CASES: {
       "Four internal tools shipped for ZeroDown: investment memos, offer tracking, lead search and property management.",
     stack: ["React", "GraphQL", "Apollo", "Ant Design"],
     bullets: [
-      "IC memo tool that turns the data already in the Flask backend into an Investment Committee memo for each offer, an order of magnitude productivity gain for the PM",
-      "Offer process tool that moved status updates from phone calls into a web app, with every state of an offer managed in one place",
-      "Lead search dashboard with 10 to 15 filters and search for sales and marketing, backed by Python, GraphQL and SQLAlchemy filters, so lead metrics can be quantified",
-      "Property management dashboard for 50+ company-owned properties, with property stats, monthly payments and repair setup",
+      "IC memo tool: turns the data already in the Flask backend into an Investment Committee memo for each offer, an order of magnitude productivity gain for the PM",
+      "Offer process tool: moved status updates from phone calls into a web app, with every state of an offer managed in one place",
+      "Lead search dashboard: 10 to 15 filters and search for sales and marketing, backed by Python, GraphQL and SQLAlchemy filters, so lead metrics can be quantified",
+      "Property management dashboard: 50+ company-owned properties, with property stats, monthly payments and repair setup",
     ],
     stats: [
       {
@@ -284,7 +284,7 @@ export const EXTRA_CASES: {
     tag: "NONPROFIT",
     link: { label: "apparelimpact.org →", href: "https://apparelimpact.org" },
     blurb:
-      "A full-stack dashboard apparel brands use to gauge environmental impact by tracking carbon emissions from their factories.",
+      "The Climate Solutions Portfolio: a platform where apparel brands find climate solutions for their factories and track the cost, savings and carbon impact of each one, taken from discovery through design to build.",
     stats: [
       {
         figure: "Nike, Lululemon, New Balance",
@@ -297,9 +297,29 @@ export const EXTRA_CASES: {
       },
     ],
     bullets: [
-      "Ingestion engine: a deterministic Node.js/GraphQL engine transposes multi-tab Excel workbooks into a relational schema",
-      "Precision: no loss of numeric precision, even as workbooks drifted from the template",
+      "Discovery to build: research and design ran as a double diamond across three user groups: brands, solution providers and the Aii team",
+      "Solutions search: a searchable repository of climate solutions brands can fund in their factories",
+      "Brand analytics: spreadsheet calculations replaced by a dashboard of cost per tCO₂e, annual savings, payback period and a breakdown of brand and facility investment",
+      "Ingestion engine: a deterministic Node.js/GraphQL engine transposes multi-tab Excel workbooks into a relational schema with no loss of numeric precision, even as workbooks drifted from the template",
       "Hardening: every failure became a failing unit test until a 50-file corpus ingested cleanly",
+    ],
+    stack: [
+      "Nx",
+      "TypeScript",
+      "MobX",
+      "Mantine",
+      "Netlify",
+      "Fastify",
+      "Pothos",
+      "Google Cloud Run",
+      "PostgreSQL",
+      "Sequelize",
+      "Cloud SQL",
+      "CircleCI",
+      "Cypress",
+      "Stytch",
+      "Sentry",
+      "SendGrid",
     ],
     quote: {
       pre: "“They were an absolute pleasure to work with. Their work ethic was ",

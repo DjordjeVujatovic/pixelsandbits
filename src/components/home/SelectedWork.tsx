@@ -173,7 +173,6 @@ const CASES: {
       "Daily minting dApp: a new creator featured each day of the festival, with their NFT collection opened for minting, so there was something new to mint every time people came back",
       "Wallet onboarding: wallet setup in under 60 seconds, so people new to crypto could join a drop without already owning a wallet",
       "Onchain: smart contracts behind each daily drop, plus a custom bridge built on the Optimism SDK to move ETH from Ethereum onto Base",
-      "Peak day: 145K+ users and 1.4M transactions",
     ],
     stack: [
       "React",
@@ -253,6 +252,19 @@ const CASES: {
 ];
 
 /* The tech stack, as a chip band along the foot of a case card. */
+/* Bullets read "Label: description"; the label up to the first colon
+   is set bold. Bullets without a short label render as plain text. */
+function BulletText({ text }: { text: string }): JSX.Element {
+  const i = text.indexOf(": ");
+  if (i < 1 || text.slice(0, i).split(" ").length > 5) return <>{text}</>;
+  return (
+    <>
+      <b className="std2-bk">{text.slice(0, i + 1)}</b>
+      {text.slice(i + 1)}
+    </>
+  );
+}
+
 function StackBand({ items }: { items: string[] }): JSX.Element {
   return (
     <div className="pb-stack">
@@ -530,7 +542,9 @@ export default function SelectedWork(): JSX.Element {
           {c.bullets ? (
             <ul className="std2-bullets">
               {c.bullets.map((b) => (
-                <li key={b}>{b}</li>
+                <li key={b}>
+                  <BulletText text={b} />
+                </li>
               ))}
             </ul>
           ) : null}
@@ -593,7 +607,9 @@ export default function SelectedWork(): JSX.Element {
             {c.bullets ? (
               <ul className="std2-bullets">
                 {c.bullets.map((b) => (
-                  <li key={b}>{b}</li>
+                  <li key={b}>
+                    <BulletText text={b} />
+                  </li>
                 ))}
               </ul>
             ) : null}
@@ -698,7 +714,9 @@ export default function SelectedWork(): JSX.Element {
                     {c.bullets ? (
                       <ul className="std2-bullets">
                         {c.bullets.map((b) => (
-                          <li key={b}>{b}</li>
+                          <li key={b}>
+                            <BulletText text={b} />
+                          </li>
                         ))}
                       </ul>
                     ) : null}

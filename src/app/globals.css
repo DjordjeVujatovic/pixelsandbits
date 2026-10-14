@@ -2004,6 +2004,7 @@ body.pb-navopen .pb-dft { animation: pb-dft-in .5s cubic-bezier(.2,.85,.3,1) .5s
   color: color-mix(in srgb, var(--fg) 62%, transparent);
 }
 .std2-bullets li::before { content: "—"; position: absolute; left: 0; color: color-mix(in srgb, var(--acc) 70%, transparent) }
+.std2-bk { font-weight: 600; color: color-mix(in srgb, var(--fg) 88%, transparent) }
 
 /* the client quote */
 .qb {
