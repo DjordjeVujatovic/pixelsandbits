@@ -452,6 +452,6 @@ export const CONTACT_TIMELINES = [
 export const CONTACT_LOG: [string, string][] = [
   ["→", "validating fields"],
   ["→", "routing to the team"],
-  ["→", "no auto-responder, a human takes it from here"],
+  ["→", "sending a confirmation email to you"],
   ["✓", "sent · reply within 2 business days"],
 ];

@@ -19,13 +19,23 @@ export default function ContactPage(): JSX.Element {
         <main className="ct-main">
           <section className="ct-in ct-intro">
             <div className="pb-kicker ct-intro-kicker">$ cat ./contact</div>
-            <h1 className="ct-h1">What are you building?</h1>
-            <p className="ct-lead">
-              Fill this in for a reply within two business days: what to do
-              first, and an honest view on whether it&apos;s the right team for
-              the job. Every field is optional except your name, email and a
-              short brief.
-            </p>
+            <div className="ct-intro-form">
+              <h1 className="ct-h1">What are you building?</h1>
+              <p className="ct-lead">
+                Fill this in for a reply within two business days: what to do
+                first, and an honest view on whether it&apos;s the right team
+                for the job. Every field is optional except your name, email and
+                a short brief.
+              </p>
+            </div>
+            {/* Swapped in by CSS once the form shows its confirmation. */}
+            <div className="ct-intro-thanks">
+              <h2 className="ct-h1">Thank you.</h2>
+              <p className="ct-lead">
+                Your message has been sent. A confirmation email with a copy of
+                it is on its way to you.
+              </p>
+            </div>
           </section>
 
           <section className="ct-shell">
@@ -54,7 +64,7 @@ export default function ContactPage(): JSX.Element {
                   <div className="ct-step">
                     <span className="ct-step-n">02</span>
                     <div>
-                      <div className="ct-step-t">A 30-minute call</div>
+                      <div className="ct-step-t">Initial call</div>
                       <p className="ct-step-p">
                         Enough to know if the shapes fit on both sides.
                       </p>

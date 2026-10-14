@@ -300,10 +300,23 @@ header.pb-compact {
    Below the collapse the whole nav is over dark: light links, lime CTA,
    as today. */
 @media (min-width: 1200px) {
-  .pb-header.pb-navtop .pb-cta { color: var(--ink) }
-  .pb-header.pb-navtop .pb-cta .pb-brk { color: rgba(5, 8, 13, .5) }
-  .pb-header.pb-navtop .pb-cta:hover,
-  .pb-header.pb-navtop .pb-cta:hover .pb-brk { color: var(--ink) }
+  /* Over the lime the CTA takes the closing section's black button (.ibtn)
+     at nav scale: ink fill, lime label, no brackets. */
+  .pb-header.pb-navtop .pb-cta { color: var(--acc) }
+  /* Afterglow: once the lime has wiped in, a halo blooms and fades. The
+     animation is only attached off the flood, so it replays each time the
+     header leaves it. */
+  .pb-header:not(.pb-navtop) .pb-cta {
+    animation: pb-cta-glow 1.3s ease-out .5s backwards;
+  }
+  .pb-header.pb-navtop .pb-cta::before {
+    transform: scaleX(0);
+    transform-origin: right center;
+  }
+  .pb-header.pb-navtop .pb-cta:hover {
+    color: var(--acc);
+    box-shadow: 0 10px 28px rgba(5, 8, 13, .28);
+  }
 }
 
 .pb-brand {
@@ -374,26 +387,54 @@ header.pb-compact {
 .pb-navlink.pb-navon .pb-dash { color: var(--acc) }
 
 .pb-navlinks { display: flex; align-items: center }
+/* Filled button: lime over dark, swapped to the black button over the lime
+   flood (see .pb-navtop above). Hover must not change the CTA's width — the
+   paired spacers recentre the capsule around it, so it lifts instead. */
 .pb-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   font-family: var(--font-mono), monospace;
-  font-size: 13px;
-  color: var(--acc);
   /* A step above the 13px capsule links */
   font-size: 14px;
-  padding: 9px 8px;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--ink);
+  padding: 11px 20px;
+  border-radius: 10px;
   white-space: nowrap;
-  transition: color .3s ease;
+  transition:
+    color .45s ease .12s,
+    transform .2s ease,
+    box-shadow .2s ease;
 }
-/* Hover must not change the CTA's width — the paired spacers recentre
-   the capsule around it, so any growth shifts the whole nav. Brackets
-   brighten and the arrow slides; the gap stays put. */
-.pb-brk { color: color-mix(in srgb, var(--acc) 45%, transparent); transition: color .22s ease }
-.pb-cta:hover { color: var(--acc) }
-.pb-cta:hover .pb-brk { color: var(--acc) }
+/* The lime is a layer that wipes in from the left when the header leaves
+   the lime flood, and drains off to the right when it comes back. */
+.pb-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--acc);
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: transform .55s cubic-bezier(.7, 0, .2, 1);
+}
+.pb-cta .pb-brk { display: none }
+.pb-cta:hover {
+  color: var(--ink);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--acc) 22%, transparent);
+}
 .pb-cta:hover .pb-arrow { transform: translateX(3px) }
+@keyframes pb-cta-glow {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--acc) 0%, transparent), 0 0 0 0 color-mix(in srgb, var(--acc) 0%, transparent) }
+  22% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--acc) 28%, transparent), 0 0 28px 6px color-mix(in srgb, var(--acc) 55%, transparent) }
+  100% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--acc) 0%, transparent), 0 0 56px 16px color-mix(in srgb, var(--acc) 0%, transparent) }
+}
 
 .pb-arrow { transition: transform .25s ease; display: inline-block }
 
@@ -2966,6 +3007,8 @@ a.pb-footer-brand:hover { color: var(--fg) }
 }
 .ct-label-dim { color: color-mix(in srgb, var(--fg) 28%, transparent) }
 .ct-tick { color: var(--acc); font-size: 12px }
+.ct-count { margin-left: auto; flex-shrink: 0; white-space: nowrap; font-size: 11px; letter-spacing: .04em; color: color-mix(in srgb, var(--fg) 32%, transparent); font-variant-numeric: tabular-nums }
+.ct-count-max { color: var(--acc) }
 .ct-req { color: color-mix(in srgb, var(--fg) 24%, transparent); font-size: 10.5px; letter-spacing: .1em }
 .ct-field {
   width: 100%;
@@ -3055,11 +3098,18 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 .ct-tag {
   font-family: var(--font-mono), monospace;
   font-size: 11px;
-  color: color-mix(in srgb, var(--fg) 62%, transparent);
-  border: 1px solid color-mix(in srgb, var(--fg) 13%, transparent);
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--acc);
+  border: 1px solid var(--acc);
   border-radius: var(--r-pill);
   padding: 5px 10px;
 }
+.ct-confirm-name { color: var(--acc) }
+.ct-intro-thanks { display: none }
+.ct-main:has(.ct-confirm) .ct-intro-form { display: none }
+.ct-main:has(.ct-confirm) .ct-intro-thanks { display: block; animation: ct-in .6s ease both }
+.ct-confirm .ct-confirm-note { font-size: 14px; color: color-mix(in srgb, var(--fg) 45%, transparent) }
 .ct-confirm-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px }
 .ct-ghost-btn {
   font-family: var(--font-mono), monospace;
@@ -3205,10 +3255,8 @@ textarea.ct-field { min-height: 128px; resize: vertical; line-height: 1.6 }
 @media (max-width: 800px) {
   .pb-navlink { padding: 9px 7px }
   .pb-capsule { font-size: 11.5px }
-  /* A long CTA label overflows this band with its
-     brackets on — drop them here, keep the label and arrow. */
-  .pb-cta .pb-brk { display: none }
-  .pb-cta { font-size: 12px; padding: 9px 4px }
+  /* Tighter CTA so a long label still fits this band. */
+  .pb-cta { font-size: 12px; padding: 9px 14px }
 }
 
 @media (max-width: 720px) {

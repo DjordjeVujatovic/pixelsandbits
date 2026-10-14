@@ -11,6 +11,8 @@ import {
 import { prefersReducedMotion } from "@/lib/motion";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+// Mirrored in the API route.
+const BRIEF_MAX = 3000;
 
 type Stage = "form" | "sending" | "done" | "error";
 
@@ -94,19 +96,6 @@ export default function ContactForm(): JSX.Element {
     }, 620);
   };
 
-  const reset = () => {
-    window.clearInterval(timer.current);
-    setName("");
-    setEmail("");
-    setCompany("");
-    setBrief("");
-    setKinds([]);
-    setBudget("");
-    setTimeline("");
-    setStage("form");
-    setLogN(0);
-  };
-
   const recap = [company || null, budget || null, timeline || null, ...kinds].filter(
     (x): x is string => Boolean(x),
   );
@@ -138,7 +127,9 @@ export default function ContactForm(): JSX.Element {
             className="ct-honeypot"
             ref={honeypotRef}
             type="text"
-            name="website"
+            // Deliberately meaningless: browser autofill fills fields it
+            // recognises (e.g. "website") even when hidden, tripping the trap.
+            name="pb-hp-7f"
             tabIndex={-1}
             autoComplete="off"
             aria-hidden="true"
@@ -260,12 +251,20 @@ export default function ContactForm(): JSX.Element {
             <label className="ct-label" htmlFor="ct-brief">
               07 · what are you building? <span className="ct-req">required</span>
               <span className="ct-tick">{brief.trim().length > 12 ? "✓" : ""}</span>
+              <span
+                className={`ct-count${brief.length >= BRIEF_MAX ? " ct-count-max" : ""}`}
+                aria-live="polite"
+              >
+                {brief.length.toLocaleString("en-US")} /{" "}
+                {BRIEF_MAX.toLocaleString("en-US")}
+              </span>
             </label>
             <textarea
               className="ct-field"
               id="ct-brief"
               placeholder="the problem, who it's for, and where you are today"
               value={brief}
+              maxLength={BRIEF_MAX}
               onChange={(e) => setBrief(e.target.value)}
             />
           </div>
@@ -275,7 +274,13 @@ export default function ContactForm(): JSX.Element {
               ship it →
             </button>
             <span className="ct-hint">
-              {ready ? "ready to send" : ""}
+              {ready
+                ? "ready to send"
+                : !name.trim()
+                  ? "add your name"
+                  : !emailOk
+                    ? "add a valid email"
+                    : `brief: ${13 - brief.trim().length} more character${12 - brief.trim().length === 0 ? "" : "s"}`}
             </span>
           </div>
         </form>
@@ -312,11 +317,17 @@ export default function ContactForm(): JSX.Element {
 
           {stage === "done" ? (
             <div className="ct-confirm">
-              <h2>Got it, {firstName}.</h2>
+              <h2>
+                Got it, <span className="ct-confirm-name">{firstName}</span>.
+              </h2>
               <p>
                 Every message is read by a person. Expect a reply within two
                 business days, and if it&apos;s not the right fit, a straight
                 answer and a pointer somewhere better.
+              </p>
+              <p className="ct-confirm-note">
+                A confirmation email is on its way. If it isn&apos;t in your
+                inbox, check your junk folder.
               </p>
               <div className="ct-recap">
                 {recap.map((r) => (
@@ -329,13 +340,6 @@ export default function ContactForm(): JSX.Element {
                 <Link className="ct-btn ct-ghost-btn" href="/#work">
                   see the work
                 </Link>
-                <button
-                  className="ct-btn ct-ghost-btn ct-ghost-dim"
-                  type="button"
-                  onClick={reset}
-                >
-                  send another
-                </button>
               </div>
             </div>
           ) : null}

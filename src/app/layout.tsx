@@ -28,7 +28,7 @@ const plexMono = IBM_Plex_Mono({
 /* Pinned to the canonical production domain — an env override here made
    og:image / twitter:image resolve to the deploy-preview host while
    og:url claimed the canonical one, and social scrapers cached that. */
-const siteUrl = "https://www.pixelsandbits.com";
+const siteUrl = "https://www.pixelsandbits.co";
 
 const siteTitle = "pixels&bits: product engineering and design for teams shipping AI";
 const siteDescription =
