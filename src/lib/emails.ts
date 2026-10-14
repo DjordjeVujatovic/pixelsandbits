@@ -124,7 +124,6 @@ const formatReceived = (iso: string): string =>
 /* Team inbox */
 
 export function enquiryEmail(s: Submission): Email {
-  const first = firstNameOf(s.name);
   const received = formatReceived(s.receivedAt);
   const subject = `New enquiry from ${s.name}${s.company ? `, ${s.company}` : ""}`;
 
@@ -155,15 +154,10 @@ export function enquiryEmail(s: Submission): Email {
     })
     .join("");
 
-  const replyHref = `mailto:${encodeURIComponent(s.email)}?subject=${encodeURIComponent("Re: your message to Pixels & Bits")}`;
-
   const body = `
     ${heading(`${esc(s.name)}${s.company ? `<span style="color:${FG_DIM}">, ${esc(s.company)}</span>` : ""}`)}
     <tr><td style="padding:14px 32px 0;font-family:${SANS};font-size:16px;line-height:1.65;color:${FG_DIM}">
       New enquiry from the contact form.
-    </td></tr>
-    <tr><td style="padding:22px 32px 0">
-      <a href="${replyHref}" style="display:inline-block;padding:0 22px;height:44px;line-height:44px;border-radius:9px;background:${ACC};color:${INK};font-family:${MONO};font-size:14px;font-weight:700;text-decoration:none">reply to ${esc(first)} &rarr;</a>
     </td></tr>
     <tr><td style="padding:24px 32px 0">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${table}</table>
